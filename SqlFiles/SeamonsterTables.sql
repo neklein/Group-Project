@@ -49,6 +49,7 @@ GO
 Create Table Post 
 	(
 	 PostID int identity (1,1) primary key,
+	 PostTitle nvarchar(50) not null,
 	 DateCreated datetime2 default(getdate()),
 	 Expdate datetime2,
 	 ToPostDate datetime2,
@@ -75,6 +76,7 @@ Create Table PostText
 	(
 	   PostTextId int identity(1,1) primary key,
 	   PostId int foreign key references Post(PostID),
+	   PostTitle nvarchar(50) not null,
 	   PostText nvarchar(max),
 	   textaddedby nvarchar(40) default Current_User
 	) 
