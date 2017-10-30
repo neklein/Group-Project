@@ -76,7 +76,6 @@ Create Table PostText
 	(
 	   PostTextId int identity(1,1) primary key,
 	   PostId int foreign key references Post(PostID),
-	   PostTitle nvarchar(50) not null,
 	   PostText nvarchar(max),
 	   textaddedby nvarchar(40) default Current_User
 	) 
