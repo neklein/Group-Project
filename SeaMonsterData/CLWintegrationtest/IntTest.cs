@@ -55,7 +55,25 @@ namespace CLWintegrationtest
             Assert.AreEqual(expected, Cats.Count());
         }
 
+        [Test]
+        public void GetPosts()
+        {
+            PostRepo repo = new PostRepo();
 
+            List<Post> posts = repo.GetAllPosts().ToList();
 
+            Assert.AreEqual(5, posts.Count());
+        }
+
+        [Test]
+        public void GetImages()
+        {
+            PostRepo repo = new PostRepo();
+
+            List<Image> images = repo.GetImagesByPost(1);
+
+            Assert.AreEqual(2, images.Count());
+            Assert.AreEqual("SeriousSelfie.jpg", images[0].ImageName);
+        }
     }
 }
