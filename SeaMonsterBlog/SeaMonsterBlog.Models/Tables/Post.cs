@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SeaMonster.Models.Tables
+namespace SeaMonsterBlog.Models.Tables
 {
     public class Post
     {
@@ -15,9 +15,9 @@ namespace SeaMonster.Models.Tables
         public DateTime ExpDate { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime ToPostDate { get; set; }
+        public bool IsStatic { get; set; }
         public bool IsPublished { get; set; }
-        public List<Comment> Comments { get; set; }
-        public List<Image> Images { get; set; }
 
+        public List<Image> Images { get; set; }
     }
 }

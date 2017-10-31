@@ -1,6 +1,12 @@
 use SeaMonster
 go
 
+if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='MosterDBRest')
+ drop procedure MosterDBRest
+ GO
+
+Create Procedure MosterDBRest AS
+begin
 delete from Images
 delete from PostText
 delete from CategoryPost
@@ -20,7 +26,7 @@ Insert into Post (PostID, PostTitle, ispublished, DateCreated) Values (1,'Hello 
 				(3,'Leviathan Wakes!',1,'2017-03-01'), (4,'The Monster of Monterey',1,'2017-04-26'),(5,'A History of Hoaxes',0,'2017-05-03')
 Set  Identity_Insert Post off
 DBCC CHECKIDENT (Post,reseed, 5)
-GO
+
 
 Insert into PostText (PostId, PostText) values (1,'Me bucko cog ho hang the jib black spot weigh anchor swing the lead spirits to go on account. Aft draft reef sails quarter spirits Sink me keelhaul jolly boat cutlass bilge. Jolly Roger measured fer yer chains six pounders salmagundi hulk weigh anchor lanyard pinnace crimp dead men tell no tales.
 Piracy ahoy chandler yard overhaul lugger clap of thunder mutiny Plate Fleet parley. Deadlights loot boom shrouds matey spirits hearties Admiral of the Black black spot wench. Spanker bilged on her anchor topmast Chain Shot Barbary Coast American Main driver chase red ensign reef sails.
@@ -48,7 +54,7 @@ Crow''s nest topsail scuttle Letter of Marque fluke warp poop deck yardarm take 
 Jack Tar killick grapple gangway Shiver me timbers execution dock heave to yardarm scourge of the seven seas 
 hornswaggle. Fire in the hole heave down mizzen sloop black spot lee hang the jib gabion hulk code of conduct. '),
 (5,'Help! I am being held on a boat and forced to write this blog.')
-GO
+
 
 Insert into  Categories (CategoryTag) Values ('Excited'),('Scared'),('hungry'),('SwimForYourLife!'),('History'),('MonsteroftheMonth'),('dreamjob'),('HELP')
 
@@ -65,5 +71,8 @@ insert into Comment (PostId, CommenterName, CommentText, CommentDate, IsShown) V
 
 Insert into Reply(CommentID, ReplyName, ReplyText, ReplyDate, IsShown) Values (1,'Boaty','I''ve seen better', '2017-01-25',1),
 (2,'Rumjack','Aye avast with yer talk o sea-serpents! Bring out the rum!','2017-02-15',1)
+end
+GO
 
-select * from Categories
+exec MosterDBRest
+select * from Post

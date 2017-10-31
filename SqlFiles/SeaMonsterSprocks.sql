@@ -45,15 +45,30 @@ GO
  drop procedure ReuseCategory
  GO
 
+   if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='GetPostByID')
+ drop procedure GetPostByID
+ GO
+
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='GetReplyByComment')
+ drop procedure GetReplyByComment
+ GO
+
  Create Procedure GetPublishedPosts AS
  Begin
- Select p.PostTitle, p.DateCreated, p.ToPostDate, pt.PostText, I.ImageName from Post p
+ Select p.PostTitle, p.DateCreated, p.ToPostDate, pt.PostText from Post p
  left join PostText pt on pt.PostId=p.PostID
- left join Images I on I.PostId=p.PostID
  where p.ispublished=1
  order by p.DateCreated
  End  
 GO
+
+Create Procedure GetPostByID (@PostID int) AS
+ Begin
+ Select p.PostTitle, p.DateCreated, p.ToPostDate, pt.PostText from Post p
+ left join PostText pt on pt.PostId=p.PostID
+ order by p.DateCreated
+ End
+ GO
 
 Create procedure GetImagesForPost(@PostID int) As
 begin
@@ -69,6 +84,12 @@ where c.PostId=@PostID
 END
 GO
 
+create procedure GetReplyByComment (@CommentId int) As
+begin
+select * from Reply r
+where r.CommentID=@CommentId
+end
+go
 ---------------Admin---------------------
 Create Procedure ApprovePost (@PostID int) AS
 begin
@@ -112,9 +133,11 @@ Go
 
 Create Procedure AddNewCategory (@CategoryTag nvarchar(50), @CategoryID int output, @PostID int)As
 begin
+begin transaction
 Insert into Categories (CategoryTag) Values (@CategoryTag)
 set @CategoryID=SCOPE_IDENTITY();
-insert into CategoryPost values(@PostID, @CategoryID)
+insert into CategoryPost values(@CategoryID, @PostId)
+commit 
 end  
 GO
 
@@ -123,3 +146,8 @@ Begin
 Insert into CategoryPost (CategoryID, PostID) Values (@CategoryID, @PostId)
 End
 Go
+select * from CategoryPost
+
+select * from post
+select* from PostText
+select* from Categories
