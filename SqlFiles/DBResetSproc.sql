@@ -1,6 +1,10 @@
 use SeaMonster
 go
 
+if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='MosterDBRest')
+ drop procedure MosterDBRest
+ GO
+
 Create Procedure MosterDBRest AS
 begin
 delete from Images
@@ -21,7 +25,7 @@ Set Identity_Insert Post On
 Insert into Post (PostID, PostTitle, ispublished, DateCreated) Values (1,'Hello Fellow Monster Hunters',1, '2017-01-15'),(2, 'Cracking the Kraken',1,'2017-02-12'),
 				(3,'Leviathan Wakes!',1,'2017-03-01'), (4,'The Monster of Monterey',1,'2017-04-26'),(5,'A History of Hoaxes',0,'2017-05-03')
 Set  Identity_Insert Post off
-DBCC CHECKIDENT (Post,reseed, 6)
+DBCC CHECKIDENT (Post,reseed, 5)
 
 
 Insert into PostText (PostId, PostText) values (1,'Me bucko cog ho hang the jib black spot weigh anchor swing the lead spirits to go on account. Aft draft reef sails quarter spirits Sink me keelhaul jolly boat cutlass bilge. Jolly Roger measured fer yer chains six pounders salmagundi hulk weigh anchor lanyard pinnace crimp dead men tell no tales.
@@ -69,3 +73,6 @@ Insert into Reply(CommentID, ReplyName, ReplyText, ReplyDate, IsShown) Values (1
 (2,'Rumjack','Aye avast with yer talk o sea-serpents! Bring out the rum!','2017-02-15',1)
 end
 GO
+
+exec MosterDBRest
+select * from Post

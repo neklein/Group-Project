@@ -29,7 +29,7 @@ namespace CLWintegrationtest
       public void CanLoadCategories()
         {
             PostRepo repo = new PostRepo();
-            List<Category> Cats = repo.GetCategories();
+            List<HashTag> Cats = repo.GetCategories();
             Assert.IsNotNull(Cats);
             Assert.AreEqual(8, Cats.Count());
         }
@@ -41,7 +41,7 @@ namespace CLWintegrationtest
         {
             PostRepo repo = new PostRepo();
             repo.AddCategoryTags(test, postID);
-            List<Category> Cats = repo.GetCategories();
+            List<HashTag> Cats = repo.GetCategories();
             Assert.AreEqual(expected, Cats.Count());
         }
 
@@ -51,18 +51,32 @@ namespace CLWintegrationtest
         {
             PostRepo repo = new PostRepo();
             repo.AddCategoryTags(test, postID);
-            List<Category> Cats = repo.GetCategories();
+            List<HashTag> Cats = repo.GetCategories();
             Assert.AreEqual(expected, Cats.Count());
+        }
+        [Test]
+
+        public void CanCreatePost()
+        {
+            PostRepo repo = new PostRepo();
+            repo.CreatePost("testTitle", "This is text for a test of the ability to add text to a new post");
+            List<Post> posts = repo.GetAllPosts();
+            Assert.AreEqual(6, posts.Count());
         }
 
         [Test]
         public void GetPosts()
         {
             PostRepo repo = new PostRepo();
-
             List<Post> posts = repo.GetAllPosts().ToList();
 
             Assert.AreEqual(5, posts.Count());
+        }
+
+        public void CanCreatePostWithExpDate()
+        {
+            PostRepo repo = new PostRepo();
+
         }
 
         [Test]

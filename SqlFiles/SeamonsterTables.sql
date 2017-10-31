@@ -51,7 +51,7 @@ Create Table Post
 	 PostID int identity (1,1) primary key,
 	 PostTitle nvarchar(50) not null,
 	 DateCreated datetime2 default(getdate()),
-	 Expdate datetime2,
+	 Expdate datetime2 default null,
 	 ToPostDate datetime2 default(getdate()),
 	 ispublished bit not null default 0,
 	 addedby nvarchar(40) default Current_User,
