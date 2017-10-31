@@ -26,7 +26,7 @@ namespace SeaMonster.Data_CLW
         void CreateReply(int commentId, string replyName, string replyText);
         void DeleteComment(int CommmentID);
         void DeleteReply(int ReplyID);
-        void AddCategoryTags(string catagoryinput, int PostID);
-        List<HashTag> GetCategories();
+        void AddHashtags(string catagoryinput, int PostID);
+        List<HashTag> GetHashtags();
     }
 }

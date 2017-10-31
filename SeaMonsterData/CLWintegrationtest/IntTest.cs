@@ -29,7 +29,7 @@ namespace CLWintegrationtest
       public void CanLoadCategories()
         {
             PostRepo repo = new PostRepo();
-            List<HashTag> Cats = repo.GetCategories();
+            List<HashTag> Cats = repo.GetHashtags();
             Assert.IsNotNull(Cats);
             Assert.AreEqual(8, Cats.Count());
         }
@@ -40,8 +40,8 @@ namespace CLWintegrationtest
         public void CanResuseCategory(string test, int postID, int expected)
         {
             PostRepo repo = new PostRepo();
-            repo.AddCategoryTags(test, postID);
-            List<HashTag> Cats = repo.GetCategories();
+            repo.AddHashtags(test, postID);
+            List<HashTag> Cats = repo.GetHashtags();
             Assert.AreEqual(expected, Cats.Count());
         }
 
@@ -50,8 +50,8 @@ namespace CLWintegrationtest
         public void CanAddNewCat(string test, int postID, int expected)
         {
             PostRepo repo = new PostRepo();
-            repo.AddCategoryTags(test, postID);
-            List<HashTag> Cats = repo.GetCategories();
+            repo.AddHashtags(test, postID);
+            List<HashTag> Cats = repo.GetHashtags();
             Assert.AreEqual(expected, Cats.Count());
         }
         [Test]

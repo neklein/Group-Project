@@ -8,8 +8,8 @@ namespace SeaMonster.Models.Tables
 {
     public class HashTag
     {
-        public int CategoryID { get; set; }
-        public string CategoryTag { get; set; }
+        public int HashtagID { get; set; }
+        public string Hashtag { get; set; }
         public DateTime DateAdded { get; set; }
     }
 }
