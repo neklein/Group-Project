@@ -94,12 +94,39 @@ namespace SeaMonster.Data_CLW
 
         public void CreatePostDelayed(string PostTitle, string posttext, DateTime postdate)
         {
-            throw new NotImplementedException();
+            using (SqlConnection cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("CreatePost", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                SqlParameter Param = new SqlParameter("@PostID", SqlDbType.Int);
+                Param.Direction = ParameterDirection.Output;
+                cmd.Parameters.Add(Param);
+                cmd.Parameters.AddWithValue("@PostTitle", PostTitle);
+                cmd.Parameters.AddWithValue("@PostText", posttext);
+                cmd.Parameters.AddWithValue("@ToPostDate", postdate);
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
         }
 
         public void CreatePostDelayed(string PostTitle, string posttext, DateTime postdate, DateTime expdate)
         {
-            throw new NotImplementedException();
+            using (SqlConnection cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("CreatePost", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                SqlParameter Param = new SqlParameter("@PostID", SqlDbType.Int);
+                Param.Direction = ParameterDirection.Output;
+                cmd.Parameters.Add(Param);
+                cmd.Parameters.AddWithValue("@PostTitle", PostTitle);
+                cmd.Parameters.AddWithValue("@PostText", posttext);
+                cmd.Parameters.AddWithValue("@ToPostDate", postdate);
+                cmd.Parameters.AddWithValue("@ExpDate", expdate);
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
         }
 
         public void CreateReply(int commentId, string replyName, string replyText)
@@ -162,7 +189,7 @@ namespace SeaMonster.Data_CLW
 
         public List<Comment> GetAllComments(int PostID)
         {
-            List<Post> posts = new List<Post>();
+            List<Comment> comments = new List<Comment>();
 
             string cs = "Server=localhost;Database=SeaMonster;User Id=SeamonsterSA; Password=ocean;";
 
@@ -178,18 +205,19 @@ namespace SeaMonster.Data_CLW
                 {
                     while (dr.Read())
                     {
-                        Post post = new Post();
+                        Comment comment = new Comment();
 
-                        post.PostId = (int)dr["PostID"];
-                        post.PostTitle = dr["PostTitle"].ToString();
-                        post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
-                        post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
+                        comment.PostId = (int)dr["PostID"];
+                        comment.CommentId = (int)dr["CommentID"];
+                        comment.CommenterName = dr["CommenterName"].ToString();
+                        comment.CommentDate = DateTime.Parse(dr["CommentDate"].ToString());
+                        comment.CommentText = dr["CommentText"].ToString();
 
-                        posts.Add(post);
+                        comments.Add(comment);
                     }
                 }
             }
-            return posts;
+            return comments;
 
         }
 
@@ -354,6 +382,7 @@ namespace SeaMonster.Data_CLW
                         reply.ReplyName = dr["ReplyName"].ToString();
                         reply.ReplyDate = DateTime.Parse(dr["ReplyDate"].ToString());
                         reply.ReplyText = dr["ReplyText"].ToString();
+                        reply.IsShown = (bool)dr["IsShown"];
 
                         replies.Add(reply);
                     }
