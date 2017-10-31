@@ -16,7 +16,7 @@ namespace SeaMonster.Models.Tables
         public DateTime DateCreated { get; set; }
         public DateTime ToPostDate { get; set; }
         public bool IsPublished { get; set; }
-
+        public List<Comment> Comments { get; set; }
         public List<Image> Images { get; set; }
 
     }

@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.8
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaMonster.Data-CLW", "SeaMonster.Data-CLW\SeaMonster.Data-CLW.csproj", "{7F7EEFC9-EDA8-49B2-B2E5-D7546556C3FD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaMonster.Models", "SeaMonster.Models\SeaMonster.Models.csproj", "{1CCBD3B1-5362-472B-8F35-BAD769736DB4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CLWintegrationtest", "CLWintegrationtest\CLWintegrationtest.csproj", "{76CFE7F8-9703-4F52-AD03-6D1E7AE62131}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{1CCBD3B1-5362-472B-8F35-BAD769736DB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CCBD3B1-5362-472B-8F35-BAD769736DB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CCBD3B1-5362-472B-8F35-BAD769736DB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76CFE7F8-9703-4F52-AD03-6D1E7AE62131}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76CFE7F8-9703-4F52-AD03-6D1E7AE62131}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76CFE7F8-9703-4F52-AD03-6D1E7AE62131}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76CFE7F8-9703-4F52-AD03-6D1E7AE62131}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
