@@ -22,8 +22,8 @@ namespace SeaMonster.Data_CLW
         void CreatePostDelayed(string PostTitle, string posttext, DateTime postdate, DateTime expdate);
         void ApproveComment(int CommentID);
         void ApproveReply(int ReplyID);
-        Comment Createcomment(int postId, string commenterName, string commentText);
-        void CreateReply();
+        void CreateComment(int postId, string commenterName, string commentText);
+        void CreateReply(int commentId, string replyName, string replyText);
         void DeleteComment(int CommmentID);
         void DeleteReply(int ReplyID);
         void AddCategoryTags(string catagoryinput, int PostID);
