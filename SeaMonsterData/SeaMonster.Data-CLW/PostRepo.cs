@@ -207,16 +207,16 @@ namespace SeaMonster.Data_CLW
             List<string> CatTags = new List<string>();
             foreach(Category cat in CurrentCategories)
             {
-                CatTags.Add(cat.CategoryTag);
+                CatTags.Add(cat.CategoryTag.ToLower());
             }
             char[] delimiters = new char[] { ',', '#', ' ' };
             List<string> Categories = categoryinput.Split(delimiters).ToList();
             List<string> categorysort = new List<string>();
             foreach(string s in Categories)
             {
-                if (s.Length > 3)
+                if (s.Length >2 && !string.IsNullOrWhiteSpace(s))
                 {
-                    categorysort.Add(s);
+                    categorysort.Add(s.ToLower());
                 }
             }
             using (SqlConnection cn = new SqlConnection("Server=localhost;Database=SeaMonster;User Id=SeamonsterSA; Password=ocean;"))
@@ -225,7 +225,7 @@ namespace SeaMonster.Data_CLW
                 {
                     if (CatTags.Contains(c))
                     {
-                        Category current = CurrentCategories.Where(m => m.CategoryTag == c).FirstOrDefault();
+                        Category current=  CurrentCategories.Where(m => m.CategoryTag.ToLower() == c).FirstOrDefault();
                         SqlCommand cmd = new SqlCommand("ReuseCategory", cn);
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@CategoryID", current.CategoryID);
@@ -239,6 +239,9 @@ namespace SeaMonster.Data_CLW
                     {
                         SqlCommand cmd2 = new SqlCommand("AddNewCategory", cn);
                         cmd2.CommandType = CommandType.StoredProcedure;
+                        SqlParameter Param = new SqlParameter("@CategoryID", SqlDbType.Int);
+                        Param.Direction = ParameterDirection.Output;
+                        cmd2.Parameters.Add(Param);
                         cmd2.Parameters.AddWithValue("CategoryTag", c);
                         cmd2.Parameters.AddWithValue("PostID", PostID);
                         cn.Open();
@@ -256,6 +259,7 @@ namespace SeaMonster.Data_CLW
             {
                 SqlCommand cmd = new SqlCommand("select * from Categories", cn);
                 cmd.CommandType = CommandType.Text;
+                cn.Open();
                 using(SqlDataReader dr = cmd.ExecuteReader())
                 {
                     while (dr.Read())
@@ -265,6 +269,7 @@ namespace SeaMonster.Data_CLW
                         c.CategoryTag = dr["CategoryTag"].ToString();
                         string date = dr["DateAdded"].ToString();
                         c.DateAdded = DateTime.Parse(date);
+                        CurrentCategories.Add(c);
                     }
                 }
             }

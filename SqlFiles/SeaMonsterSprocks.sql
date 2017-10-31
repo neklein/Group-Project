@@ -89,7 +89,7 @@ begin
 select * from Reply r
 where r.CommentID=@CommentId
 end
-
+go
 ---------------Admin---------------------
 Create Procedure ApprovePost (@PostID int) AS
 begin
@@ -133,9 +133,11 @@ Go
 
 Create Procedure AddNewCategory (@CategoryTag nvarchar(50), @CategoryID int output, @PostID int)As
 begin
+begin transaction
 Insert into Categories (CategoryTag) Values (@CategoryTag)
 set @CategoryID=SCOPE_IDENTITY();
-insert into CategoryPost values(@PostID, @CategoryID)
+insert into CategoryPost values(@CategoryID, @PostId)
+commit 
 end  
 GO
 
@@ -144,3 +146,8 @@ Begin
 Insert into CategoryPost (CategoryID, PostID) Values (@CategoryID, @PostId)
 End
 Go
+select * from CategoryPost
+
+select * from post
+select* from PostText
+select* from Categories
