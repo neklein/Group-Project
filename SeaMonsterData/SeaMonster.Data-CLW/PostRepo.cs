@@ -227,14 +227,14 @@ namespace SeaMonster.Data_CLW
 
 
         }
-        public void AddCategoryTags(string categoryinput, int PostID)
+        public void AddHashtags(string categoryinput, int PostID)
         {
             PostRepo repo = new PostRepo();
-            List<HashTag> CurrentCategories = repo.GetCategories();
+            List<HashTag> CurrentCategories = repo.GetHashtags();
             List<string> CatTags = new List<string>();
             foreach(HashTag cat in CurrentCategories)
             {
-                CatTags.Add(cat.CategoryTag.ToLower());
+                CatTags.Add(cat.Hashtag.ToLower());
             }
             char[] delimiters = new char[] { ',', '#', ' ' };
             List<string> Categories = categoryinput.Split(delimiters).ToList();
@@ -252,10 +252,10 @@ namespace SeaMonster.Data_CLW
                 {
                     if (CatTags.Contains(c))
                     {
-                        HashTag current=  CurrentCategories.Where(m => m.CategoryTag.ToLower() == c).FirstOrDefault();
+                        HashTag current=  CurrentCategories.Where(m => m.Hashtag.ToLower() == c).FirstOrDefault();
                         SqlCommand cmd = new SqlCommand("ReuseCategory", cn);
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@CategoryID", current.CategoryID);
+                        cmd.Parameters.AddWithValue("@HashtagID", current.HashtagID);
                         cmd.Parameters.AddWithValue("@PostID", PostID);
                         cn.Open();
                         cmd.ExecuteNonQuery();
@@ -264,13 +264,13 @@ namespace SeaMonster.Data_CLW
                     }
                     else
                     {
-                        SqlCommand cmd2 = new SqlCommand("AddNewCategory", cn);
+                        SqlCommand cmd2 = new SqlCommand("AddNewHashtag", cn);
                         cmd2.CommandType = CommandType.StoredProcedure;
-                        SqlParameter Param = new SqlParameter("@CategoryID", SqlDbType.Int);
+                        SqlParameter Param = new SqlParameter("@HashtagID", SqlDbType.Int);
                         Param.Direction = ParameterDirection.Output;
                         cmd2.Parameters.Add(Param);
-                        cmd2.Parameters.AddWithValue("CategoryTag", c);
-                        cmd2.Parameters.AddWithValue("PostID", PostID);
+                        cmd2.Parameters.AddWithValue("@Hashtag", c);
+                        cmd2.Parameters.AddWithValue("@PostID", PostID);
                         cn.Open();
                         cmd2.ExecuteNonQuery();
                         cn.Close();
@@ -279,7 +279,7 @@ namespace SeaMonster.Data_CLW
             }
         }
 
-        public List<HashTag> GetCategories()
+        public List<HashTag> GetHashtags()
         {
             List<HashTag> CurrentCategories = new List<HashTag>();
             using (SqlConnection cn = new SqlConnection("Server=localhost;Database=SeaMonster;User Id=SeamonsterSA; Password=ocean;"))
@@ -292,8 +292,8 @@ namespace SeaMonster.Data_CLW
                     while (dr.Read())
                     {
                         HashTag c = new HashTag();
-                        c.CategoryID = (int)dr["CategoryID"];
-                        c.CategoryTag = dr["CategoryTag"].ToString();
+                        c.HashtagID = (int)dr["HashtagID"];
+                        c.Hashtag = dr["Hashtag"].ToString();
                         string date = dr["DateAdded"].ToString();
                         c.DateAdded = DateTime.Parse(date);
                         CurrentCategories.Add(c);

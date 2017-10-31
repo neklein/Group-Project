@@ -37,12 +37,12 @@ GO
  drop procedure AddImage
  GO
 
-  if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='AddNewCategory')
- drop procedure AddNewCategory
+  if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='AddNewHashtag')
+ drop procedure AddNewHashtag
  GO
 
-  if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='ReuseCategory')
- drop procedure ReuseCategory
+  if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='ReuseHashtag')
+ drop procedure ReuseHashtag
  GO
 
    if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='GetPostByID')
@@ -131,23 +131,22 @@ Go
 
 
 
-Create Procedure AddNewCategory (@CategoryTag nvarchar(50), @CategoryID int output, @PostID int)As
+Create Procedure AddNewHashtag (@Hashtag nvarchar(50), @HashtagID int output, @PostID int)As
 begin
 begin transaction
-Insert into Categories (CategoryTag) Values (@CategoryTag)
-set @CategoryID=SCOPE_IDENTITY();
-insert into CategoryPost values(@CategoryID, @PostId)
+Insert into Hashtags (Hashtag) Values (@Hashtag)
+set @HashtagID=SCOPE_IDENTITY();
+insert into HashtagPost values(@HashtagID, @PostId)
 commit 
 end  
 GO
 
-Create Procedure ReuseCategory (@CategoryID int, @PostId int) AS
+Create Procedure ReuseHashtag (@HashtagID int, @PostId int) AS
 Begin
-Insert into CategoryPost (CategoryID, PostID) Values (@CategoryID, @PostId)
+Insert into HashtagPost (HashtagID, PostID) Values (@HashtagID, @PostId)
 End
 Go
-select * from CategoryPost
+
 
 select * from post
 select* from PostText
-select* from Categories

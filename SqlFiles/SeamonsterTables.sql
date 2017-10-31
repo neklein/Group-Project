@@ -1,6 +1,7 @@
 Use SeaMonster
 Go
 
+
 if exists (select * from sys.tables where name='Reply')
 Drop table Reply
 GO
@@ -11,8 +12,8 @@ Drop table Comment
 GO
 
 --if exists (select* from sys.tables where name='')
-if exists (select * from sys.tables where name='CategoryPost')
-Drop table CategoryPost
+if exists (select * from sys.tables where name='HashtagPost')
+Drop table HashtagPost
 GO
 
 if exists (select * from sys.tables where name='PostText')
@@ -23,9 +24,18 @@ if exists (select * from sys.tables where name='Images')
 Drop table Images
 GO
 
+if exists (select * from sys.tables where name='Hashtags')
+Drop table Hashtags
+GO
+
 if exists (select * from sys.tables where name='Categories')
 Drop table Categories
 GO
+
+if exists (select * from sys.tables where name='CategoryPost')
+Drop table CategoryPost
+GO
+
 
 if exists (select * from sys.tables where name='Post')
 Drop table Post
@@ -38,10 +48,10 @@ GO
 
 
 
-Create Table Categories 
+Create Table Hashtags 
 	(
-		CategoryID int identity(1,1) not null primary key,
-		CategoryTag nvarchar(50),
+		HashtagID int identity(1,1) not null primary key,
+		Hashtag nvarchar(50),
 		DateAdded datetime2 default(getdate())
 	)
 GO
@@ -56,6 +66,24 @@ Create Table Post
 	 ispublished bit not null default 0,
 	 addedby nvarchar(40) default Current_User,
 	 isStatic bit default 0 not null,
+	 isforReview bit default 0 not null,
+	 DisplayAuthor nvarchar(40) default Current_User,
+	 DisplayDate datetime2 not null default(getdate())
+	)
+GO
+
+Create Table Categories 
+	(
+	 CategoryID int identity(1,1) primary Key not null,
+	 CategoryName nvarchar(50) not null,
+	 DateAdded datetime2  not null default(getdate())
+	)	
+GO
+
+create Table CategoryPost 
+	(
+	 CategoryID int foreign key references Categories(CategoryID) not null,
+	 PostID int foreign key references Post(PostID)
 	)
 
 Create Table Images 
@@ -66,9 +94,9 @@ Create Table Images
 	)
 GO
 
-Create Table CategoryPost
+Create Table HashtagPost
 	(
-	  CategoryID int foreign key references Categories(CategoryID),
+	  HashtagID int foreign key references Hashtags(HashtagID),
 	  PostID int foreign key references Post(PostID)
 	)
 GO

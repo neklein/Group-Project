@@ -9,17 +9,20 @@ Create Procedure MosterDBRest AS
 begin
 delete from Images
 delete from PostText
+delete from HashtagPost
 delete from CategoryPost
-delete from Categories
+delete from Hashtags
 delete from Reply
 delete from Comment
 delete from post 
+delete from Categories
 DBCC CHECKIDENT (Comment,reseed, 0)
 DBCC CHECKIDENT (Reply,reseed, 0)
 DBCC CHECKIDENT (Post,reseed, 0)
 DBCC CHECKIDENT (Images,reseed, 0)
-DBCC CHECKIDENT (Categories,reseed, 0)
+DBCC CHECKIDENT (Hashtags,reseed, 0)
 DBCC CHECKIDENT (PostText,reseed, 0)
+DBCC CHECKIDENT (Categories,reseed, 0)
 
 Set Identity_Insert Post On
 Insert into Post (PostID, PostTitle, ispublished, DateCreated) Values (1,'Hello Fellow Monster Hunters',1, '2017-01-15'),(2, 'Cracking the Kraken',1,'2017-02-12'),
@@ -56,10 +59,10 @@ hornswaggle. Fire in the hole heave down mizzen sloop black spot lee hang the ji
 (5,'Help! I am being held on a boat and forced to write this blog.')
 
 
-Insert into  Categories (CategoryTag) Values ('Excited'),('Scared'),('hungry'),('SwimForYourLife!'),('History'),('MonsteroftheMonth'),('dreamjob'),('HELP')
+Insert into  HashTags (Hashtag) Values ('Excited'),('Scared'),('hungry'),('SwimForYourLife!'),('History'),('MonsteroftheMonth'),('dreamjob'),('HELP')
 
 
-insert into CategoryPost (CategoryID, PostID) Values (1,1),(2,1),(4,2),(6,2),(7,3),(5,4),(6,4),(8,5)
+insert into HashtagPost (HashtagID, PostID) Values (1,1),(2,1),(4,2),(6,2),(7,3),(5,4),(6,4),(8,5)
 
 Insert into Images (ImageName, PostId) Values ('SeriousSelfie.jpg',1),('MyBoat.jpg',1),('KrakenMap.png',2),('KrakenDrawing.png',2),('GiantSquid.Jpg',2),
 ('Leviathan.jpg',3),('MontereyMap.Jpg',4),('Monty.png',4),('sitingmap.png',4)
@@ -71,8 +74,16 @@ insert into Comment (PostId, CommenterName, CommentText, CommentDate, IsShown) V
 
 Insert into Reply(CommentID, ReplyName, ReplyText, ReplyDate, IsShown) Values (1,'Boaty','I''ve seen better', '2017-01-25',1),
 (2,'Rumjack','Aye avast with yer talk o sea-serpents! Bring out the rum!','2017-02-15',1)
+
+insert into Categories (CategoryName) Values ('Sightings'),('Submarines'),('Treasure')
+
+insert into CategoryPost(CategoryID, PostID) Values (2,1),(1,2),(2,2),(3,3),(1,4),(2,4),(1,5)
+
 end
 GO
 
 exec MosterDBRest
-select * from Post
+select * from Hashtags
+select * from HashtagPost
+select * from Categories
+select * from categorypost
