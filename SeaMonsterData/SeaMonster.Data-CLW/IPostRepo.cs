@@ -9,8 +9,8 @@ namespace SeaMonster.Data_CLW
 {
     public interface IPostRepo
     {
-        List<Post> GetAllPost();
-        List<Post> GetPublishefPost();
+        List<Post> GetAllPosts();
+        List<Post> GetPublishedPost();
         List<Comment> GetAllComments(int PostID);
         List<Comment> GetPublishedComments(int PostID);
         List<Reply> GetReplies(int CommentID);
@@ -22,8 +22,8 @@ namespace SeaMonster.Data_CLW
         void CreatePostDelayed(string PostTitle, string posttext, DateTime postdate, DateTime expdate);
         void ApproveComment(int CommentID);
         void ApproveReply(int ReplyID);
-        void Createcomment();
-        void CreateReply();
+        void CreateComment(int postId, string commenterName, string commentText);
+        void CreateReply(int commentId, string replyName, string replyText);
         void DeleteComment(int CommmentID);
         void DeleteReply(int ReplyID);
         void AddHashtags(string catagoryinput, int PostID);

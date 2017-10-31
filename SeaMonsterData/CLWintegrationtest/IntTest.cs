@@ -60,11 +60,18 @@ namespace CLWintegrationtest
         {
             PostRepo repo = new PostRepo();
             repo.CreatePost("testTitle", "This is text for a test of the ability to add text to a new post");
-            List<Post> posts = repo.GetAllPost();
+            List<Post> posts = repo.GetAllPosts();
             Assert.AreEqual(6, posts.Count());
         }
 
         [Test]
+        public void GetPosts()
+        {
+            PostRepo repo = new PostRepo();
+            List<Post> posts = repo.GetAllPosts().ToList();
+
+            Assert.AreEqual(5, posts.Count());
+        }
 
         public void CanCreatePostWithExpDate()
         {
@@ -72,6 +79,15 @@ namespace CLWintegrationtest
 
         }
 
+        [Test]
+        public void GetImages()
+        {
+            PostRepo repo = new PostRepo();
 
+            List<Image> images = repo.GetImagesByPost(1);
+
+            Assert.AreEqual(2, images.Count());
+            Assert.AreEqual("SeriousSelfie.jpg", images[0].ImageName);
+        }
     }
 }

@@ -1,0 +1,50 @@
+﻿@model SeaMonsterBlog.UI.Models.CreateEditVM
+
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-inline" }))
+{
+    @Html.AntiForgeryToken()
+    <div style="padding-left:15px">
+        <label>Title</label>
+        <div class="row" style="padding-bottom:10px">
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Post.PostTitle, new { @class = "form-control" })
+            </div>
+            <div class="col-md-2">
+                <select name = "IsStatic" class="form-control" style="width:auto">
+                    <option selected disabled>Select Type</option>
+                    <option value="false">Blog Post</option>
+                    <option value="true">Static Page</option>
+                </select>
+            </div>
+        </div>      
+        <!-- This will contain your HtmlContent and use the TinyMCE editor-->
+        @Html.TextAreaFor(model => model.Post.PostText)
+        <p>and some other stuff</p>
+        <input type="submit" value="Create" />
+    </div>
+}
+
+@section scripts {
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            height: 500,
+            theme: 'modern',
+            plugins: 'print preview fullpage paste searchreplace autolink directionality code visualblocks importcss visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount spellchecker imagetools media  link contextmenu colorpicker textpattern help',
+            toolbar1: 'formatselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat',
+            image_advtab: true,
+            templates: [
+                { title: 'Test template 1', content: 'Test 1' },
+                { title: 'Test template 2', content: 'Test 2' }
+            ],
+            content_css: [
+                '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+                '//www.tinymce.com/css/codepen.min.css'
+            ]
+        });
+    </script>    
+}
