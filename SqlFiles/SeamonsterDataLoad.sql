@@ -12,7 +12,6 @@ DBCC CHECKIDENT (Categories,reseed, 0)
 DBCC CHECKIDENT (PostText,reseed, 0)
 
 
-
 Insert into Post (PostTitle, ispublished, DateCreated) Values ('Hello Fellow Monster Hunters',1, '2017-01-15'),('Cracking the Kraken',1,'2017-02-12'),
 				('Leviathan Wakes!',1,'2017-03-01'), ('The Monster of Monterey',1,'2017-04-26'),('A History of Hoaxes',0,'2017-05-03')
 GO
@@ -53,5 +52,10 @@ insert into CategoryPost (CategoryID, PostID) Values (1,1),(2,1),(4,2),(6,2),(7,
 Insert into Images (ImageName, PostId) Values ('SeriousSelfie.jpg',1),('MyBoat.jpg',1),('KrakenMap.png',2),('KrakenDrawing.png',2),('GiantSquid.Jpg',2),
 ('Leviathan.jpg',3),('MontereyMap.Jpg',4),('Monty.png',4),('sitingmap.png',4)
 
-select * from Post p
-left join PostText pt on p.PostID=pt.PostId 
+
+
+insert into Comment (PostId, CommenterName, CommentText, CommentDate, IsShown) Values (1, 'anonymous','Nice Boat!','2017-01-18',1),
+(2,'SomeNameOrOther','I thought this would be about the rum','2017-02-14',1),(4,'Skeptic-Hal','Totally a hoax!','2017-04-27',0)
+
+Insert into Reply(CommentID, ReplyName, ReplyText, ReplyDate, IsShown) Values (1,'Boaty','I''ve seen better', '2017-01-25',1),
+(2,'Rumjack','Aye avast with yer talk o sea-serpents! Bring out the rum!','2017-02-15',1)

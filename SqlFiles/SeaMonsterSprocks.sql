@@ -45,15 +45,30 @@ GO
  drop procedure ReuseCategory
  GO
 
+   if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='GetPostByID')
+ drop procedure GetPostByID
+ GO
+
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='GetReplyByComment')
+ drop procedure GetReplyByComment
+ GO
+
  Create Procedure GetPublishedPosts AS
  Begin
- Select p.PostTitle, p.DateCreated, p.ToPostDate, pt.PostText, I.ImageName from Post p
+ Select p.PostTitle, p.DateCreated, p.ToPostDate, pt.PostText from Post p
  left join PostText pt on pt.PostId=p.PostID
- left join Images I on I.PostId=p.PostID
  where p.ispublished=1
  order by p.DateCreated
  End  
 GO
+
+Create Procedure GetPostByID (@PostID int) AS
+ Begin
+ Select p.PostTitle, p.DateCreated, p.ToPostDate, pt.PostText from Post p
+ left join PostText pt on pt.PostId=p.PostID
+ order by p.DateCreated
+ End
+ GO
 
 Create procedure GetImagesForPost(@PostID int) As
 begin
@@ -68,6 +83,12 @@ select c.CommenterName, c.CommentDate, c.CommentText from Comment c
 where c.PostId=@PostID
 END
 GO
+
+create procedure GetReplyByComment (@CommentId int) As
+begin
+select * from Reply r
+where r.CommentID=@CommentId
+end
 
 ---------------Admin---------------------
 Create Procedure ApprovePost (@PostID int) AS
