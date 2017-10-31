@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SeaMonsterBlog.UI.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,7 +12,15 @@ namespace SeaMonsterBlog.UI.Controllers
         // GET: Admin
         public ActionResult Create()
         {
-            return View();
+            CreateEditVM createEditVM = new CreateEditVM();
+            return View(createEditVM);
+        }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult Create(CreateEditVM createEditVM)
+        {
+            return View("Create");
         }
 
         public ActionResult Review()
