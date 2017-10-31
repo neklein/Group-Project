@@ -164,9 +164,41 @@ namespace SeaMonster.Data_CLW
             throw new NotImplementedException();
         }
 
+        //May need to edit to match procedure in Sprocks
         public List<Reply> GetReplies(int CommentID)
         {
-            throw new NotImplementedException();
+            List<Reply> replies = new List<Reply>();
+
+
+            string cs = "Server=localhost;Database=SeaMonster;User Id=SeamonsterSA; Password=ocean;";
+
+            using (var cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("GetReplybyID", cn);
+
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@CommentID", CommentID);
+
+                cn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        Reply reply = new Reply();
+                        reply.ReplyName = dr["ReplyName"].ToString();
+                        reply.ReplyDate = DateTime.Parse(dr["ReplyDate"].ToString());
+                        reply.ReplyText = dr["ReplyText"].ToString();
+
+                        replies.Add(reply);
+                    }
+                }
+
+            }
+
+
+            return replies;
+
+
         }
         public List<string> GetCategoryTags()
         {

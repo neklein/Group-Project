@@ -10,9 +10,9 @@ namespace SeaMonster.Models.Tables
     {
         public int ReplyID { get; set; }
         public int CommentID { get; set; }
-        public string CommenterName { get; set; }
-        public DateTime CommentDate { get; set; }
-        public string CommentText { get; set; }
+        public string ReplyName { get; set; }
+        public DateTime ReplyDate { get; set; }
+        public string ReplyText { get; set; }
         public bool IsShown { get; set; }
     }
 }
