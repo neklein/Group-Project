@@ -11,6 +11,7 @@ namespace SeaMonster.Data_CLW
 {
     public class PostRepo : IPostRepo
     {
+        const string cs = "Server=localhost;Database=SeaMonster;User Id=SeamonsterSA; Password=ocean;";
         public void ApproveComment(int CommentID)
         {
             throw new NotImplementedException();
@@ -33,12 +34,38 @@ namespace SeaMonster.Data_CLW
 
         public void CreatePost(string PostTitle, string posttext)
         {
-            throw new NotImplementedException();
+            using(SqlConnection cn =new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("CreatePost", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                SqlParameter Param = new SqlParameter("@PostID", SqlDbType.Int);
+                Param.Direction = ParameterDirection.Output;
+                cmd.Parameters.Add(Param);
+                cmd.Parameters.AddWithValue("@PostTitle", PostTitle);
+                cmd.Parameters.AddWithValue("@PostText", posttext);
+                cmd.Parameters.AddWithValue("@ExpDate", ' ');
+                cmd.Parameters.AddWithValue("@ToPostDate", ' ');
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
         public void CreatePost(string PostTitle, string posttext, DateTime expdate)
         {
-            throw new NotImplementedException();
+            using (SqlConnection cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("CreatePost", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                SqlParameter Param = new SqlParameter("@PostID", SqlDbType.Int);
+                Param.Direction = ParameterDirection.Output;
+                cmd.Parameters.Add(Param);
+                cmd.Parameters.AddWithValue("@PostTitle", PostTitle);
+                cmd.Parameters.AddWithValue("@PostText", posttext);
+                cmd.Parameters.AddWithValue("@ExpDate", expdate);
+                cmd.Parameters.AddWithValue("@ToPostDate", ' ');
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
         public void CreatePostDelayed(string PostTitle, string posttext, DateTime postdate)
@@ -203,9 +230,9 @@ namespace SeaMonster.Data_CLW
         public void AddCategoryTags(string categoryinput, int PostID)
         {
             PostRepo repo = new PostRepo();
-            List<Category> CurrentCategories = repo.GetCategories();
+            List<HashTag> CurrentCategories = repo.GetCategories();
             List<string> CatTags = new List<string>();
-            foreach(Category cat in CurrentCategories)
+            foreach(HashTag cat in CurrentCategories)
             {
                 CatTags.Add(cat.CategoryTag.ToLower());
             }
@@ -225,7 +252,7 @@ namespace SeaMonster.Data_CLW
                 {
                     if (CatTags.Contains(c))
                     {
-                        Category current=  CurrentCategories.Where(m => m.CategoryTag.ToLower() == c).FirstOrDefault();
+                        HashTag current=  CurrentCategories.Where(m => m.CategoryTag.ToLower() == c).FirstOrDefault();
                         SqlCommand cmd = new SqlCommand("ReuseCategory", cn);
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@CategoryID", current.CategoryID);
@@ -252,9 +279,9 @@ namespace SeaMonster.Data_CLW
             }
         }
 
-        public List<Category> GetCategories()
+        public List<HashTag> GetCategories()
         {
-            List<Category> CurrentCategories = new List<Category>();
+            List<HashTag> CurrentCategories = new List<HashTag>();
             using (SqlConnection cn = new SqlConnection("Server=localhost;Database=SeaMonster;User Id=SeamonsterSA; Password=ocean;"))
             {
                 SqlCommand cmd = new SqlCommand("select * from Categories", cn);
@@ -264,7 +291,7 @@ namespace SeaMonster.Data_CLW
                 {
                     while (dr.Read())
                     {
-                        Category c = new Category();
+                        HashTag c = new HashTag();
                         c.CategoryID = (int)dr["CategoryID"];
                         c.CategoryTag = dr["CategoryTag"].ToString();
                         string date = dr["DateAdded"].ToString();

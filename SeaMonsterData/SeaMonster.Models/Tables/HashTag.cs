@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SeaMonster.Models.Tables
 {
-    public class Category
+    public class HashTag
     {
         public int CategoryID { get; set; }
         public string CategoryTag { get; set; }

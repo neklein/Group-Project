@@ -14,5 +14,6 @@ namespace SeaMonster.Models.Tables
         public DateTime CommentDate { get; set; }
         public string CommentText { get; set; }
         public bool IsShown { get; set; }
+        public List<Reply>Replies { get; set; }
     }
 }
