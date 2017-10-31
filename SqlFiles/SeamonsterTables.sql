@@ -52,7 +52,7 @@ Create Table Post
 	 PostTitle nvarchar(50) not null,
 	 DateCreated datetime2 default(getdate()),
 	 Expdate datetime2,
-	 ToPostDate datetime2,
+	 ToPostDate datetime2 default(getdate()),
 	 ispublished bit not null default 0,
 	 addedby nvarchar(40) default Current_User
 	)
@@ -76,7 +76,6 @@ Create Table PostText
 	(
 	   PostTextId int identity(1,1) primary key,
 	   PostId int foreign key references Post(PostID),
-	   PostTitle nvarchar(50) not null,
 	   PostText nvarchar(max),
 	   textaddedby nvarchar(40) default Current_User
 	) 
