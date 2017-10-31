@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SeaMonster.Models.Tables;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -92,6 +93,9 @@ namespace SeaMonster.Data_CLW
         {
             throw new NotImplementedException();
         }
-        public List<string> GetCategoryTags();
+        public List<string> GetCategoryTags()
+        {
+
+        }
     }
 }
