@@ -168,9 +168,75 @@ namespace SeaMonster.Data_CLW
         {
             throw new NotImplementedException();
         }
-        public List<string> GetCategoryTags()
+        public void AddCategoryTags(string categoryinput, int PostID)
         {
+            PostRepo repo = new PostRepo();
+            List<Category> CurrentCategories = repo.GetCategories();
+            List<string> CatTags = new List<string>();
+            foreach(Category cat in CurrentCategories)
+            {
+                CatTags.Add(cat.CategoryTag);
+            }
+            char[] delimiters = new char[] { ',', '#', ' ' };
+            List<string> Categories = categoryinput.Split(delimiters).ToList();
+            List<string> categorysort = new List<string>();
+            foreach(string s in Categories)
+            {
+                if (s.Length > 3)
+                {
+                    categorysort.Add(s);
+                }
+            }
+            using (SqlConnection cn = new SqlConnection("Server=localhost;Database=SeaMonster;User Id=SeamonsterSA; Password=ocean;"))
+            {
+                foreach (string c in categorysort)
+                {
+                    if (CatTags.Contains(c))
+                    {
+                        Category current = CurrentCategories.Where(m => m.CategoryTag == c).FirstOrDefault();
+                        SqlCommand cmd = new SqlCommand("ReuseCategory", cn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@CategoryID", current.CategoryID);
+                        cmd.Parameters.AddWithValue("@PostID", PostID);
+                        cn.Open();
+                        cmd.ExecuteNonQuery();
+                        cn.Close();
 
+                    }
+                    else
+                    {
+                        SqlCommand cmd2 = new SqlCommand("AddNewCategory", cn);
+                        cmd2.CommandType = CommandType.StoredProcedure;
+                        cmd2.Parameters.AddWithValue("CategoryTag", c);
+                        cmd2.Parameters.AddWithValue("PostID", PostID);
+                        cn.Open();
+                        cmd2.ExecuteNonQuery();
+                        cn.Close();
+                    }
+                }
+            }
+        }
+
+        public List<Category> GetCategories()
+        {
+            List<Category> CurrentCategories = new List<Category>();
+            using (SqlConnection cn = new SqlConnection("Server=localhost;Database=SeaMonster;User Id=SeamonsterSA; Password=ocean;"))
+            {
+                SqlCommand cmd = new SqlCommand("select * from Categories", cn);
+                cmd.CommandType = CommandType.Text;
+                using(SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        Category c = new Category();
+                        c.CategoryID = (int)dr["CategoryID"];
+                        c.CategoryTag = dr["CategoryTag"].ToString();
+                        string date = dr["DateAdded"].ToString();
+                        c.DateAdded = DateTime.Parse(date);
+                    }
+                }
+            }
+            return CurrentCategories;
         }
     }
 }

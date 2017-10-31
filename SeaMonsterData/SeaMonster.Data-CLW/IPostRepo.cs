@@ -26,6 +26,7 @@ namespace SeaMonster.Data_CLW
         void CreateReply();
         void DeleteComment(int CommmentID);
         void DeleteReply(int ReplyID);
-        List<string> GetCategoryTags();
+        void AddCategoryTags(string catagoryinput, int PostID);
+        List<Category> GetCategories();
     }
 }

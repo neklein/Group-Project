@@ -37,6 +37,14 @@ GO
  drop procedure AddImage
  GO
 
+  if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='AddNewCategory')
+ drop procedure AddNewCategory
+ GO
+
+  if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='ReuseCategory')
+ drop procedure ReuseCategory
+ GO
+
  Create Procedure GetPublishedPosts AS
  Begin
  Select p.PostTitle, p.DateCreated, p.ToPostDate, pt.PostText, I.ImageName from Post p
@@ -97,5 +105,21 @@ Go
 Create Procedure AddImage(@ImageName varchar(30), @PostID int) AS
 Begin
 insert into Images (ImageName, PostId) values (@ImageName, @PostID)
+End
+Go
+
+
+
+Create Procedure AddNewCategory (@CategoryTag nvarchar(50), @CategoryID int output, @PostID int)As
+begin
+Insert into Categories (CategoryTag) Values (@CategoryTag)
+set @CategoryID=SCOPE_IDENTITY();
+insert into CategoryPost values(@PostID, @CategoryID)
+end  
+GO
+
+Create Procedure ReuseCategory (@CategoryID int, @PostId int) AS
+Begin
+Insert into CategoryPost (CategoryID, PostID) Values (@CategoryID, @PostId)
 End
 Go
