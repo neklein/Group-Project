@@ -28,5 +28,9 @@ namespace SeaMonster.Data_CLW
         void DeleteReply(int ReplyID);
         void AddHashtags(string catagoryinput, int PostID);
         List<HashTag> GetHashtags();
+        List<Post> GetPostsByCategory(int CategoryID);
+        List<Post> GetPostByHashtag(int HashtagID);
+        List<Post> GetAllStaticPublished();
+        List<Post> GetAllStatic();
     }
 }

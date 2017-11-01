@@ -421,7 +421,7 @@ namespace SeaMonster.Data_CLW
                     if (CatTags.Contains(c))
                     {
                         HashTag current=  CurrentCategories.Where(m => m.Hashtag.ToLower() == c).FirstOrDefault();
-                        SqlCommand cmd = new SqlCommand("ReuseCategory", cn);
+                        SqlCommand cmd = new SqlCommand("ReuseHashtag", cn);
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@HashtagID", current.HashtagID);
                         cmd.Parameters.AddWithValue("@PostID", PostID);
@@ -452,7 +452,7 @@ namespace SeaMonster.Data_CLW
             List<HashTag> CurrentCategories = new List<HashTag>();
             using (SqlConnection cn = new SqlConnection("Server=localhost;Database=SeaMonster;User Id=SeamonsterSA; Password=ocean;"))
             {
-                SqlCommand cmd = new SqlCommand("select * from Categories", cn);
+                SqlCommand cmd = new SqlCommand("select * from Hashtags", cn);
                 cmd.CommandType = CommandType.Text;
                 cn.Open();
                 using(SqlDataReader dr = cmd.ExecuteReader())

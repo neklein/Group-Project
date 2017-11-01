@@ -19,6 +19,7 @@ namespace SeaMonster.Models.Tables
         public bool IsForReview { get; set; }
         public List<Comment> Comments { get; set; }
         public List<Image> Images { get; set; }
+        public bool IsStatic { get; set; }
 
     }
 }
