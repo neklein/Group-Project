@@ -110,11 +110,39 @@ namespace CLWintegrationtest
             Assert.AreEqual(5, posts.Count());
         }
 
-        public void CanCreatePostWithExpDate() //finish
+
+      
+
+        [Test]
+        public void GetPublishedPosts()
         {
             PostRepo repo = new PostRepo();
+            List<Post> posts = repo.GetPublishedPost();
 
+            Assert.AreEqual(4, posts.Count());
+            Assert.AreEqual("Hello Fellow Monster Hunters", posts[0].PostTitle);
         }
+
+        [Test]
+        public void CanGetStaticPosts()
+        {
+            PostRepo repo = new PostRepo();
+            List<Post> posts = repo.GetAllStatic();
+
+            Assert.AreEqual(0, posts.Count());
+        }
+
+        [Test]
+        public void CanGetStaticPublishedPosts()
+        {
+            PostRepo repo = new PostRepo();
+            List<Post> posts = repo.GetAllStaticPublished();
+
+            Assert.AreEqual(0, posts.Count());
+        }
+
+
+        
 
         [Test]
         public void GetImages()
@@ -126,5 +154,54 @@ namespace CLWintegrationtest
             Assert.AreEqual(2, images.Count());
             Assert.AreEqual("SeriousSelfie.jpg", images[0].ImageName);
         }
+
+        [Test]
+        public void CanGetCommentsByPost()
+        {
+            PostRepo repo = new PostRepo();
+            List<Comment> comments = repo.GetAllComments(1);
+            List<Comment> commentsEmpty = repo.GetAllComments(3);
+
+            Assert.AreEqual(1, comments.Count);
+            Assert.AreEqual("Nice Boat!", comments[0].CommentText);
+
+            Assert.AreEqual(0, commentsEmpty.Count);
+
+        }
+
+        [Test]
+        public void CanGetPublishedCommentsByPost()
+        {
+            PostRepo repo = new PostRepo();
+            List<Comment> comments = repo.GetPublishedComments(1);
+            List<Comment> commentsEmpty = repo.GetPublishedComments(4);
+
+            Assert.AreEqual(1, comments.Count);
+            Assert.AreEqual("Nice Boat!", comments[0].CommentText);
+
+            Assert.AreEqual(0, commentsEmpty.Count);
+
+        }
+
+        [Test]
+        public void GetRepliesByComment()
+        {
+            PostRepo repo = new PostRepo();
+            List<Reply> replies = repo.GetReplies(1);
+
+            Assert.AreEqual(1, replies.Count);
+            Assert.AreEqual("I've seen better", replies[0].ReplyText);
+        }
+
+        [Test]
+        public void GetPublishedRepliesByComment()
+        {
+            PostRepo repo = new PostRepo();
+            List<Reply> replies = repo.GetPublishedReplies(1);
+
+            Assert.AreEqual(1, replies.Count);
+            Assert.AreEqual("I've seen better", replies[0].ReplyText);
+        }
+
     }
 }
