@@ -502,11 +502,15 @@ namespace SeaMonster.Data_CLW
         public List<Post> GetAllStaticPublished()
         {
 
-            throw new NotImplementedException();
+            PostRepo repo = new PostRepo();
+            List<Post> posts = repo.GetAllPosts().Where(p => p.IsStatic == true && p.IsPublished == true).ToList();
+
+            return posts;
+
         }
 
-        
-        
+
+
 
         public void SetPostLists(Post post)
         {
