@@ -8,5 +8,6 @@ namespace SeaMonsterBlog.Data
 {
     public interface IRepository
     {
+
     }
 }
