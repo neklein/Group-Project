@@ -6,12 +6,14 @@ using System.Web;
 
 namespace SeaMonsterBlog.UI.Models
 {
-    public class CreateEditVM
+    public class CreateEditVM 
     {
+        List<StaticShortVM> StaticShortList { get; set; }
+        List<Category> Categories { get; set; }
         public Post Post { get; set; }
-        public List<Post> StaticPost { get; set; }
-        public List<Comment> Comments { get; set; }
-        public List <Reply> Replies { get; set; }
         public List<Image> Images { get; set; }
+        public string ImageTitle { get; set; }
+        public HttpPostedFileBase UploadedFile { get; set; }
     }
+
 }

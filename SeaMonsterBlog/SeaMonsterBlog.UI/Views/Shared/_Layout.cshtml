@@ -8,8 +8,8 @@
     @Scripts.Render("~/bundles/modernizr")
 
 </head>
-<body>
-    @*<div class="navbar navbar-inverse navbar-fixed-top">
+<body class="container">
+    <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -28,7 +28,7 @@
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
-    </div>*@
+    </div>
     
     <div class="text-center"><h1><strong>@Html.ActionLink("Sea Monsters and the Monsters who Hunt Them", "Index", "Home", null,null)</strong></h1></div>
     <hr />
@@ -57,7 +57,7 @@
                 <p></p>
                 <hr />
                 <div id="create-new-button">
-                    @Html.ActionLink("Create New", "Create", "Admin", null, new { @class = "btn btn-info"})
+                    @Html.ActionLink("Create New", "Create", "Admin", null, new { @class = "btn btn-info" })
                 </div>
                 <p></p>
                 <hr />
@@ -74,8 +74,6 @@
                 </div>
 
             </div>
-
-
         </div>
 
         
