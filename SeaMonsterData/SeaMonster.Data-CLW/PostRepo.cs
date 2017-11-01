@@ -355,7 +355,13 @@ namespace SeaMonster.Data_CLW
 
         public List<Reply> GetPublishedReplies(int CommentID)
         {
-            throw new NotImplementedException();
+            List<Reply> replies = new List<Reply>();
+            PostRepo repo = new PostRepo();
+
+            replies = repo.GetReplies(CommentID).Where(r => r.IsShown == true).ToList();
+
+            return replies;
+
         }
 
         //May need to edit to match procedure in Sprocks
@@ -499,6 +505,32 @@ namespace SeaMonster.Data_CLW
                     }
                 }
             }
+            return posts;
+        }
+
+        public List<Post> GetPostsByCategory(int CategoryID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Post> GetPostByHashtag(int HashtagID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Post> GetAllStaticPublished()
+        {
+            PostRepo repo = new PostRepo();
+            List<Post> posts = repo.GetAllPosts().Where(p => (p.IsStatic == true) && (p.IsPublished == true)).ToList();
+
+            return posts;
+        }
+
+        public List<Post> GetAllStatic()
+        {
+            PostRepo repo = new PostRepo();
+            List<Post> posts = repo.GetAllPosts().Where(p => p.IsStatic == true).ToList();
+
             return posts;
         }
     }
