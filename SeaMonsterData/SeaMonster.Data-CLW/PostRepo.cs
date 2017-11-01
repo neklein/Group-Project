@@ -12,6 +12,7 @@ namespace SeaMonster.Data_CLW
     public class PostRepo : IPostRepo
     {
         const string cs = "Server=localhost;Database=SeaMonster;User Id=SeamonsterSA; Password=ocean;";
+
         public void ApproveComment(int CommentID)
         {
             throw new NotImplementedException();
@@ -198,7 +199,9 @@ namespace SeaMonster.Data_CLW
                 SqlCommand cmd = new SqlCommand();
 
                 cmd.Connection = cn;
-                cmd.CommandText = "SELECT * FROM Post";
+                cmd.CommandText = "SELECT * FROM Comment" +
+                        " WHERE PostId = @PostID";
+                cmd.Parameters.AddWithValue("@PostID", PostID);
 
                 cn.Open();
                 using (SqlDataReader dr = cmd.ExecuteReader())
@@ -207,12 +210,12 @@ namespace SeaMonster.Data_CLW
                     {
                         Comment comment = new Comment();
 
-                        comment.PostId = (int)dr["PostID"];
+                        comment.PostId = PostID;
                         comment.CommentId = (int)dr["CommentID"];
                         comment.CommenterName = dr["CommenterName"].ToString();
                         comment.CommentDate = DateTime.Parse(dr["CommentDate"].ToString());
                         comment.CommentText = dr["CommentText"].ToString();
-
+                        comment.IsShown = (bool)dr["IsShown"];
                         comments.Add(comment);
                     }
                 }
@@ -320,34 +323,8 @@ namespace SeaMonster.Data_CLW
 
         public List<Comment> GetPublishedComments(int PostID)
         {
-            List<Comment> comments = new List<Comment>();
-
-
-            string cs = "Server=localhost;Database=SeaMonster;User Id=SeamonsterSA; Password=ocean;";
-
-            using (var cn = new SqlConnection(cs))
-            {
-                SqlCommand cmd = new SqlCommand("GetCommentbyID", cn);
-
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@PostID", PostID);
-
-                cn.Open();
-                using (SqlDataReader dr = cmd.ExecuteReader())
-                {
-                    while (dr.Read())
-                    {
-                        Comment comment = new Comment();
-                        comment.CommenterName = dr["CommenterName"].ToString();
-                        comment.CommentDate = DateTime.Parse(dr["CommentDate"].ToString());
-                        comment.CommentText = dr["CommentText"].ToString();
-
-                        comments.Add(comment);
-                    }
-                }
-
-            }
-
+            PostRepo repo = new PostRepo();
+            List<Comment> comments = repo.GetAllComments(PostID).Where(c => c.IsShown == true).ToList();
 
             return comments;
 
@@ -374,9 +351,12 @@ namespace SeaMonster.Data_CLW
 
             using (var cn = new SqlConnection(cs))
             {
-                SqlCommand cmd = new SqlCommand("GetReplybyID", cn);
+                SqlCommand cmd = new SqlCommand();
 
-                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Connection = cn;
+                cmd.CommandText = "SELECT * FROM Reply" +
+                        " WHERE CommentID = @CommentID";
+
                 cmd.Parameters.AddWithValue("@CommentID", CommentID);
 
                 cn.Open();
@@ -385,6 +365,7 @@ namespace SeaMonster.Data_CLW
                     while (dr.Read())
                     {
                         Reply reply = new Reply();
+                        reply.ReplyID = (int)dr["ReplyId"];
                         reply.ReplyName = dr["ReplyName"].ToString();
                         reply.ReplyDate = DateTime.Parse(dr["ReplyDate"].ToString());
                         reply.ReplyText = dr["ReplyText"].ToString();
