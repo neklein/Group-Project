@@ -16,6 +16,7 @@ namespace SeaMonsterBlog.UI.Controllers
         {
             var repo = RepositoryFactory.GetRepository();
             CreateEditVM createEditVM = new CreateEditVM();
+            createEditVM.Categories = repo.GetAllCategories();
             
             return View(createEditVM);
         }

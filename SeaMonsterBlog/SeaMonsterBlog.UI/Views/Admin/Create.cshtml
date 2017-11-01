@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Create";
-
+    ViewBag.Categories = Model.Categories;
 }
 
     @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-inline" }))
@@ -15,10 +15,30 @@
                     @Html.TextBoxFor(model => model.Post.PostTitle, new { @class = "form-control", style = "width:600px" })
                 </div>
                 <div class="col-md-2">
-                    <select name="IsStatic" class="form-control" style="width:auto">
-                        <option selected disabled>Select Type</option>
-                        <option value="false">Blog Post</option>
+                    <label>Select Type</label>
+                    <select name="Post.IsStatic" class="form-control" style="width:auto">
+                    @{ 
+                        if (Model.Post != null && Model.Post.IsStatic == false)
+                        {
+                        <text>
+                        <option value="false" selected>Blog Post</option>
                         <option value="true">Static Page</option>
+                        </text>
+                        }
+                        else if (Model.Post != null && Model.Post.IsStatic == true)
+                        {
+                        <text>
+                            <option value="false">Blog Post</option>
+                            <option value="true" selected>Static Page</option>
+                        </text>
+                        }
+                        else
+                        {
+                            <option value="false" selected>Blog Post</option>
+                            <option value="true">Static Page</option>
+                        }
+                        }
+
                     </select>
                 </div>
             </div>
@@ -29,7 +49,7 @@
             <input type="button" class ="btn btn-danger"value="Discard" />
             <input type="button" class="btn btn-primary" value="Submit For Review" onclick="FlagAndSend()" /> 
         </div>
-    }
+
     <div class="row" style="padding-top:20px;padding-left:20px;">
         <div class="col-md-6" style="border: 2px solid white;height:200px">
             <form class="form-inline">
@@ -42,6 +62,7 @@
                     <button type="button" class="btn btn-default" onclick="UploadImage()">Submit</button>
                 </div>
             </form>
+            
         </div>
         <div class="col-md-6" style="border: 2px solid white;height:200px">
             <h4>Uploaded Images - copy/paste to use</h4>
@@ -52,7 +73,7 @@
             </select>
         </div>
     </div>
-
+                        }
 
 @section scripts {
     <script>
