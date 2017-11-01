@@ -26,7 +26,7 @@ namespace CLWintegrationtest
         }
 
       [Test]
-      public void CanLoadCategories()
+      public void CanLoadHashtags()
         {
             PostRepo repo = new PostRepo();
             List<HashTag> Cats = repo.GetHashtags();
@@ -37,7 +37,7 @@ namespace CLWintegrationtest
         [Test]
         [TestCase("#Excited,#Scared",5,8)]
         [TestCase("#Excited,  #Scared", 5, 8)]
-        public void CanResuseCategory(string test, int postID, int expected)
+        public void CanResuseHashtag(string test, int postID, int expected)
         {
             PostRepo repo = new PostRepo();
             repo.AddHashtags(test, postID);
@@ -47,7 +47,7 @@ namespace CLWintegrationtest
 
         [Test]
         [TestCase("#New #ShouldWork",5,10)]
-        public void CanAddNewCat(string test, int postID, int expected)
+        public void CanAddNewHashtag(string test, int postID, int expected)
         {
             PostRepo repo = new PostRepo();
             repo.AddHashtags(test, postID);
@@ -65,6 +65,43 @@ namespace CLWintegrationtest
         }
 
         [Test]
+        [TestCase(5,1)]
+        [TestCase(4,2)]
+        public void CanGetHashtagsbyID(int postid, int x)
+        {
+            PostRepo repo = new PostRepo();
+            List<HashTag> hts = repo.GetHashtagbyPost(postid);
+            Assert.AreEqual(x, hts.Count());
+        }
+        [Test]
+        public void CanLoadCategories()
+        {
+            PostRepo repo = new PostRepo();
+            List<Category> cats = repo.GetAllCategories();
+            Assert.AreEqual(3, cats.Count());
+        }
+
+        [Test]
+        [TestCase(2, 2)]
+        [TestCase(5, 1)]
+        public void CanLoadCategoriesbyPost(int postID, int x)
+        {
+            PostRepo repo = new PostRepo();
+            List<Category> cats = repo.GetCategoryByPost(postID);
+            Assert.AreEqual(x, cats.Count());
+        }
+
+        [Test]
+        [TestCase(1,1)]
+        [TestCase(5,0)]
+        public void CanloadCommentsbyID(int postID, int x)
+        {
+            PostRepo repo = new PostRepo();
+            List<Comment> cmts = repo.GetCommentsbyPost(postID);
+            Assert.AreEqual(x, cmts.Count());
+        }
+
+        [Test]
         public void GetPosts()
         {
             PostRepo repo = new PostRepo();
@@ -73,7 +110,7 @@ namespace CLWintegrationtest
             Assert.AreEqual(5, posts.Count());
         }
 
-        public void CanCreatePostWithExpDate()
+        public void CanCreatePostWithExpDate() //finish
         {
             PostRepo repo = new PostRepo();
 

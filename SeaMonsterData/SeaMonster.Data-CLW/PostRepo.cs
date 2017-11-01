@@ -524,7 +524,10 @@ namespace SeaMonster.Data_CLW
 
         public void SetPostLists(Post post)
         {
-            throw new NotImplementedException();
+            PostRepo repo = new PostRepo();
+            post.PostCategories = GetCategoryByPost(post.PostId);
+            post.Hashtags = repo.GetHashtagbyPost(post.PostId);
+            post.Comments = GetCommentsbyPost(post.PostId);
         }
 
         public List<Category> GetAllCategories()
@@ -551,12 +554,76 @@ namespace SeaMonster.Data_CLW
 
         public List<HashTag> GetHashtagbyPost(int PostID)
         {
-            throw new NotImplementedException();
+            List<HashTag> hts = new List<HashTag>();
+            using (SqlConnection cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("GetHashtagsByPost", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PostID", PostID);
+                cn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        HashTag c = new HashTag();
+                        c.HashtagID = (int)dr["HashtagID"];
+                        c.Hashtag = dr["Hashtag"].ToString();
+                      
+                        hts.Add(c);
+                    }
+                }
+            }
+            return hts;
         }
 
         public List<Category> GetCategoryByPost(int PostID)
         {
-            throw new NotImplementedException();
+            List<Category> Cats = new List<Category>();
+            using (SqlConnection cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("GetCategorybyPost", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PostID", PostID);
+                cn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        Category current = new Category();
+                        current.CategoryID = (int)dr["CategoryID"];
+                        current.CategoryName = dr["CategoryName"].ToString();
+                        Cats.Add(current);
+                    }
+                }
+            }
+            return Cats;
+        }
+
+        public List<Comment> GetCommentsbyPost(int PostId)
+        {
+            List<Comment> comments = new List<Comment>();
+            using (SqlConnection cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("GetCommentbyID", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PostID", PostId);
+                cn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        Comment cmt = new Comment();
+                        cmt.CommentId = (int)dr["CommentID"];
+                        cmt.CommenterName = dr["CommenterName"].ToString();
+                        cmt.CommentText= dr["CommentText"].ToString();
+                        string date = dr["CommentDate"].ToString();
+                        cmt.CommentDate = DateTime.Parse(date);
+                        comments.Add(cmt);
+                    }
+                }
+                
+            }
+            return comments;
         }
     }
 }
