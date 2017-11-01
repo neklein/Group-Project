@@ -213,8 +213,8 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CreateEditVM.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\LayoutVM.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\StaticShortVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -448,6 +448,10 @@
     <Content Include="Scripts\jquery-3.2.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SeaMonsterBlog.Data\SeaMonsterBlog.Data.csproj">
+      <Project>{2637c7b0-7020-4a24-ba3b-8985ec263efd}</Project>
+      <Name>SeaMonsterBlog.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SeaMonsterBlog.Models\SeaMonsterBlog.Models.csproj">
       <Project>{aff8f541-4997-4cb2-bcc0-d7907dc7d4ed}</Project>
       <Name>SeaMonsterBlog.Models</Name>

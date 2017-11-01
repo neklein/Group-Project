@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using SeaMonsterBlog.Data;
 
 namespace SeaMonsterBlog.UI.Controllers
 {
@@ -13,9 +14,9 @@ namespace SeaMonsterBlog.UI.Controllers
         // GET: Admin
         public ActionResult Create()
         {
+            var repo = RepositoryFactory.GetRepository();
             CreateEditVM createEditVM = new CreateEditVM();
             
-           
             return View(createEditVM);
         }
 
@@ -58,5 +59,6 @@ namespace SeaMonsterBlog.UI.Controllers
         {
             return View();
         }
+
     }
 }
