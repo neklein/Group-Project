@@ -72,5 +72,9 @@ namespace SeaMonsterBlog.Data
 
         }
 
+        public List<Category> GetAllCategories()
+        {
+            return categories.ToList();
+        }
     }
 }

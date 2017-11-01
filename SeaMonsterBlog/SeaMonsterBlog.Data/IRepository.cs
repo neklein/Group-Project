@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SeaMonsterBlog.Models.Tables;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace SeaMonsterBlog.Data
 {
     public interface IRepository
     {
-
+        List<Category> GetAllCategories();
     }
 }
