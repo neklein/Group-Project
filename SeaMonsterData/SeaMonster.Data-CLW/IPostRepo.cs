@@ -32,5 +32,9 @@ namespace SeaMonster.Data_CLW
         List<Post> GetPostByHashtag(int HashtagID);
         List<Post> GetAllStaticPublished();
         List<Post> GetAllStatic();
+        void SetPostLists(Post post);
+        List<Category> GetAllCategories();
+        List<HashTag> GetHashtagbyPost(int PostID);
+        List<Category> GetCategoryByPost(int PostID);
     }
 }

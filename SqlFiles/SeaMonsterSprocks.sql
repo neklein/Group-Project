@@ -53,6 +53,14 @@ GO
  drop procedure GetReplyByComment
  GO
 
+  if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='GetCategorybyPost')
+ drop procedure GetCategorybyPost
+ GO
+
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='GetHashtagsByPost')
+ drop procedure GetHashtagsByPost
+ GO
+
  Create Procedure GetPublishedPosts AS
  Begin
  Select p.PostTitle, p.DateCreated, p.ToPostDate, pt.PostText from Post p
@@ -88,6 +96,22 @@ create procedure GetReplyByComment (@CommentId int) As
 begin
 select * from Reply r
 where r.CommentID=@CommentId
+end
+go
+
+Create Procedure GetCategorybyPost(@PostID int)AS
+begin
+Select c.CategoryName, c.CategoryID  from Categories c
+left join CategoryPost cp on cp.CategoryID=c.CategoryID
+where cp.PostID=@PostID
+end
+GO
+
+Create Procedure GetHashtagsByPost (@PostID int) AS
+Begin 
+select h.Hashtag, h.HashtagID from HashTags h
+left join HashtagPost hp on hp.HashtagID =h.HashtagID
+where hp.PostID=@PostID
 end
 go
 ---------------Admin---------------------

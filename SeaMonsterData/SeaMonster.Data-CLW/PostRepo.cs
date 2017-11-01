@@ -501,5 +501,62 @@ namespace SeaMonster.Data_CLW
             }
             return posts;
         }
+
+        public List<Post> GetPostsByCategory(int CategoryID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Post> GetPostByHashtag(int HashtagID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Post> GetAllStaticPublished()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Post> GetAllStatic()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetPostLists(Post post)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Category> GetAllCategories()
+        {
+            List<Category> Cats = new List<Category>();
+            using(SqlConnection cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("select * from categories", cn);
+                cmd.CommandType = CommandType.Text;
+                cn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        Category current = new Category();
+                        current.CategoryID = (int)dr["CategoryID"];
+                        current.CategoryName = dr["CategoryName"].ToString();
+                        Cats.Add(current);
+                    }
+                }
+            }
+            return Cats;
+        }
+
+        public List<HashTag> GetHashtagbyPost(int PostID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Category> GetCategoryByPost(int PostID)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

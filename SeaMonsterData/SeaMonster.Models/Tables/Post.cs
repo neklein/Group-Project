@@ -20,6 +20,9 @@ namespace SeaMonster.Models.Tables
         public List<Comment> Comments { get; set; }
         public List<Image> Images { get; set; }
         public bool IsStatic { get; set; }
+        public List<HashTag>Hashtags { get; set; }
+        public List<Category>PostCategories { get; set; }
 
+        
     }
 }
