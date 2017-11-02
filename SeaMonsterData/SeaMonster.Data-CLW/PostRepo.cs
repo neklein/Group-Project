@@ -290,6 +290,8 @@ namespace SeaMonster.Data_CLW
             return post;
         }
 
+
+
         public List<Image> GetImagesByPost(int postId)
         {
             List<Image> images = new List<Image>();
@@ -622,6 +624,31 @@ namespace SeaMonster.Data_CLW
             List<Post> posts = repo.GetAllPosts().Where(p => p.IsStatic == true).ToList();
 
             return posts;
+        }
+
+        //may need to adjust the procedure name
+        public void AddImage(string imageName)
+        {
+            using (var cn = new SqlConnection(cs))
+            {
+                Image image = new Image();
+                image.ImageName = imageName;
+
+                SqlCommand cmd = new SqlCommand("AddImage", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                SqlParameter param = new SqlParameter("@ImageId", SqlDbType.Int);
+                param.Direction = ParameterDirection.Output;
+
+                cmd.Parameters.Add(param);
+
+                cmd.Parameters.AddWithValue("@ImageName", imageName);
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+
+                image.ImageId = (int)param.Value;
+            }
+
         }
     }
 }
