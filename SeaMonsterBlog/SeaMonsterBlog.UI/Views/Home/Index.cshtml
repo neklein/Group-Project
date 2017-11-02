@@ -5,7 +5,42 @@
     ViewBag.Categories = Model.Categories;
 }
 
+
 <div class="row">
+    <div class="col-sm-12">
+        @foreach (var blog in Model.Posts)
+        {
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3><storng>@blog.PostTitle</storng></h3>
+                    <h5><strong>@blog.DisplayDate  |  {blog.author}</strong></h5>
+                </div>
+                <div class="panel-body">
+                    <p>list of categories will go here</p>
+                </div>
+            </div>
+
+            <div class="well-lg" id="post-body">
+                @blog.PostText
+            </div>
+
+            <div class="panel-body">
+                <div class="label label-success">
+                    <p>list of categories will go here</p>
+                </div>
+            </div>
+
+            @Html.ActionLink("Comment", "Details", "Home", new { id = blog.PostId}, new { @class = "btn btn-warning" })
+
+            <hr />
+        }
+
+        
+        
+    </div>
+</div>
+
+@*<div class="row">
     <div class="col-sm-12">
         <div class="panel-info">
             <div class="panel-heading">
@@ -29,7 +64,7 @@
             <div class="label label-primary">#BermudaTriangle</div>
         </div>
 
-        @Html.ActionLink("Comment", "Details", "Home", null, new { @class = "btn btn-warning" })
+        
 
         <hr />
 
@@ -62,4 +97,4 @@
     </div>
    
 
-</div>
+</div>*@

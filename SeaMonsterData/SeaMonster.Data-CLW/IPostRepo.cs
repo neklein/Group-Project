@@ -40,8 +40,10 @@ namespace SeaMonster.Data_CLW
         List<Post> GetPostbyHashtag(int HashtagID);
         List<Post> GetPostByCategory(int CatId);
         List<Post> GetPublishedPostByCategory(int CatId);
-
-
+        void AddImage(string imageName);
+        List<Image> GetImagesByPost(int postId);
+        Comment GetCommentByCommentId(int commentId);
+        Reply GetReplyByReplyId(int replyId);
 
     }
 }

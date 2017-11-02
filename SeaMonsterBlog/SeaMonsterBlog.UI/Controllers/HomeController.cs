@@ -15,6 +15,8 @@ namespace SeaMonsterBlog.UI.Controllers
             var repo = RepositoryFactory.GetRepository();
             HomeVM homeVM = new HomeVM();
             homeVM.Categories = repo.GetAllCategories();
+            homeVM.Posts = repo.GetAllPosts(); 
+
             
 
             return View(homeVM);
@@ -22,7 +24,8 @@ namespace SeaMonsterBlog.UI.Controllers
 
         public ActionResult Detail(int id)
         {
-            
+            var repo = RepositoryFactory.GetRepository();
+
 
             return View();
         }

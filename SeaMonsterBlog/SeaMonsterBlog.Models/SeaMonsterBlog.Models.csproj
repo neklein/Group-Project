@@ -44,6 +44,7 @@
     <Compile Include="ShortList\StaticPageShort.cs" />
     <Compile Include="Tables\Category.cs" />
     <Compile Include="Tables\Comment.cs" />
+    <Compile Include="Tables\Hashtag.cs" />
     <Compile Include="Tables\Image.cs" />
     <Compile Include="Tables\Post.cs" />
     <Compile Include="Tables\Reply.cs" />
