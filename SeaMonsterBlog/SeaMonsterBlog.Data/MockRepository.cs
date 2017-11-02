@@ -111,6 +111,7 @@ namespace SeaMonsterBlog.Data
             return posts.ToList();
         }
 
+        
         public List<Image> GetAllImages()
         {
             return images.ToList();
@@ -123,6 +124,12 @@ namespace SeaMonsterBlog.Data
             list.Add(image);
             images = list;
             imageIdCount++;
+        }
+
+        public Post GetPostByID(int postID)
+        {
+            return posts.FirstOrDefault(p => p.PostId == postID);
+
         }
     }
 }

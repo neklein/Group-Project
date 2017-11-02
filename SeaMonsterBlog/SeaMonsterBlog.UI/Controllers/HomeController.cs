@@ -17,10 +17,6 @@ namespace SeaMonsterBlog.UI.Controllers
             homeVM.Categories = repo.GetAllCategories();
             homeVM.Posts = repo.GetAllPosts(); 
 
-            foreach(var post in homeVM.Posts)
-            {
-                post.TruncatedPostText = post.PostText.Substring(0,500); 
-            }
             
 
             return View(homeVM);
