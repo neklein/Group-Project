@@ -9,7 +9,7 @@
     {
         @Html.AntiForgeryToken()
         <div style="padding-left:15px">
-            @Html.CheckBoxFor(m => m.Post.IsForReview, new { @style = "visibility:hidden", id = "is-for-review" });
+            @Html.CheckBoxFor(m => m.Post.IsForReview, new { @style = "visibility:hidden", id = "is-for-review" })
             <label>Title</label>
             <div class="row" style="padding-bottom:10px">
                 <div class="col-md-10">
@@ -45,9 +45,10 @@
             </div>
             <!-- This will contain your HtmlContent and use the TinyMCE editor-->
             @Html.TextAreaFor(model => model.Post.PostText)
-            <br /><br />
+            <br />
+            @Html.TextBoxFor(m => Model.Post.Categories, new { @class="form-control", style="width:1000px", placeholder="#hashtags"})
+            <br />
             <input type="submit" class ="btn btn-default"value="Save" id="main-button"/>
-            <input type="button" class ="btn btn-danger"value="Discard" />
             <input type="button" class="btn btn-primary" value="Submit For Review" onclick="FlagAndSend()" /> 
         </div>
 
