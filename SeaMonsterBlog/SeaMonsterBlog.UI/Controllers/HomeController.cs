@@ -17,17 +17,20 @@ namespace SeaMonsterBlog.UI.Controllers
             homeVM.Categories = repo.GetAllCategories();
             homeVM.Posts = repo.GetAllPosts(); 
 
-            
-
             return View(homeVM);
         }
 
         public ActionResult Detail(int id)
         {
             var repo = RepositoryFactory.GetRepository();
+            DetailVM detailVM = new DetailVM();
 
+            detailVM.Categories = repo.GetAllCategories();
+            detailVM.Post = repo.GetPostByID(id);
+            detailVM.Comments = repo.GetAllComments();
+            detailVM.Replies = repo.GetAllReply();
 
-            return View();
+            return View(detailVM);
         }
 
         public ActionResult ByCategory(int id)
