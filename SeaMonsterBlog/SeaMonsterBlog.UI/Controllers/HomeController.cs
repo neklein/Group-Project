@@ -15,6 +15,12 @@ namespace SeaMonsterBlog.UI.Controllers
             var repo = RepositoryFactory.GetRepository();
             HomeVM homeVM = new HomeVM();
             homeVM.Categories = repo.GetAllCategories();
+            homeVM.Posts = repo.GetAllPosts(); 
+
+            foreach(var post in homeVM.Posts)
+            {
+                post.TruncatedPostText = post.PostText.Substring(0,500); 
+            }
             
 
             return View(homeVM);
@@ -22,7 +28,8 @@ namespace SeaMonsterBlog.UI.Controllers
 
         public ActionResult Detail(int id)
         {
-            
+            var repo = RepositoryFactory.GetRepository();
+
 
             return View();
         }

@@ -106,6 +106,11 @@ namespace SeaMonsterBlog.Data
             return categories.ToList();
         }
 
+        public List<Post> GetAllPosts()
+        {
+            return posts.ToList();
+        }
+
         public List<Image> GetAllImages()
         {
             return images.ToList();

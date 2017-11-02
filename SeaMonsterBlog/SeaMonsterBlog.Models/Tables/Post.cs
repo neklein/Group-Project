@@ -20,5 +20,11 @@ namespace SeaMonsterBlog.Models.Tables
         public bool IsPublished { get; set; }
         public bool IsForReview { get; set; }
         public List<Comment> Comments { get; set; }
+
+        // JM -> ADDED MORNING 11/2
+        public string Author { get; set; }
+        public string TruncatedPostText { get; set; }
+
+        
     }
 }
