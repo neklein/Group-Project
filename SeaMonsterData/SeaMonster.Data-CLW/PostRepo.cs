@@ -15,17 +15,44 @@ namespace SeaMonster.Data_CLW
 
         public void ApproveComment(int CommentID)
         {
-            throw new NotImplementedException();
+            using (var cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("ApproveComment", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@CommentID", CommentID);
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
         }
 
         public void Approvepost(int postID)
         {
-            throw new NotImplementedException();
+            using (var cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("ApprovePost", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PostID", postID);
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
         }
 
         public void ApproveReply(int ReplyID)
         {
-            throw new NotImplementedException();
+            using (var cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("ApproveReply", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@ReplyId", ReplyID);
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
         }
 
         //need to clarify procedure name
@@ -648,6 +675,72 @@ namespace SeaMonster.Data_CLW
 
                 image.ImageId = (int)param.Value;
             }
+
+        }
+
+        public Comment GetCommentByCommentId(int commentId)
+        {
+
+            Comment comment = new Comment();
+            comment.CommentId = commentId;
+
+            using (var cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand();
+
+                cmd.Connection = cn;
+                cmd.CommandText = "SELECT CommenterName, CommentText, CommentDate, PostId FROM Comment" +
+                        " WHERE CommentID = @CommentId";
+                cmd.Parameters.AddWithValue("@CommentId", commentId);
+
+                cn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+
+                        comment.PostId = (int)dr["PostId"];
+                        comment.CommenterName = dr["CommenterName"].ToString();
+                        comment.CommentDate = DateTime.Parse(dr["CommentDate"].ToString());
+                        comment.CommentText = dr["CommentText"].ToString();
+                        comment.IsShown = (bool)dr["IsShown"];
+                    }
+                }
+            }
+
+            return comment;
+        }
+
+        public Reply GetReplyByReplyId(int replyId)
+        {
+            Reply reply = new Reply();
+            reply.ReplyID = replyId;
+
+            using (var cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand();
+
+                cmd.Connection = cn;
+                cmd.CommandText = "SELECT ReplyName, ReplyText, ReplyDate, PostId FROM Reply" +
+                        " WHERE ReplyID = @ReplyId";
+                cmd.Parameters.AddWithValue("@ReplyId", replyId);
+
+                cn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+
+                        reply.CommentID = (int)dr["CommentID"];
+                        reply.ReplyName = dr["ReplyName"].ToString();
+                        reply.ReplyDate = DateTime.Parse(dr["ReplyDate"].ToString());
+                        reply.ReplyText = dr["ReplyText"].ToString();
+                        reply.IsShown = (bool)dr["IsShown"];
+                    }
+                }
+            }
+
+            return reply;
 
         }
     }

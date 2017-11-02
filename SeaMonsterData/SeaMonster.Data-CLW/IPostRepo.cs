@@ -39,5 +39,7 @@ namespace SeaMonster.Data_CLW
         List<Comment> GetCommentsbyPost(int PostId);
         void AddImage(string imageName);
         List<Image> GetImagesByPost(int postId);
+        Comment GetCommentByCommentId(int commentId);
+        Reply GetReplyByReplyId(int replyId);
     }
 }
