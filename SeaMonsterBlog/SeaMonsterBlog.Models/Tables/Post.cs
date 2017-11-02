@@ -20,6 +20,8 @@ namespace SeaMonsterBlog.Models.Tables
         public bool IsPublished { get; set; }
         public bool IsForReview { get; set; }
         public List<Comment> Comments { get; set; }
+        public List<Hashtag> Hashtags { get; set; }
+        public List<Category> Categories { get; set; }
 
         // JM -> ADDED MORNING 11/2
         public string Author { get; set; }
