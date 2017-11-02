@@ -17,6 +17,7 @@ namespace SeaMonsterBlog.UI.Controllers
             var repo = RepositoryFactory.GetRepository();
             CreateEditVM createEditVM = new CreateEditVM();
             createEditVM.Categories = repo.GetAllCategories();
+            createEditVM.Images = repo.GetAllImages();
             
             return View(createEditVM);
         }
@@ -25,11 +26,19 @@ namespace SeaMonsterBlog.UI.Controllers
         [ValidateInput(false)]
         public ActionResult Create(CreateEditVM createEditVM)
         {
+            var repo = RepositoryFactory.GetRepository();
+            if (createEditVM.Post.PostId == 0)    //Save or add work regardless of button choice
+            {
+                createEditVM.Post.PostId = repo.CreateNewPost(createEditVM.Post);
+            }
+            else
+                repo.SavePost(createEditVM.Post);
+
+
             string fileName;
             if (createEditVM.Post.IsForReview)
             {
-                //save all necessary stuff
-                return Redirect("Review");
+                return Redirect("Review/" + createEditVM.Post.PostId);
             }
             else if (createEditVM.UploadedFile != null)
             {
@@ -37,20 +46,28 @@ namespace SeaMonsterBlog.UI.Controllers
 
                 if (fileName != null && fileName.Contains(".jpg"))
                 {
-                    fileName = createEditVM.ImageTitle + ".jpg";
+                    if (createEditVM.ImageTitle == null)
+                        fileName = createEditVM.UploadedFile.FileName;
+                    else
+                       fileName = createEditVM.ImageTitle + ".jpg";
+
                     if (createEditVM.UploadedFile != null && createEditVM.UploadedFile.ContentLength > 0)
                     {
                         string path = Path.Combine(Server.MapPath("~/images"),
-                             Path.GetFileName(createEditVM.ImageTitle + ".jpg"));
+                             Path.GetFileName(fileName));
 
                         createEditVM.UploadedFile.SaveAs(path);
+                        repo.SaveNewImage(fileName);
                     }
                 }
-                //repopulate imagelist and layout models
+                createEditVM.Categories = repo.GetAllCategories();
+                createEditVM.Images = repo.GetAllImages();
                 return View("Create", createEditVM);
             }
-            else //It was just intended to be a save so save everything but don't flag for review
+            else 
             {
+                createEditVM.Categories = repo.GetAllCategories();
+                createEditVM.Images = repo.GetAllImages();
                 return View("Create", createEditVM);
             }
            

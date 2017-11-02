@@ -13,6 +13,10 @@ namespace SeaMonsterBlog.Data
         static IEnumerable<Post> posts;
         static IEnumerable<Comment> comments;
         static IEnumerable<Reply> replies;
+        static IEnumerable<Image> images;
+
+        static int postIdCount = 11;
+        static int imageIdCount = 4;
 
        public MockRepository()
         {
@@ -70,11 +74,50 @@ namespace SeaMonsterBlog.Data
                 new Reply {ReplyID = 9, CommentID = 14, ReplyDate = new DateTime(2017, 11, 3), ReplyName = "Jane", ReplyText = "Blah blah blah blah blah"},
             };
 
+            images = new List<Image>()
+            {
+                new Image {ImageId = 1, ImageName = "narwhal.jpg"},
+                new Image {ImageId = 2, ImageName = "kraken.jpg"},
+                new Image {ImageId = 3, ImageName = "submarine.jpg"}
+            };
+        }
+
+        public int CreateNewPost(Post post)
+        {
+            var list = posts.ToList();
+            post.PostId = postIdCount;
+            postIdCount++;
+            list.Add(post);
+            posts = list;
+            return postIdCount - 1;
+        }
+
+        public void SavePost(Post post)
+        {
+            var list = (from p in posts
+                       where p.PostId != post.PostId
+                       select p).ToList();
+            list.Add(post);
+            posts = list;
         }
 
         public List<Category> GetAllCategories()
         {
             return categories.ToList();
+        }
+
+        public List<Image> GetAllImages()
+        {
+            return images.ToList();
+        }
+
+        public void SaveNewImage(string fileName)
+        {
+            var list = images.ToList();
+            Image image = new Image { ImageId = imageIdCount, ImageName = fileName };
+            list.Add(image);
+            images = list;
+            imageIdCount++;
         }
     }
 }

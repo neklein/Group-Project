@@ -10,5 +10,9 @@ namespace SeaMonsterBlog.Data
     public interface IRepository
     {
         List<Category> GetAllCategories();
+        List<Image> GetAllImages();
+        int CreateNewPost(Post post);
+        void SavePost(Post post);
+        void SaveNewImage(string fileName);
     }
 }
