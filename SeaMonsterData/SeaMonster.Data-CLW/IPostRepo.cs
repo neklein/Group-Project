@@ -37,5 +37,7 @@ namespace SeaMonster.Data_CLW
         List<HashTag> GetHashtagbyPost(int PostID);
         List<Category> GetCategoryByPost(int PostID);
         List<Comment> GetCommentsbyPost(int PostId);
+        void AddImage(string imageName);
+        List<Image> GetImagesByPost(int postId);
     }
 }
