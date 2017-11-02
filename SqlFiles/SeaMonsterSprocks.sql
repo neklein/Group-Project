@@ -61,9 +61,21 @@ GO
  drop procedure GetHashtagsByPost
  GO
 
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='GetPostByHashtag')
+ drop procedure GetPostByHashtag
+ GO
+
+  if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='GetPostByCategory')
+ drop procedure GetPostByCategory
+ GO
+
+
+
+
+
  Create Procedure GetPublishedPosts AS
  Begin
- Select p.PostTitle, p.DateCreated, p.ToPostDate, pt.PostText from Post p
+ Select p.PostID, p.PostTitle, p.DateCreated, p.ToPostDate, p.DisplayAuthor, p.DisplayDate, pt.PostText from Post p
  left join PostText pt on pt.PostId=p.PostID
  where p.ispublished=1
  order by p.DateCreated
@@ -72,7 +84,7 @@ GO
 
 Create Procedure GetPostByID (@PostID int) AS
  Begin
- Select p.PostTitle, p.DateCreated, p.ToPostDate, pt.PostText from Post p
+ Select p.PostID, p.PostTitle, p.DateCreated, p.ToPostDate, p.DisplayAuthor, p.DisplayDate, pt.PostText from Post p
  left join PostText pt on pt.PostId=p.PostID
  order by p.DateCreated
  End
@@ -114,6 +126,27 @@ left join HashtagPost hp on hp.HashtagID =h.HashtagID
 where hp.PostID=@PostID
 end
 go
+
+Create Procedure GetPostByHashtag (@HashtagID int) AS
+begin
+Select p.PostID, p.PostTitle, p.DateCreated, p.ispublished, p.ToPostDate, p.DisplayAuthor,p.DisplayDate, pt.PostText from Post p
+ left join PostText pt on pt.PostId=p.PostID
+ left join HashtagPost h on h.PostID=p.PostID
+ where h.HashtagID=@HashtagID
+ order by p.DateCreated
+end
+Go
+
+Create Procedure GetPostByCategory (@CategoryID int)AS
+begin
+Select p.PostID, p.PostTitle, p.DateCreated, p.ToPostDate, p.DisplayAuthor,p.ispublished, p.DisplayDate, pt.PostText from Post p
+left join PostText pt on pt.PostId=p.PostID
+left join CategoryPost cp on cp.PostId=p.PostID
+where cp.CategoryID=@CategoryID
+end
+go
+
+
 ---------------Admin---------------------
 Create Procedure ApprovePost (@PostID int) AS
 begin

@@ -476,7 +476,7 @@ namespace SeaMonster.Data_CLW
                     while (dr.Read())
                     {
                         Post post = new Post();
-
+                        post.PostId = (int)dr["PostID"];
                         post.PostTitle = dr["PostTitle"].ToString();
                         post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
                         post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
@@ -489,15 +489,7 @@ namespace SeaMonster.Data_CLW
             return posts;
         }
 
-        public List<Post> GetPostsByCategory(int CategoryID)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Post> GetPostByHashtag(int HashtagID)
-        {
-            throw new NotImplementedException();
-        }
+     
 
         public List<Post> GetAllStaticPublished()
         {
@@ -517,7 +509,11 @@ namespace SeaMonster.Data_CLW
             PostRepo repo = new PostRepo();
             post.PostCategories = GetCategoryByPost(post.PostId);
             post.Hashtags = repo.GetHashtagbyPost(post.PostId);
-            post.Comments = GetCommentsbyPost(post.PostId);
+            post.Comments = GetPublishedComments(post.PostId);
+            foreach(Comment c in post.Comments)
+            {
+                c.Replies = GetPublishedReplies(c.CommentId);
+            }
         }
 
         public List<Category> GetAllCategories()
@@ -623,5 +619,85 @@ namespace SeaMonster.Data_CLW
 
             return posts;
         }
+
+        public void ADMINSetPostList(Post post)
+        {
+            PostRepo repo = new PostRepo();
+            post.PostCategories = GetCategoryByPost(post.PostId);
+            post.Hashtags = repo.GetHashtagbyPost(post.PostId);
+            post.Comments = GetCommentsbyPost(post.PostId);
+            foreach (Comment c in post.Comments)
+            {
+                c.Replies = GetReplies(c.CommentId);
+            }
+        }
+
+        public List<Post> GetPublishedPostbyHashtag(int HashtagID)
+        {
+            List<Post> posts = GetPostbyHashtag(HashtagID);
+            List<Post> PublishedPosts = posts.Where(p => p.IsPublished).ToList();
+            return PublishedPosts;
+        }
+
+        public List<Post> GetPostbyHashtag(int HashtagID)
+        {
+            List<Post> posts = new List<Post>();
+            using (SqlConnection cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("GetPostByHashtag", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@HashtagID", HashtagID);
+                cn.Open();
+                using(SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        Post current = new Post();
+                        current.PostId = (int)dr["PostID"];
+                        current.PostTitle = dr["PostTitle"].ToString();
+                        current.PostText = dr["PostText"].ToString();
+                        current.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
+                        current.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
+                        current.IsPublished = (bool)dr["IsPublished"];
+                        posts.Add(current);
+                    }
+                }
+            }
+            return posts;
+        }
+
+        public List<Post> GetPostByCategory(int CatId)
+        {
+            List<Post> posts = new List<Post>();
+            using (SqlConnection cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("GetPostByCategory", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@CategoryID", CatId);
+                cn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        Post current = new Post();
+                        current.PostId = (int)dr["PostID"];
+                        current.PostTitle = dr["PostTitle"].ToString();
+                        current.PostText = dr["PostText"].ToString();
+                        current.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
+                        current.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
+                        current.IsPublished = (bool)dr["IsPublished"];
+                        posts.Add(current);
+                    }
+                }
+            }
+            return posts;
+        }
+
+        public List<Post> GetPublishedPostByCategory(int CatId)
+        {
+            List<Post> posts = GetPostByCategory(CatId).Where(p => p.IsPublished == true).ToList();
+            return posts;
+        }
+
     }
 }

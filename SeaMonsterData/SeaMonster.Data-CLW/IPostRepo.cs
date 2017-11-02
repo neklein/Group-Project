@@ -28,8 +28,6 @@ namespace SeaMonster.Data_CLW
         void DeleteReply(int ReplyID);
         void AddHashtags(string catagoryinput, int PostID);
         List<HashTag> GetHashtags();
-        List<Post> GetPostsByCategory(int CategoryID);
-        List<Post> GetPostByHashtag(int HashtagID);
         List<Post> GetAllStaticPublished();
         List<Post> GetAllStatic();
         void SetPostLists(Post post);
@@ -37,5 +35,13 @@ namespace SeaMonster.Data_CLW
         List<HashTag> GetHashtagbyPost(int PostID);
         List<Category> GetCategoryByPost(int PostID);
         List<Comment> GetCommentsbyPost(int PostId);
+        void ADMINSetPostList(Post post);
+        List<Post> GetPublishedPostbyHashtag(int HashtagID);
+        List<Post> GetPostbyHashtag(int HashtagID);
+        List<Post> GetPostByCategory(int CatId);
+        List<Post> GetPublishedPostByCategory(int CatId);
+
+
+
     }
 }
