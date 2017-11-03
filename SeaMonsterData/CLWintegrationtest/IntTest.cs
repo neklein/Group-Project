@@ -203,5 +203,66 @@ namespace CLWintegrationtest
             Assert.AreEqual("I've seen better", replies[0].ReplyText);
         }
 
+        [Test]
+        public void CanSetPostList()
+        {
+            PostRepo repo = new PostRepo();
+            Post post = repo.GetPostDetails(2);
+            repo.SetPostLists(post);
+            Assert.AreEqual(3,post.Hashtags.Count());
+            Assert.AreEqual(2, post.PostCategories.Count());
+            Assert.AreEqual(1, post.Comments.Count);
+            Assert.AreEqual(1, post.Comments[0].Replies.Count());
+        }
+
+        [Test]
+        public void CanSetADMINPostList()
+        {
+            PostRepo repo = new PostRepo();
+            Post post = repo.GetPostDetails(2);
+            repo.ADMINSetPostList(post);
+            Assert.AreEqual(3, post.Hashtags.Count());
+            Assert.AreEqual(2, post.PostCategories.Count());
+            Assert.AreEqual(2, post.Comments.Count);
+            Assert.AreEqual(2, post.Comments[0].Replies.Count());
+        }
+
+        [Test]
+        public void CangetbyHashtag()
+        {
+            PostRepo repo = new PostRepo();
+            List<Post> posts = repo.GetPostbyHashtag(1);
+            Assert.AreEqual(2, posts.Count());
+            List<Post> posts2 = repo.GetPostbyHashtag(8);
+            Assert.AreEqual(posts2.Count, 1);
+        }
+        [Test]
+        public void CangetPublishedbyHashtag()
+        {
+            PostRepo repo = new PostRepo();
+            List<Post> posts = repo.GetPublishedPostbyHashtag(1);
+            Assert.AreEqual(2, posts.Count());
+            List<Post> posts2 = repo.GetPublishedPostbyHashtag(8);
+            Assert.AreEqual(posts2.Count, 0);
+        }
+        [Test]
+        public void CanGetPostByCat()
+        {
+            PostRepo repo = new PostRepo();
+            List<Post> posts = repo.GetPostByCategory(1);
+            Assert.AreEqual(3, posts.Count());
+            List<Post> posts2 = repo.GetPostByCategory(3);
+            Assert.AreEqual(posts2.Count, 1);
+        }
+        [Test]
+        public void CanGetPublishedPostByCat()
+        {
+            PostRepo repo = new PostRepo();
+            List<Post> posts = repo.GetPublishedPostByCategory(1);
+            Assert.AreEqual(2, posts.Count());
+            List<Post> posts2 = repo.GetPublishedPostByCategory(3);
+            Assert.AreEqual(posts2.Count, 1);
+        }
+
     }
 }

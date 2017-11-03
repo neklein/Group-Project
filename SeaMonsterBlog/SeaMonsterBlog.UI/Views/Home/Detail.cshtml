@@ -1,35 +1,88 @@
-﻿
+﻿@model SeaMonsterBlog.UI.Models.DetailVM
+
 @{
     ViewBag.Title = "Detail";
+    ViewBag.Categories = Model.Categories;
 }
 
 <div class="row">
     <div class="col-sm-12">
-        <div class="panel-info">
+        <div class="panel panel-success">
             <div class="panel-heading">
-                <h3><strong>This is the title of a blog post</strong></h3>
-                <h5><strong>DD/MM/YYYY</strong></h5>
+                <h3><storng>@Model.Post.PostTitle</storng></h3>
+                <h5><strong>@Model.Post.DisplayDate  |  {blog.author}</strong></h5>
+            </div>
+            <div class="panel-body">
+                <p>list of categories will go here</p>
             </div>
         </div>
 
         <div class="well-lg">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vestibulum dolor vel turpis sollicitudin sollicitudin. Praesent mollis dolor id est congue lacinia. Vivamus dignissim elit ac odio tincidunt, eget cursus elit congue. Nulla eu magna sagittis, congue lorem eu, posuere velit. Pellentesque quis ornare massa, in suscipit magna. Morbi vestibulum lacus quis leo sollicitudin commodo. Curabitur porttitor sagittis quam viverra tincidunt. Aenean consectetur ipsum sit amet turpis luctus, eu ullamcorper metus efficitur. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nulla vel mauris tristique, venenatis nisi id, gravida sapien. In pulvinar justo ac erat ultricies, at efficitur sem vehicula. Donec non ligula interdum, placerat mauris sit amet, pulvinar neque. In mattis felis eget est aliquam rutrum. Sed dapibus enim erat, quis pharetra purus posuere et.</p>
-
-            <p>Nunc luctus sollicitudin lorem, vitae facilisis metus sollicitudin in. Sed commodo aliquam leo, non tristique elit faucibus eget. Nulla sed tellus ligula. Donec vel massa dictum, tempus tortor at, tristique elit. Vivamus sit amet risus eu quam porttitor volutpat eu quis turpis. Vivamus lacinia et quam a sollicitudin. Nulla at suscipit velit. Nullam aliquam massa sit amet sapien congue finibus. Duis pulvinar a felis id sollicitudin. Nunc commodo, eros a tincidunt placerat, sapien nisi egestas augue, vel maximus metus diam sit amet metus. Nullam at arcu eleifend, feugiat tortor egestas, fermentum libero. Phasellus mi felis, mattis et libero ut, posuere blandit ipsum. Praesent tincidunt sapien id lectus aliquet placerat. Morbi finibus, felis sit amet tempor condimentum, tellus lectus consequat dui, at consectetur massa leo aliquet leo. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Integer ut eros posuere diam accumsan vulputate.</p>
-
-            <p>Praesent sed nisi dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vel lacus metus. Nullam eget vestibulum mi. Fusce porttitor convallis nisl et pretium. Proin imperdiet lectus ac fermentum lacinia. Ut vel cursus nunc. Nunc ornare aliquam libero. Pellentesque sit amet nibh sed purus mattis sodales eu et est.</p>
-
+            @Model.Post.PostText
         </div>
 
-        <div class="text-right">
-            <div class="label label-primary">#Cryptids</div>
-            <div class="label label-primary">#Kraken</div>
-            <div class="label label-primary">#BermudaTriangle</div>
+        <div class="panel-body">
+            <div class="label label-success">
+                <p>list of categories will go here</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<div class="row">
+    <div class="co-sm-12">
+        <h4>Comments</h4>
+        
+        @foreach (var comment in Model.Comments)
+        {
+            <p>@comment.CommenterName  |  @comment.CommentDate</p>
+            <p>@comment.CommentText</p>
+
+            if (comment.Replies == null)
+            {
+                <div class="form-inline">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label for="reply">Reply</label>
+                            <input type="text" class="form-control" id="reply" >
+                            <button id="btn-reply" class="btn btn-default">Reply</button>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                foreach (var reply in comment.Replies)
+                {
+                    <p>@reply.ReplyName  |  @reply.ReplyDate</p>
+                    <p>@reply.ReplyText</p>
+
+                    <div class="form-inline">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label for="reply">Reply</label>
+                                <input type="text" class="form-control" id="reply">
+                                <button id="btn-reply" class="btn btn-default">Reply</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+
+        }
+
+        <div class="form-inline">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label for="reply">Comment</label>
+                    <input type="text" class="form-control" id="new-comment">
+                    <button id="btn-reply" class="btn btn-default">Comment</button>
+                </div>
+            </div>
         </div>
 
-        <hr />
-
-<p>comment apparatus goes here</p>
-
+    </div>
 </div>
 

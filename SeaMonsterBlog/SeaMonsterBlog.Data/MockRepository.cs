@@ -131,5 +131,15 @@ namespace SeaMonsterBlog.Data
             return posts.FirstOrDefault(p => p.PostId == postID);
 
         }
+
+        public List<Comment> GetAllComments()
+        {
+            return comments.ToList();
+        }
+
+        public List<Reply> GetAllReply()
+        {
+            return replies.ToList();
+        }
     }
 }

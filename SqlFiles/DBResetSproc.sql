@@ -62,7 +62,7 @@ hornswaggle. Fire in the hole heave down mizzen sloop black spot lee hang the ji
 Insert into  HashTags (Hashtag) Values ('Excited'),('Scared'),('hungry'),('SwimForYourLife!'),('History'),('MonsteroftheMonth'),('dreamjob'),('HELP')
 
 
-insert into HashtagPost (HashtagID, PostID) Values (1,1),(2,1),(4,2),(6,2),(7,3),(5,4),(6,4),(8,5)
+insert into HashtagPost (HashtagID, PostID) Values (1,1),(2,1),(1,2),(4,2),(6,2),(7,3),(5,4),(6,4),(8,5)
 
 Insert into Images (ImageName, PostId) Values ('SeriousSelfie.jpg',1),('MyBoat.jpg',1),('KrakenMap.png',2),('KrakenDrawing.png',2),('GiantSquid.Jpg',2),
 ('Leviathan.jpg',3),('MontereyMap.Jpg',4),('Monty.png',4),('sitingmap.png',4)
@@ -70,10 +70,13 @@ Insert into Images (ImageName, PostId) Values ('SeriousSelfie.jpg',1),('MyBoat.j
 
 
 insert into Comment (PostId, CommenterName, CommentText, CommentDate, IsShown) Values (1, 'anonymous','Nice Boat!','2017-01-18',1),
-(2,'SomeNameOrOther','I thought this would be about the rum','2017-02-14',1),(4,'Skeptic-Hal','Totally a hoax!','2017-04-27',0)
+(2,'SomeNameOrOther','I thought this would be about the rum','2017-02-14',1),
+(2, 'Skeptic-Hal', 'Totally a hoax','2017-02-15',0),
+(4,'Skeptic-Hal','Totally a hoax!','2017-04-27',0)
 
 Insert into Reply(CommentID, ReplyName, ReplyText, ReplyDate, IsShown) Values (1,'Boaty','I''ve seen better', '2017-01-25',1),
-(2,'Rumjack','Aye avast with yer talk o sea-serpents! Bring out the rum!','2017-02-15',1)
+(2,'Rumjack','Aye avast with yer talk o sea-serpents! Bring out the rum!','2017-02-15',1),
+(2, 'Anon' ,'I''ve got nothing','2017-02-16',0)
 
 insert into Categories (CategoryName) Values ('Sightings'),('Submarines'),('Treasure')
 
@@ -87,3 +90,5 @@ select * from Hashtags
 select * from HashtagPost
 select * from Categories
 select * from categorypost
+select* from Reply
+select * from comment
