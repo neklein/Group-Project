@@ -59,7 +59,7 @@ namespace CLWintegrationtest
         public void CanCreatePost()
         {
             PostRepo repo = new PostRepo();
-            repo.CreatePost("testTitle", "This is text for a test of the ability to add text to a new post");
+            repo.CreatePost("testTitle", "This is text for a test of the ability to add text to a new post","author","12/12/2017");
             List<Post> posts = repo.GetAllPosts();
             Assert.AreEqual(6, posts.Count());
         }
@@ -117,7 +117,7 @@ namespace CLWintegrationtest
         public void GetPublishedPosts()
         {
             PostRepo repo = new PostRepo();
-            List<Post> posts = repo.GetPublishedPost();
+            List<Post> posts = repo.GetPublishedPosts();
 
             Assert.AreEqual(4, posts.Count());
             Assert.AreEqual("Hello Fellow Monster Hunters", posts[0].PostTitle);

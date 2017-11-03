@@ -72,6 +72,14 @@ GO
  if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='GetPostByAuthor')
  drop procedure GetPostByAuthor
  GO
+
+  if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='SavePost')
+ drop procedure SavePost
+ GO
+
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='GetALLPosts')
+ drop procedure GetALLPosts
+ GO
  --------------------Searches and Gets------------------------------------------
 
  
@@ -83,7 +91,7 @@ GO
  left join PostText pt on pt.PostId=p.PostID
  order by p.DateCreated
  end
- go
+ go 
 
 
  Create Procedure GetPublishedPosts AS
@@ -237,10 +245,16 @@ Go
 Create Procedure SavePost (@PostID int, @PostTitle nvarchar(50), @PostText nvarchar(max), @ExpDate DateTime2 null, @ToPostDate DateTime2 null, @DisplayAuthor nvarchar(40), @DisplayDate datetime2) AS
 Begin
 Update Post SET 
-PostTitle=@PostTitle
-Post
-
+PostTitle=@PostTitle,
+ExpDate=@ExpDate,
+ToPostDate=@ToPostDate,
+DisplayAuthor=@DisplayAuthor,
+DisplayDate=@DisplayDate
 where PostID=@PostID
+
+update PostText Set
+PostText=@PostText
+where PostId=@PostID
 END
 
 

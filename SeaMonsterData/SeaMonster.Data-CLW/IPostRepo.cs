@@ -10,13 +10,13 @@ namespace SeaMonster.Data_CLW
     public interface IPostRepo
     {
         List<Post> GetAllPosts();
-        List<Post> GetPublishedPost();
+        List<Post> GetPublishedPosts();
         List<Comment> GetAllComments(int PostID);
         List<Comment> GetPublishedComments(int PostID);
         List<Reply> GetReplies(int CommentID);
         List<Reply> GetPublishedReplies(int CommentID);
         void Approvepost(int postID);
-        int CreatePost(string PostTitle, string posttext, string displayauthor, DateTime displaydate);
+        int CreatePost(string PostTitle, string posttext, string displayauthor, string displaydate);
         int CreatePost(string PostTitle, string posttext, string displayauthor, DateTime displaydate, DateTime expdate);
         int CreatePostDelayed(string PostTitle, string posttext, string displayauthor, DateTime displaydate, DateTime postdate);
         int CreatePostDelayed(string PostTitle, string posttext, DateTime postdate, string displayauthor, DateTime displaydate, DateTime expdate);

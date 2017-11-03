@@ -84,7 +84,7 @@ namespace SeaMonster.Data_CLW
             }
         }
 
-        public int CreatePost(string PostTitle, string posttext, string displayauthor, DateTime displaydate)
+        public int CreatePost(string PostTitle, string posttext, string displayauthor, string displaydate)
         { int x = 0;
             using (SqlConnection cn = new SqlConnection(cs))
             {
@@ -96,12 +96,12 @@ namespace SeaMonster.Data_CLW
                 cmd.Parameters.AddWithValue("@PostTitle", PostTitle);
                 cmd.Parameters.AddWithValue("@PostText", posttext);
                 cmd.Parameters.AddWithValue("@DisplayAuthor", displayauthor);
-                cmd.Parameters.AddWithValue("@DisplayDate", displaydate);
+                cmd.Parameters.AddWithValue("@DisplayDate", (DateTime.Parse(displaydate)));
                 cmd.Parameters.AddWithValue("@ExpDate", ' ');
                 cmd.Parameters.AddWithValue("@ToPostDate", ' ');
                 cn.Open();
                 cmd.ExecuteNonQuery();
-                x = int.Parse(Param.ToString());
+                x = (int)Param.Value;
             }
             return x;
             
@@ -125,7 +125,7 @@ namespace SeaMonster.Data_CLW
                 cmd.Parameters.AddWithValue("@ToPostDate", ' ');
                 cn.Open();
                 cmd.ExecuteNonQuery();
-                x = int.Parse(Param.ToString());
+                x = (int)Param.Value; 
             }
             return x;
         }
@@ -149,7 +149,7 @@ namespace SeaMonster.Data_CLW
                 cmd.Parameters.AddWithValue("@ExpDate", ' ');
                 cn.Open();
                 cmd.ExecuteNonQuery();
-                x = int.Parse(Param.ToString());
+                x = (int)Param.Value;
             }
             return x;
         }
@@ -172,7 +172,7 @@ namespace SeaMonster.Data_CLW
                 cmd.Parameters.AddWithValue("@DisplayDate", displaydate);
                 cn.Open();
                 cmd.ExecuteNonQuery();
-                x = int.Parse(Param.ToString());
+                x = (int)Param.Value;
             }
             return x;
         }
@@ -511,7 +511,7 @@ namespace SeaMonster.Data_CLW
             return CurrentCategories;
         }
 
-        public List<Post> GetPublishedPost()
+        public List<Post> GetPublishedPosts()
         {
             List<Post> posts = new List<Post>();
 
@@ -531,12 +531,14 @@ namespace SeaMonster.Data_CLW
                         Post post = new Post();
                         post.PostId = (int)dr["PostID"];
                         post.PostTitle = dr["PostTitle"].ToString();
+                        post.PostText = dr["PostText"].ToString();
                         post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
                         post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
                         post.DisplayAuthor = dr["DisplayAuthor"].ToString();
-                        post.DisplayDate = DateTime.Parse( dr["DisplayDate"].ToString());
-                        post.PostText = dr["PostText"].ToString();
-
+                        post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
+                        post.IsStatic = (bool)dr["isStatic"];
+                        post.IsPublished = (bool)dr["ispublished"];
+                        post.IsForReview = (bool)dr["isforReview"];
                         posts.Add(post);
                     }
                 }
@@ -850,7 +852,8 @@ namespace SeaMonster.Data_CLW
 
         public Category GetCategoryByCatID(int CatID)
         {
-            throw new NotImplementedException();
+            Category cat = GetAllCategories().Where(c => c.CategoryID == CatID).FirstOrDefault();
+            return cat; 
         }
 
         public void SavePost()
@@ -862,6 +865,12 @@ namespace SeaMonster.Data_CLW
         {
             List<Post> posts = GetAllPostByAuthor(name).Where(p => p.IsPublished).ToList();
             return posts;
+        }
+
+        public Category GetCategoryByCatName(string name)
+        {
+            Category cat = GetAllCategories().Where(c => c.CategoryName == name).FirstOrDefault();
+            return cat;
         }
     }
 
