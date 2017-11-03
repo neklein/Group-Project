@@ -46,9 +46,10 @@ namespace SeaMonster.Data_CLW
         Reply GetReplyByReplyId(int replyId);
         List<Post> GetAllPostByAuthor(string name);
         Category GetCategoryByCatID(int CatID);
-        void SavePost();
+        void SavePost(Post post);
         List<Post> GetPublishedPostbyAuthor(string name);
         Category GetCategoryByCatName(string name);
+        void ADMINSavePost(Post post);
 
 
     }

@@ -84,7 +84,7 @@ namespace SeaMonster.Data_CLW
             }
         }
 
-        public int CreatePost(string PostTitle, string posttext, string displayauthor, string displaydate)
+        public int CreatePost(string PostTitle, string posttext, string displayauthor, string displaydate) //fix to take a Post as argument
         { int x = 0;
             using (SqlConnection cn = new SqlConnection(cs))
             {
@@ -856,9 +856,31 @@ namespace SeaMonster.Data_CLW
             return cat; 
         }
 
-        public void SavePost()
+        public void SavePost(Post post)
         {
-            throw new NotImplementedException();
+
+            using (SqlConnection cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("SavePost", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PostID", post.PostId);
+                cmd.Parameters.AddWithValue("@PostTitle", post.PostTitle);
+                cmd.Parameters.AddWithValue("@PostText", post.PostText);
+                cmd.Parameters.AddWithValue("@DisplayAuthor", post.DisplayAuthor);
+                cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
+                cmd.Parameters.AddWithValue("@isForReview", post.IsForReview);
+                if (post.ToPostDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
+                }
+
+                if (post.ExpDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ExpDate", ' ');
+                }
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
         public List<Post> GetPublishedPostbyAuthor(string name)
@@ -871,6 +893,33 @@ namespace SeaMonster.Data_CLW
         {
             Category cat = GetAllCategories().Where(c => c.CategoryName == name).FirstOrDefault();
             return cat;
+        }
+
+        public void ADMINSavePost(Post post)
+        {
+            using (SqlConnection cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("AdminSavePost", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PostID", post.PostId);
+                cmd.Parameters.AddWithValue("@PostTitle", post.PostTitle);
+                cmd.Parameters.AddWithValue("@PostText", post.PostText);
+                cmd.Parameters.AddWithValue("@DisplayAuthor", post.DisplayAuthor);
+                cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
+                cmd.Parameters.AddWithValue("@isForReview", post.IsForReview);
+                cmd.Parameters.AddWithValue("@IsPublished", post.IsPublished);
+                if (post.ToPostDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
+                }
+
+                if (post.ExpDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ExpDate", ' ');
+                }
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 

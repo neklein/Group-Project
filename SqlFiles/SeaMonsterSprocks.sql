@@ -77,6 +77,11 @@ GO
  drop procedure SavePost
  GO
 
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='AdminSavePost')
+ drop procedure AdminSavePost
+ GO
+
+
  if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='GetALLPosts')
  drop procedure GetALLPosts
  GO
@@ -242,14 +247,33 @@ Insert into HashtagPost (HashtagID, PostID) Values (@HashtagID, @PostId)
 End
 Go
 
-Create Procedure SavePost (@PostID int, @PostTitle nvarchar(50), @PostText nvarchar(max), @ExpDate DateTime2 null, @ToPostDate DateTime2 null, @DisplayAuthor nvarchar(40), @DisplayDate datetime2) AS
+Create Procedure SavePost (@PostID int, @PostTitle nvarchar(50), @PostText nvarchar(max), @ExpDate DateTime2 null, @ToPostDate DateTime2 null, @DisplayAuthor nvarchar(40), @DisplayDate datetime2, @isForReview bit) AS
 Begin
 Update Post SET 
 PostTitle=@PostTitle,
 ExpDate=@ExpDate,
 ToPostDate=@ToPostDate,
 DisplayAuthor=@DisplayAuthor,
-DisplayDate=@DisplayDate
+DisplayDate=@DisplayDate,
+isforReview=@isForReview
+where PostID=@PostID
+
+update PostText Set
+PostText=@PostText
+where PostId=@PostID
+END
+GO
+
+Create Procedure AdminSavePost (@PostID int, @PostTitle nvarchar(50), @PostText nvarchar(max), @ExpDate DateTime2 null, @ToPostDate DateTime2 null, @DisplayAuthor nvarchar(40), @DisplayDate datetime2, @isForReview bit, @isPublished bit) AS
+Begin
+Update Post SET 
+PostTitle=@PostTitle,
+ExpDate=@ExpDate,
+ToPostDate=@ToPostDate,
+DisplayAuthor=@DisplayAuthor,
+DisplayDate=@DisplayDate,
+isforReview=@isForReview,
+ispublished=@isPublished
 where PostID=@PostID
 
 update PostText Set
