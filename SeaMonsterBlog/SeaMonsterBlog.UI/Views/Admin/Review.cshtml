@@ -11,6 +11,7 @@
     @Html.HiddenFor(m => m.Post.PostId)
 <div class="panel panel-success">
     <div class="panel-heading">
+        @Html.TextBoxFor(m => m.Post.PostId)
         <h3><strong>@Model.Post.PostTitle</strong></h3>
         <h5><strong>@Model.Post.DisplayDate  |  @Model.Post.Author</strong></h5>
     </div>

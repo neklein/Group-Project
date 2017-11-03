@@ -28,7 +28,7 @@ namespace SeaMonsterBlog.UI.Controllers
         public ActionResult Create(CreateEditVM createEditVM)
         {
             createEditVM.Post.PostText = WebUtility.HtmlEncode(createEditVM.Post.PostText);
-            var repo = RepositoryFactory.GetRepository();
+            var repo = RepositoryFactory.GetRepository(); 
             if (createEditVM.Post.PostId == 0)    //Save or add work regardless of button choice
             {
                 createEditVM.Post.PostId = repo.CreateNewPost(createEditVM.Post);

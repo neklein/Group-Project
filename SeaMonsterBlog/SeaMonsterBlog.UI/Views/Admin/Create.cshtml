@@ -5,9 +5,10 @@
     ViewBag.Categories = Model.Categories;
 }
 
-    @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-inline", enctype = "multipart/form-data", id = "frmUpload" }))
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-inline", id = "frmUpload" }))
     {
         @Html.AntiForgeryToken()
+        <input type="text" name="Post.PostId" value="@Model.Post.PostId" class="hidden"/>
         <div style="padding-left:15px">
             @Html.CheckBoxFor(m => m.Post.IsForReview, new { @style = "visibility:hidden", id = "is-for-review" })
             <div class="row" style="padding-bottom:10px">
@@ -85,7 +86,6 @@
                 }
             </select>
         </div>
-        @Html.HiddenFor(m => m.Post.PostId)
     </div>
 }
 @section scripts {
