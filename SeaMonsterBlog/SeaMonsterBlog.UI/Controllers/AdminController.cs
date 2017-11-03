@@ -19,7 +19,7 @@ namespace SeaMonsterBlog.UI.Controllers
             CreateEditVM createEditVM = new CreateEditVM();
             createEditVM.Categories = repo.GetAllCategories();
             createEditVM.Images = repo.GetAllImages();
-            
+            createEditVM.Post = new SeaMonsterBlog.Models.Tables.Post();            
             return View(createEditVM);
         }
 
