@@ -1,0 +1,78 @@
+﻿@model SeaMonsterBlog.UI.Models.CreateEditVM
+
+@{
+    ViewBag.Title = "Review";
+    ViewBag.Categories = Model.Categories;
+}
+
+<h2>Review</h2>
+@using (Html.BeginForm("review", "admin", FormMethod.Post, new { @class = "form-inline", enctype = "multipart/form-data", id = "review-form" }))
+{
+    @Html.HiddenFor(m => m.Post.PostId)
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <h3><strong>@Model.Post.PostTitle</strong></h3>
+        <h5><strong>@Model.Post.DisplayDate  |  @Model.Post.Author</strong></h5>
+    </div>
+    <div class="panel-body">
+        <p>
+            categories listed here
+        </p>
+    </div>
+</div>
+
+<div class="well-lg" id="post-body">
+    @Html.Raw(Model.Post.PostText)
+</div>
+<div class="row">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-inline", enctype = "multipart/form-data" }))
+    {
+        <div class="form-group">
+            <label>Display Date</label>
+            <input class='date-picker' name="Post.DisplayDate" />
+        </div>
+        <div class="form-group">
+            <label>Publish Date</label>
+            <input class='date-picker' name="Post.ToPostDate" />
+        </div>
+        <div class="form-group">
+            <label>Display Date</label>
+            <input class='date-picker' name="Post.ExpDate" />
+        </div>
+        <div class="row">
+            <button onclick="returnToEdit" class="btn" id="main-submit">Return to Edit View</button>
+            <button onclick="flagToReturn()"class="btn">Return to Contributor</button>
+            <button onclick="flagToPublish()"class="btn btn-primary" style="float:right">Publish</button>
+        </div>
+        @Html.CheckBoxFor(m => m.Post.IsForReview, new { @style = "visibility:hidden", id = "toReview" })
+        @Html.CheckBoxFor(m => m.Post.IsPublished, new { @style = "visibility:hidden", id = "is-for-publish" })
+    }
+</div>
+}
+
+
+
+@section scripts {
+    <script>
+        $(function () {
+            $('.date-picker').datepicker();
+        });
+
+        function flagToReturn() {
+            $("#toReview").attr("checked", false);
+            $("#is-for-publish").attr("checked", false)
+            $("#review-form").submit();
+        };
+
+        function flagToPublish() {
+            $("#is-for-publish").attr("checked", true);
+            $("#toReview").attr("checked", false);
+            $("#review-form").submit();
+        }
+        function returnToEdit() {
+            $("#is-for-publish").attr("checked", false);
+            $("#toReview").attr("checked", true);
+            $("#review-form").submit();
+        }
+</script>
+}

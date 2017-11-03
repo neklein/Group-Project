@@ -15,7 +15,7 @@ namespace SeaMonsterBlog.Data
         static IEnumerable<Reply> replies;
         static IEnumerable<Image> images;
 
-        static int postIdCount = 11;
+        static int postIdCount = 12;
         static int imageIdCount = 4;
 
        public MockRepository()
