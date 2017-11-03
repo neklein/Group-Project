@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace SeaMonsterBlog.Models.Tables
 {
@@ -12,6 +13,7 @@ namespace SeaMonsterBlog.Models.Tables
         public string PostText { get; set; }
         public int UserId { get; set; }
         public string PostTitle { get; set; }
+        public string HashtagString { get; set; }
         public DateTime ExpDate { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime ToPostDate { get; set; }
@@ -21,7 +23,7 @@ namespace SeaMonsterBlog.Models.Tables
         public bool IsForReview { get; set; }
         public List<Comment> Comments { get; set; }
         public List<Hashtag> Hashtags { get; set; }
-        public List<Category> Categories { get; set; }
+        public List<Category> SelectedCategories { get; set; }
 
         // JM -> ADDED MORNING 11/2
         public string Author { get; set; }

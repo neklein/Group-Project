@@ -10,8 +10,6 @@ namespace SeaMonsterBlog.Models.Tables
     {
         public int CategoryID { get; set; }
         public string CategoryTag { get; set; }
-        public DateTime DateAdded { get; set; }
-
-         
+        public DateTime DateAdded { get; set; }         
     }
 }

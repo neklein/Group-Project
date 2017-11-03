@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using SeaMonsterBlog.Data;
+using System.Net;
 
 namespace SeaMonsterBlog.UI.Controllers
 {
@@ -18,15 +19,18 @@ namespace SeaMonsterBlog.UI.Controllers
             CreateEditVM createEditVM = new CreateEditVM();
             createEditVM.Categories = repo.GetAllCategories();
             createEditVM.Images = repo.GetAllImages();
-            
+            createEditVM.Post = new SeaMonsterBlog.Models.Tables.Post();            
             return View(createEditVM);
         }
+
 
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult Create(CreateEditVM createEditVM)
         {
+            createEditVM.Post.PostText = WebUtility.HtmlEncode(createEditVM.Post.PostText);
             var repo = RepositoryFactory.GetRepository();
+            
             if (createEditVM.Post.PostId == 0)    //Save or add work regardless of button choice
             {
                 createEditVM.Post.PostId = repo.CreateNewPost(createEditVM.Post);
@@ -62,20 +66,55 @@ namespace SeaMonsterBlog.UI.Controllers
                 }
                 createEditVM.Categories = repo.GetAllCategories();
                 createEditVM.Images = repo.GetAllImages();
+                createEditVM.Post.PostText = WebUtility.HtmlDecode(createEditVM.Post.PostText);
                 return View("Create", createEditVM);
             }
             else 
             {
                 createEditVM.Categories = repo.GetAllCategories();
+                createEditVM.Post.PostText = WebUtility.HtmlDecode(createEditVM.Post.PostText);
                 createEditVM.Images = repo.GetAllImages();
                 return View("Create", createEditVM);
             }
            
         }
 
-        public ActionResult Review()
+        [HttpGet]
+        public ActionResult Review(int id)
         {
-            return View();
+            var repo = RepositoryFactory.GetRepository();
+            CreateEditVM createEditVM = new CreateEditVM();
+
+            createEditVM.Post = repo.GetPostByID(id);
+            createEditVM.Post.PostText = WebUtility.HtmlDecode(createEditVM.Post.PostText);
+            createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(53);
+            createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(0, createEditVM.Post.PostText.Length - 16);
+            createEditVM.Categories = repo.GetAllCategories();
+
+            return View(createEditVM);
+        }
+
+        [HttpPost]
+        public ActionResult Review(CreateEditVM createEditVM)
+        {
+            var repo = RepositoryFactory.GetRepository();  //chose to edit
+
+            if (createEditVM.Post.IsForReview &&createEditVM.Post.IsPublished==false)
+            {
+                createEditVM.Categories = repo.GetAllCategories();
+                createEditVM.Images = repo.GetAllImages();
+                return RedirectToAction("Create", createEditVM);
+            }
+            else if (createEditVM.Post.IsForReview == false && createEditVM.Post.IsPublished == false)  //returned to contributor
+            {
+                repo.SavePost(createEditVM.Post);
+                throw new NotImplementedException();  //return to admin/console??
+            }
+            else  //published
+            {
+                repo.SavePost(createEditVM.Post);
+                throw new NotImplementedException();  //also admin/console??
+            }
         }
 
     }

@@ -5,17 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/themes/base/css")
     @Scripts.Render("~/bundles/modernizr")
 
 </head>
-<body class="container">
-    <div class="text-center"><h1><strong>@Html.ActionLink("Sea Monsters and the People Who Love Them", "Index", "Home", null, null)</strong></h1></div>
-    <hr />
+<body class="container" style="padding-top:0px">
+    <div class="jumbotron" style="background-image:url(/images/banner.jpg);background-size:cover;padding-bottom:10px;margin-bottom:0px;height:280px"></div>
+    
     <div class="row">
 
-        <hr />
-
-        <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar navbar-header navbar-static-top">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -27,7 +26,6 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li>@Html.ActionLink("Categories", "ByCategory", "Home")</li>
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown">
                                 Categories

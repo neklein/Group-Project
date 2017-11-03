@@ -5,18 +5,22 @@
     ViewBag.Categories = Model.Categories;
 }
 
-    @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-inline", enctype = "multipart/form-data", id = "frmUpload" }))
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-inline", id = "frmUpload" }))
     {
         @Html.AntiForgeryToken()
+        <input type="text" name="Post.PostId" value="@Model.Post.PostId" class="hidden"/>
         <div style="padding-left:15px">
             @Html.CheckBoxFor(m => m.Post.IsForReview, new { @style = "visibility:hidden", id = "is-for-review" })
-            <label>Title</label>
             <div class="row" style="padding-bottom:10px">
-                <div class="col-md-10">
+                <div class="col-md-5">
+                    <label>Title</label>
                     @Html.TextBoxFor(model => model.Post.PostTitle, new { @class = "form-control", style = "width:600px" })
                 </div>
+                <div class="col-md-5">
+                    <label>Author</label>
+                    @Html.TextBoxFor(model => model.Post.Author, new { @class = "form-control" })
+                </div>
                 <div class="col-md-2">
-                    <label>Select Type</label>
                     <select name="Post.IsStatic" class="form-control" style="width:auto">
                     @{ 
                         if (Model.Post != null && Model.Post.IsStatic == false)
@@ -46,10 +50,17 @@
             <!-- This will contain your HtmlContent and use the TinyMCE editor-->
             @Html.TextAreaFor(model => model.Post.PostText)
             <br />
-            @Html.TextBoxFor(m => Model.Post.Categories, new { @class="form-control", style="width:1000px", placeholder="#hashtags"})
-            <br />
-            <input type="submit" class ="btn btn-default"value="Save" id="main-button"/>
-            <input type="button" class="btn btn-primary" value="Submit For Review" onclick="FlagAndSend()" /> 
+            <div class="row">
+                <div class="col-md-6">
+                    @Html.TextBoxFor(m => Model.Post.HashtagString, new { @class = "form-control", style = "width:1000px", placeholder = "#hashtags" })
+                    <input type="submit" class="btn btn-default" value="Save Work" id="main-button" />
+                    <input type="button" class="btn btn-primary" value="Submit For Review" onclick="FlagAndSend()" />
+                </div>
+                <div class="col-md-6">
+                @Html.ListBoxFor(m => m.Post.SelectedCategories,
+                                Model.Categories.Select(x => new SelectListItem { Text = x.CategoryTag, Value = x.CategoryID.ToString() }), new { @class = "form-control" })
+                </div>
+            </div>
         </div>
 
     <div class="row" style="padding-top:20px;padding-left:20px;">
@@ -83,6 +94,7 @@
             selector: 'textarea',
             height: 500,
             theme: 'modern',
+            relative_urls: false,
             plugins: 'print preview fullpage paste searchreplace autolink directionality code visualblocks importcss visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount spellchecker imagetools media  link contextmenu colorpicker textpattern help',
             toolbar1: 'formatselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat',
             image_advtab: true,
@@ -107,9 +119,8 @@
 
         $(function () {
             $(".image-choice").click(function (event) {
-                var sr = "../images/" + $(".image-choice option:selected").html();
-                //  tinyMCE.execCommand('mceInsertContent', false, '<img alt="Smiley face" height="42" width="42" src="' + sr + '"/>');
-                tinymce.activeEditor.insertContent('<img alt="Smiley face" height="42" width="42" src="' + sr + '"/>');
+                var sr = "http://" + window.location.host + "/images/" + $(".image-choice option:selected").html();
+                tinymce.activeEditor.insertContent('<img alt="broken" height="42" width="42" src="' + sr + '"/>');
             });
         });
     </script>    

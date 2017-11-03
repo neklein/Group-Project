@@ -10,5 +10,6 @@ namespace SeaMonsterBlog.Models.Tables
     {
         public int HashtagID { get; set; }
         public string HashtagName { get; set; }
+        public DateTime DateAdded { get; set; }
     }
 }
