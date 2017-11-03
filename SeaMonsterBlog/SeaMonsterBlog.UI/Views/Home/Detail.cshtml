@@ -13,18 +13,14 @@
                 <h5><strong>@Model.Post.DisplayDate  |  {blog.author}</strong></h5>
             </div>
             <div class="panel-body">
-                <p>list of categories will go here</p>
+                @Html.Raw(Model.Post.PostText)
             </div>
-        </div>
-
-        <div class="well-lg">
-            @Model.Post.PostText
         </div>
 
         <div class="panel-body">
-            <div class="label label-success">
-                <p>list of categories will go here</p>
-            </div>
+            <span class="label label-success">
+                #Hashtags
+            </span>
         </div>
     </div>
 </div>
@@ -42,12 +38,21 @@
 
             if (comment.Replies == null)
             {
+                <p></p>
                 <div class="form-inline">
                     <div class="form-horizontal">
                         <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-horizontal">
+                        <div class="form-group">
                             <label for="reply">Reply</label>
-                            <input type="text" class="form-control" id="reply" >
-                            <button id="btn-reply" class="btn btn-default">Reply</button>
+                                <input type="text" class="form-control">
+                            <div class="comment-button">
+                                <button id="btn-reply" class="btn btn-default">Reply</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -59,12 +64,21 @@
                     <p>@reply.ReplyName  |  @reply.ReplyDate</p>
                     <p>@reply.ReplyText</p>
 
+                    <p></p>
                     <div class="form-inline">
                         <div class="form-horizontal">
                             <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-horizontal">
+                            <div class="form-group">
                                 <label for="reply">Reply</label>
-                                <input type="text" class="form-control" id="reply">
-                                <button id="btn-reply" class="btn btn-default">Reply</button>
+                                    <input type="text" class="form-control">
+                                <div class="comment-button">
+                                    <button id="btn-reply" class="btn btn-default">Reply</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -73,16 +87,45 @@
 
         }
 
+        <p></p>
+        <p></p>
         <div class="form-inline">
-            <div class="form-horizontal">
-                <div class="form-group">
-                    <label for="reply">Comment</label>
-                    <input type="text" class="form-control" id="new-comment">
-                    <button id="btn-reply" class="btn btn-default">Comment</button>
+            <div class="comment-box">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="comment">Comment</label>
+                        <input type="text" class="form-control">
+                    </div>
                 </div>
             </div>
+            <div class="comment-button">
+                <button id="btn-reply" class="btn btn-default">Comment</button>
+            </div>
         </div>
-
     </div>
 </div>
+
+@section Scripts
+{
+    <script>
+    $(document).ready(function () {
+
+        $(".comment-box").hide();
+
+        $(".comment-button").click(function () {
+            $(".comment-box").show();
+        });
+
+    });
+
+    </script>
+    
+}
+
 
