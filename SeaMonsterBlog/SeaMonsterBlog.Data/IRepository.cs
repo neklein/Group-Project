@@ -13,11 +13,12 @@ namespace SeaMonsterBlog.Data
         List<Image> GetAllImages();
         List<Post> GetAllPosts();
         //Update the below with postId
-        List<Comment> GetAllComments(int postId);
-        List<Reply> GetAllReply(int commentId);
         Post GetPostByID(int postID);
         int CreateNewPost(Post post);
         void SavePost(Post post);
         void SaveNewImage(string fileName);
+        void ADMINSetPostList(Post post);
+        void SetPostLists(Post post);
+        List<Post> GetPublishedPosts();
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using SeaMonsterBlog.UI.Models;
+using SeaMonsterBlog.Data;
 
 namespace SeaMonsterBlog.UI.Controllers
 {
@@ -57,8 +58,11 @@ namespace SeaMonsterBlog.UI.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            var repo = RepositoryFactory.GetRepository();
+            LoginViewModel loginVM = new LoginViewModel();
+            loginVM.Categories = repo.GetAllCategories();
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return View(loginVM);
         }
 
         //
@@ -68,6 +72,9 @@ namespace SeaMonsterBlog.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            var repo = RepositoryFactory.GetRepository();
+            model.Categories = repo.GetAllCategories();
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -75,7 +82,7 @@ namespace SeaMonsterBlog.UI.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -115,7 +122,6 @@ namespace SeaMonsterBlog.UI.Controllers
             {
                 return View(model);
             }
-
             // The following code protects for brute force attacks against the two factor codes. 
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
@@ -151,7 +157,7 @@ namespace SeaMonsterBlog.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

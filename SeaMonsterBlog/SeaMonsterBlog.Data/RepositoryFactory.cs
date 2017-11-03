@@ -10,7 +10,7 @@ namespace SeaMonsterBlog.Data
 {
     public static class RepositoryFactory
     {
-        static IRepository _mock = new MockRepository();
+       // static IRepository _mock = new MockRepository();
         static IRepository _postRepo = new PostRepo();
 
         public static IRepository GetRepository()
@@ -18,8 +18,8 @@ namespace SeaMonsterBlog.Data
             string repositoryType = ConfigurationManager.AppSettings["RepositoryType"].ToString();
             switch (repositoryType)
             {
-                case "QA":
-                    return _mock;
+                //case "QA":
+                //    return _mock;
                 case "ADO":
                     return _postRepo;
                 default:
