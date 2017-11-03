@@ -35,7 +35,7 @@
     <div class="co-sm-12">
         <h4>Comments</h4>
         
-        @foreach (var comment in Model.Comments)
+        @foreach (var comment in Model.Post.Comments)
         {
             <p>@comment.CommenterName  |  @comment.CommentDate</p>
             <p>@comment.CommentText</p>
