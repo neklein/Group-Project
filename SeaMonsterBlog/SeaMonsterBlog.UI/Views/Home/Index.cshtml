@@ -12,23 +12,18 @@
         {
             <div class="panel panel-success">
                 <div class="panel-heading">
-                    <h3><storng>@blog.PostTitle</storng></h3>
+                    <h3><strong>@blog.PostTitle</strong></h3>
                     <h5><strong>@blog.DisplayDate  |  {blog.author}</strong></h5>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" style="height:300px; overflow:hidden">
                     <p>list of categories will go here</p>
-                </div>
-            </div>
-
-            <div class="well-lg" style="height:120px; overflow:hidden">
-                @blog.PostText
-            </div>
-
-            <div class="panel-body">
-                <div class="label label-success">
+                    @Html.Raw(blog.PostText)
+                    <br />
                     <p>list of hashtags will go here</p>
+
                 </div>
             </div>
+
 
             @Html.ActionLink("Read More and Comment", "Detail", "Home", new { id = blog.PostId}, new { @class = "btn btn-warning" })
 

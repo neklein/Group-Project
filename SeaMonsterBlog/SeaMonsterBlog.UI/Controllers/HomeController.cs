@@ -3,6 +3,7 @@ using SeaMonsterBlog.UI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -16,6 +17,12 @@ namespace SeaMonsterBlog.UI.Controllers
             HomeVM homeVM = new HomeVM();
             homeVM.Categories = repo.GetAllCategories();
             homeVM.Posts = repo.GetAllPosts(); 
+            foreach (var p in homeVM.Posts)
+            {
+                p.PostText = WebUtility.HtmlDecode(p.PostText);
+                p.PostText = p.PostText.Substring(53);
+                p.PostText = p.PostText.Substring(0, p.PostText.Length - 16);
+            }
 
             return View(homeVM);
         }
@@ -27,8 +34,8 @@ namespace SeaMonsterBlog.UI.Controllers
 
             detailVM.Categories = repo.GetAllCategories();
             detailVM.Post = repo.GetPostByID(id);
-            detailVM.Comments = repo.GetAllComments();
-            detailVM.Replies = repo.GetAllReply();
+            detailVM.Post.Comments = repo.GetAllComments();
+            //detailVM.Post.Comments.Replies = repo.GetAllReply();
 
             return View(detailVM);
         }

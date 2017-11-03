@@ -17,13 +17,14 @@
     <div class="panel-body">
         <p>
             categories listed here
+            @Html.Raw(Model.Post.PostText)
+            <br />
+            list of hashtags at the bottom
         </p>
     </div>
 </div>
 
-<div class="well-lg" id="post-body">
-    @Html.Raw(Model.Post.PostText)
-</div>
+
 <div class="row">
     @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-inline", enctype = "multipart/form-data" }))
     {
