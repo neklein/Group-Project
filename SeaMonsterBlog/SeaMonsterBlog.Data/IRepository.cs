@@ -12,8 +12,9 @@ namespace SeaMonsterBlog.Data
         List<Category> GetAllCategories();
         List<Image> GetAllImages();
         List<Post> GetAllPosts();
-        List<Comment> GetAllComments();
-        List<Reply> GetAllReply();
+        //Update the below with postId
+        List<Comment> GetAllComments(int postId);
+        List<Reply> GetAllReply(int commentId);
         Post GetPostByID(int postID);
         int CreateNewPost(Post post);
         void SavePost(Post post);

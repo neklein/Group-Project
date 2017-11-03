@@ -141,5 +141,15 @@ namespace SeaMonsterBlog.Data
         {
             return replies.ToList();
         }
+
+        public List<Comment> GetAllComments(int postId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Reply> GetAllReply(int commentId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

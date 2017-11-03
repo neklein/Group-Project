@@ -23,7 +23,7 @@ namespace SeaMonsterBlog.Models.Tables
         public bool IsForReview { get; set; }
         public List<Comment> Comments { get; set; }
         public List<Hashtag> Hashtags { get; set; }
-        public string[] SelectedCategories { get; set; }
+        public List<Category> SelectedCategories { get; set; }
 
         // JM -> ADDED MORNING 11/2
         public string Author { get; set; }

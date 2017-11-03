@@ -34,7 +34,7 @@ namespace SeaMonsterBlog.UI.Controllers
 
             detailVM.Categories = repo.GetAllCategories();
             detailVM.Post = repo.GetPostByID(id);
-            detailVM.Post.Comments = repo.GetAllComments();
+            detailVM.Post.Comments = repo.GetAllComments(id);
             //detailVM.Post.Comments.Replies = repo.GetAllReply();
 
             return View(detailVM);
