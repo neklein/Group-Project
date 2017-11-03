@@ -16,10 +16,10 @@ namespace SeaMonster.Data_CLW
         List<Reply> GetReplies(int CommentID);
         List<Reply> GetPublishedReplies(int CommentID);
         void Approvepost(int postID);
-        void CreatePost(string PostTitle, string posttext);
-        void CreatePost(string PostTitle, string posttext, DateTime expdate);
-        void CreatePostDelayed(string PostTitle, string posttext, DateTime postdate);
-        void CreatePostDelayed(string PostTitle, string posttext, DateTime postdate, DateTime expdate);
+        int CreatePost(string PostTitle, string posttext, string displayauthor, DateTime displaydate);
+        int CreatePost(string PostTitle, string posttext, string displayauthor, DateTime displaydate, DateTime expdate);
+        int CreatePostDelayed(string PostTitle, string posttext, string displayauthor, DateTime displaydate, DateTime postdate);
+        int CreatePostDelayed(string PostTitle, string posttext, DateTime postdate, string displayauthor, DateTime displaydate, DateTime expdate);
         void ApproveComment(int CommentID);
         void ApproveReply(int ReplyID);
         void CreateComment(int postId, string commenterName, string commentText);
@@ -44,6 +44,12 @@ namespace SeaMonster.Data_CLW
         List<Image> GetImagesByPost(int postId);
         Comment GetCommentByCommentId(int commentId);
         Reply GetReplyByReplyId(int replyId);
+        List<Post> GetAllPostByAuthor(string name);
+        Category GetCategoryByCatID(int CatID);
+        void SavePost();
+        List<Post> GetPublishedPostbyAuthor(string name);
+        Category GetCategoryByCatName(string name);
+
 
     }
 }

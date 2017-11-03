@@ -69,13 +69,28 @@ GO
  drop procedure GetPostByCategory
  GO
 
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='GetPostByAuthor')
+ drop procedure GetPostByAuthor
+ GO
+ --------------------Searches and Gets------------------------------------------
 
-
+ 
+ Create Procedure GetALLPosts as
+ begin
+ select p.PostID, p.PostTitle, p.DateCreated, p.ToPostDate, p.DisplayAuthor, 
+ p.DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby 
+ from Post p
+ left join PostText pt on pt.PostId=p.PostID
+ order by p.DateCreated
+ end
+ go
 
 
  Create Procedure GetPublishedPosts AS
  Begin
- Select p.PostID, p.PostTitle, p.DateCreated, p.ToPostDate, p.DisplayAuthor, p.DisplayDate, pt.PostText from Post p
+select p.PostID, p.PostTitle, p.DateCreated, p.ToPostDate, p.DisplayAuthor, 
+ p.DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby 
+ from Post p
  left join PostText pt on pt.PostId=p.PostID
  where p.ispublished=1
  order by p.DateCreated
@@ -84,7 +99,9 @@ GO
 
 Create Procedure GetPostByID (@PostID int) AS
  Begin
- Select p.PostID, p.PostTitle, p.DateCreated, p.ToPostDate, p.DisplayAuthor, p.DisplayDate, pt.PostText from Post p
+select p.PostID, p.PostTitle, p.DateCreated, p.ToPostDate, p.DisplayAuthor, 
+ p.DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby
+  from Post p
  left join PostText pt on pt.PostId=p.PostID
  order by p.DateCreated
  End
@@ -129,7 +146,9 @@ go
 
 Create Procedure GetPostByHashtag (@HashtagID int) AS
 begin
-Select p.PostID, p.PostTitle, p.DateCreated, p.ispublished, p.ToPostDate, p.DisplayAuthor,p.DisplayDate, pt.PostText from Post p
+ select p.PostID, p.PostTitle, p.DateCreated, p.ToPostDate, p.DisplayAuthor, 
+ p.DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby
+ from Post p
  left join PostText pt on pt.PostId=p.PostID
  left join HashtagPost h on h.PostID=p.PostID
  where h.HashtagID=@HashtagID
@@ -139,13 +158,24 @@ Go
 
 Create Procedure GetPostByCategory (@CategoryID int)AS
 begin
-Select p.PostID, p.PostTitle, p.DateCreated, p.ToPostDate, p.DisplayAuthor,p.ispublished, p.DisplayDate, pt.PostText from Post p
+Select p.PostID, p.PostTitle, p.DateCreated, p.ToPostDate, p.DisplayAuthor, 
+ p.DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby
+from Post p
 left join PostText pt on pt.PostId=p.PostID
 left join CategoryPost cp on cp.PostId=p.PostID
 where cp.CategoryID=@CategoryID
 end
 go
 
+Create Procedure GetPostByAuthor (@DisplayAuthor nvarchar(40)) AS
+Begin
+ select p.PostID, p.PostTitle, p.DateCreated, p.ToPostDate, p.DisplayAuthor, 
+ p.DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby
+ from post p
+ left join PostText pt on pt.PostId=p.PostID
+ where p.DisplayAuthor=@DisplayAuthor
+ END
+ GO
 
 ---------------Admin---------------------
 Create Procedure ApprovePost (@PostID int) AS
@@ -172,9 +202,9 @@ where ReplyId=@ReplyId
 END
 GO
 
-Create Procedure CreatePost(@PostID int Output, @PostTitle nvarchar(50), @PostText nvarchar(max), @ExpDate DateTime2 null, @ToPostDate DateTime2 null) AS
+Create Procedure CreatePost(@PostID int Output, @PostTitle nvarchar(50), @PostText nvarchar(max), @ExpDate DateTime2 null, @ToPostDate DateTime2 null, @DisplayAuthor nvarchar(40), @DisplayDate datetime2) AS
 begin 
-insert into Post (PostTitle, Expdate,ToPostDate) values (@PostTitle, @ExpDate,@ToPostDate)
+insert into Post (PostTitle, Expdate,ToPostDate,DisplayAuthor,DisplayDate) values (@PostTitle, @ExpDate,@ToPostDate, @DisplayAuthor,@DisplayDate)
 set @PostID=SCOPE_IDENTITY();
 insert into PostText (PostId, PostText) Values (@PostID, @PostText)
 END
@@ -203,6 +233,15 @@ Begin
 Insert into HashtagPost (HashtagID, PostID) Values (@HashtagID, @PostId)
 End
 Go
+
+Create Procedure SavePost (@PostID int, @PostTitle nvarchar(50), @PostText nvarchar(max), @ExpDate DateTime2 null, @ToPostDate DateTime2 null, @DisplayAuthor nvarchar(40), @DisplayDate datetime2) AS
+Begin
+Update Post SET 
+PostTitle=@PostTitle
+Post
+
+where PostID=@PostID
+END
 
 
 select * from post

@@ -84,9 +84,9 @@ namespace SeaMonster.Data_CLW
             }
         }
 
-        public void CreatePost(string PostTitle, string posttext)
-        {
-            using(SqlConnection cn =new SqlConnection(cs))
+        public int CreatePost(string PostTitle, string posttext, string displayauthor, DateTime displaydate)
+        { int x = 0;
+            using (SqlConnection cn = new SqlConnection(cs))
             {
                 SqlCommand cmd = new SqlCommand("CreatePost", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -95,15 +95,21 @@ namespace SeaMonster.Data_CLW
                 cmd.Parameters.Add(Param);
                 cmd.Parameters.AddWithValue("@PostTitle", PostTitle);
                 cmd.Parameters.AddWithValue("@PostText", posttext);
+                cmd.Parameters.AddWithValue("@DisplayAuthor", displayauthor);
+                cmd.Parameters.AddWithValue("@DisplayDate", displaydate);
                 cmd.Parameters.AddWithValue("@ExpDate", ' ');
                 cmd.Parameters.AddWithValue("@ToPostDate", ' ');
                 cn.Open();
                 cmd.ExecuteNonQuery();
+                x = int.Parse(Param.ToString());
             }
+            return x;
+            
         }
 
-        public void CreatePost(string PostTitle, string posttext, DateTime expdate)
+        public int CreatePost(string PostTitle, string posttext, string displayauthor, DateTime displaydate, DateTime expdate)
         {
+            int x = 0;
             using (SqlConnection cn = new SqlConnection(cs))
             {
                 SqlCommand cmd = new SqlCommand("CreatePost", cn);
@@ -113,17 +119,23 @@ namespace SeaMonster.Data_CLW
                 cmd.Parameters.Add(Param);
                 cmd.Parameters.AddWithValue("@PostTitle", PostTitle);
                 cmd.Parameters.AddWithValue("@PostText", posttext);
+                cmd.Parameters.AddWithValue("@DisplayAuthor", displayauthor);
+                cmd.Parameters.AddWithValue("@DisplayDate", displaydate);
                 cmd.Parameters.AddWithValue("@ExpDate", expdate);
                 cmd.Parameters.AddWithValue("@ToPostDate", ' ');
                 cn.Open();
                 cmd.ExecuteNonQuery();
+                x = int.Parse(Param.ToString());
             }
+            return x;
         }
 
-        public void CreatePostDelayed(string PostTitle, string posttext, DateTime postdate)
+        public int CreatePostDelayed(string PostTitle, string posttext, string displayauthor, DateTime displaydate, DateTime postdate)
         {
+            int x = 0;
             using (SqlConnection cn = new SqlConnection(cs))
-            {
+            { 
+
                 SqlCommand cmd = new SqlCommand("CreatePost", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 SqlParameter Param = new SqlParameter("@PostID", SqlDbType.Int);
@@ -131,15 +143,20 @@ namespace SeaMonster.Data_CLW
                 cmd.Parameters.Add(Param);
                 cmd.Parameters.AddWithValue("@PostTitle", PostTitle);
                 cmd.Parameters.AddWithValue("@PostText", posttext);
+                cmd.Parameters.AddWithValue("@DisplayAuthor", displayauthor);
+                cmd.Parameters.AddWithValue("@DisplayDate", displaydate);
                 cmd.Parameters.AddWithValue("@ToPostDate", postdate);
+                cmd.Parameters.AddWithValue("@ExpDate", ' ');
                 cn.Open();
                 cmd.ExecuteNonQuery();
+                x = int.Parse(Param.ToString());
             }
-
+            return x;
         }
 
-        public void CreatePostDelayed(string PostTitle, string posttext, DateTime postdate, DateTime expdate)
+        public int CreatePostDelayed(string PostTitle, string posttext, DateTime postdate, string displayauthor, DateTime displaydate, DateTime expdate)
         {
+            int x;
             using (SqlConnection cn = new SqlConnection(cs))
             {
                 SqlCommand cmd = new SqlCommand("CreatePost", cn);
@@ -151,10 +168,13 @@ namespace SeaMonster.Data_CLW
                 cmd.Parameters.AddWithValue("@PostText", posttext);
                 cmd.Parameters.AddWithValue("@ToPostDate", postdate);
                 cmd.Parameters.AddWithValue("@ExpDate", expdate);
+                cmd.Parameters.AddWithValue("@DisplayAuthor", displayauthor);
+                cmd.Parameters.AddWithValue("@DisplayDate", displaydate);
                 cn.Open();
                 cmd.ExecuteNonQuery();
+                x = int.Parse(Param.ToString());
             }
-
+            return x;
         }
 
         public void CreateReply(int commentId, string replyName, string replyText)
@@ -259,10 +279,8 @@ namespace SeaMonster.Data_CLW
 
             using (var cn = new SqlConnection(cs))
             {
-                SqlCommand cmd = new SqlCommand();
-
-                cmd.Connection = cn;
-                cmd.CommandText = "SELECT * FROM Post";
+                SqlCommand cmd = new SqlCommand("GetALLPosts",cn);
+                cmd.CommandType = CommandType.StoredProcedure;
 
                 cn.Open();
                 using (SqlDataReader dr = cmd.ExecuteReader())
@@ -273,8 +291,14 @@ namespace SeaMonster.Data_CLW
 
                         post.PostId = (int)dr["PostID"];
                         post.PostTitle = dr["PostTitle"].ToString();
+                        post.PostText = dr["PostText"].ToString();
                         post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
                         post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
+                        post.DisplayAuthor = dr["DisplayAuthor"].ToString();
+                        post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
+                        post.IsStatic = (bool)dr["isStatic"];
+                        post.IsPublished = (bool)dr["ispublished"];
+                        post.IsForReview = (bool)dr["isforReview"];
 
                         posts.Add(post);
                     }
@@ -416,16 +440,16 @@ namespace SeaMonster.Data_CLW
             PostRepo repo = new PostRepo();
             List<HashTag> CurrentCategories = repo.GetHashtags();
             List<string> CatTags = new List<string>();
-            foreach(HashTag cat in CurrentCategories)
+            foreach (HashTag cat in CurrentCategories)
             {
                 CatTags.Add(cat.Hashtag.ToLower());
             }
             char[] delimiters = new char[] { ',', '#', ' ' };
             List<string> Categories = categoryinput.Split(delimiters).ToList();
             List<string> categorysort = new List<string>();
-            foreach(string s in Categories)
+            foreach (string s in Categories)
             {
-                if (s.Length >2 && !string.IsNullOrWhiteSpace(s))
+                if (s.Length > 2 && !string.IsNullOrWhiteSpace(s))
                 {
                     categorysort.Add(s.ToLower());
                 }
@@ -436,7 +460,7 @@ namespace SeaMonster.Data_CLW
                 {
                     if (CatTags.Contains(c))
                     {
-                        HashTag current=  CurrentCategories.Where(m => m.Hashtag.ToLower() == c).FirstOrDefault();
+                        HashTag current = CurrentCategories.Where(m => m.Hashtag.ToLower() == c).FirstOrDefault();
                         SqlCommand cmd = new SqlCommand("ReuseHashtag", cn);
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@HashtagID", current.HashtagID);
@@ -471,7 +495,7 @@ namespace SeaMonster.Data_CLW
                 SqlCommand cmd = new SqlCommand("select * from Hashtags", cn);
                 cmd.CommandType = CommandType.Text;
                 cn.Open();
-                using(SqlDataReader dr = cmd.ExecuteReader())
+                using (SqlDataReader dr = cmd.ExecuteReader())
                 {
                     while (dr.Read())
                     {
@@ -509,6 +533,8 @@ namespace SeaMonster.Data_CLW
                         post.PostTitle = dr["PostTitle"].ToString();
                         post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
                         post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
+                        post.DisplayAuthor = dr["DisplayAuthor"].ToString();
+                        post.DisplayDate = DateTime.Parse( dr["DisplayDate"].ToString());
                         post.PostText = dr["PostText"].ToString();
 
                         posts.Add(post);
@@ -518,7 +544,7 @@ namespace SeaMonster.Data_CLW
             return posts;
         }
 
-     
+
 
         public List<Post> GetAllStaticPublished()
         {
@@ -539,7 +565,7 @@ namespace SeaMonster.Data_CLW
             post.PostCategories = GetCategoryByPost(post.PostId);
             post.Hashtags = repo.GetHashtagbyPost(post.PostId);
             post.Comments = GetPublishedComments(post.PostId);
-            foreach(Comment c in post.Comments)
+            foreach (Comment c in post.Comments)
             {
                 c.Replies = GetPublishedReplies(c.CommentId);
             }
@@ -548,7 +574,7 @@ namespace SeaMonster.Data_CLW
         public List<Category> GetAllCategories()
         {
             List<Category> Cats = new List<Category>();
-            using(SqlConnection cn = new SqlConnection(cs))
+            using (SqlConnection cn = new SqlConnection(cs))
             {
                 SqlCommand cmd = new SqlCommand("select * from categories", cn);
                 cmd.CommandType = CommandType.Text;
@@ -583,7 +609,7 @@ namespace SeaMonster.Data_CLW
                         HashTag c = new HashTag();
                         c.HashtagID = (int)dr["HashtagID"];
                         c.Hashtag = dr["Hashtag"].ToString();
-                      
+
                         hts.Add(c);
                     }
                 }
@@ -630,13 +656,13 @@ namespace SeaMonster.Data_CLW
                         Comment cmt = new Comment();
                         cmt.CommentId = (int)dr["CommentID"];
                         cmt.CommenterName = dr["CommenterName"].ToString();
-                        cmt.CommentText= dr["CommentText"].ToString();
+                        cmt.CommentText = dr["CommentText"].ToString();
                         string date = dr["CommentDate"].ToString();
                         cmt.CommentDate = DateTime.Parse(date);
                         comments.Add(cmt);
                     }
                 }
-                
+
             }
             return comments;
         }
@@ -677,7 +703,7 @@ namespace SeaMonster.Data_CLW
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@HashtagID", HashtagID);
                 cn.Open();
-                using(SqlDataReader dr = cmd.ExecuteReader())
+                using (SqlDataReader dr = cmd.ExecuteReader())
                 {
                     while (dr.Read())
                     {
@@ -778,8 +804,8 @@ namespace SeaMonster.Data_CLW
 
             return comment;
         }
-        /*
-        public Reply GetReplyByReplyId(int replyId)
+
+        /*public Reply GetReplyByReplyId(int replyId)
         {
             Reply reply = new Reply();
             reply.ReplyID = replyId;
@@ -802,7 +828,8 @@ namespace SeaMonster.Data_CLW
                     }
                 }
             }
-            return ;*/
+            return ;}*/
+
 
         public List<Post> GetPublishedPostByCategory(int CatId)
         {
@@ -810,6 +837,32 @@ namespace SeaMonster.Data_CLW
             return posts;
         }
 
+        public Reply GetReplyByReplyId(int replyId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Post> GetAllPostByAuthor(string name)
+        {
+            List<Post> posts = GetAllPosts().Where(p => p.DisplayAuthor.ToLower() == name.ToLower()).ToList();
+            return posts;
+        }
+
+        public Category GetCategoryByCatID(int CatID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SavePost()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Post> GetPublishedPostbyAuthor(string name)
+        {
+            List<Post> posts = GetAllPostByAuthor(name).Where(p => p.IsPublished).ToList();
+            return posts;
+        }
     }
 
   

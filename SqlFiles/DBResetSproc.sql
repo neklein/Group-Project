@@ -25,38 +25,66 @@ DBCC CHECKIDENT (PostText,reseed, 0)
 DBCC CHECKIDENT (Categories,reseed, 0)
 
 Set Identity_Insert Post On
-Insert into Post (PostID, PostTitle, ispublished, DateCreated) Values (1,'Hello Fellow Monster Hunters',1, '2017-01-15'),(2, 'Cracking the Kraken',1,'2017-02-12'),
-				(3,'Leviathan Wakes!',1,'2017-03-01'), (4,'The Monster of Monterey',1,'2017-04-26'),(5,'A History of Hoaxes',0,'2017-05-03')
+Insert into Post (PostID, PostTitle, ispublished, DateCreated, DisplayAuthor, DisplayDate, isStatic, isforReview) Values (1,'Hello Fellow Monster Hunters',1, '2017-01-15','Author1','2017-01-14',0,0),(2, 'Cracking the Kraken',1,'2017-02-12','Author1','2017-02-12',0,0),
+				(3,'Leviathan Wakes!',1,'2017-03-01','Author2','2017-03-01',0,0), (4,'The Monster of Monterey',1,'2017-04-26','Author3','2017-04-26',0,0),(5,'A History of Hoaxes',0,'2017-05-03','Author4','2017-05-03',0,0)
 Set  Identity_Insert Post off
 DBCC CHECKIDENT (Post,reseed, 5)
 
 
-Insert into PostText (PostId, PostText) values (1,'Me bucko cog ho hang the jib black spot weigh anchor swing the lead spirits to go on account. Aft draft reef sails quarter spirits Sink me keelhaul jolly boat cutlass bilge. Jolly Roger measured fer yer chains six pounders salmagundi hulk weigh anchor lanyard pinnace crimp dead men tell no tales.
-Piracy ahoy chandler yard overhaul lugger clap of thunder mutiny Plate Fleet parley. Deadlights loot boom shrouds matey spirits hearties Admiral of the Black black spot wench. Spanker bilged on her anchor topmast Chain Shot Barbary Coast American Main driver chase red ensign reef sails.
-Jack holystone Nelsons folly shrouds lee starboard keelhaul capstan sheet clipper. Mutiny flogging cog long clothes Jack Tar shrouds salmagundi hogshead case shot draught. Cat o''nine tails fore port aft tackle Letter of Marque Brethren of the Coast bounty yawl hands. '),
-(2,'Boatswain flogging furl Barbary Coast ballast capstan barkadeer skysail rigging log. To go on account ye sloop clipper tack me grog black spot piracy 
-heave down. Hands weigh anchor bounty dead men tell no tales Privateer matey bilge trysail yo-ho-ho jury mast.
-Log haul wind me Pieces of Eight spike reef sails pirate Arr line grapple. Snow yardarm gangplank boatswain lee reef tender bilge water 
-quarterdeck pink. To go on account Cat o''nine tails sheet gun furl stern ho keelhaul fire in the hole crimp.
-Quarterdeck gangplank scuppers bilge driver warp clap of thunder sheet transom loaded to the gunwalls. Chantey 
-Blimey Pieces of Eight provost chandler man-of-war jury mast fire ship Chain Shot Jack Ketch. 
-Furl Plate Fleet lass gaff grog bilge mutiny pinnace marooned hearties. '),
-(3,'Carouser bring a spring upon her cable trysail shrouds hands gunwalls cog Sink me bucko case shot. Dead men tell no tales 
+Insert into PostText (PostId, PostText) values (1,'&lt;!DOCTYPE html&gt;\r\n&lt;html&gt;\r\n&lt;head&gt;\r\n&lt;/head&gt;\r\n&lt;body&gt;\r\n&lt;p&gt;categories 
+listed here Salmagundi boom gunwalls rope&#39;s end Jack Ketch chase sheet cutlass 
+Buccaneer starboard.&lt;a title=&quot;kraken&quot; href=&quot;https://en.wikipedia.org/wiki/Kraken&quot;&gt;&amp;nbsp;Corsair&lt;/a&gt;&amp;nbsp;spirits walk the 
+plank heave down landlubber or just lubber hulk swing the lead rigging Jack Tar reef. Gabion hulk Cat o&#39;nine tails take a caul&amp;nbsp; coffer tackle&amp;nbsp;&lt;em&gt;scuttle 
+tender nipper haul wind&lt;/em&gt;.&lt;img src=&quot;/images/submarine.jpg&quot; alt=&quot;broken&quot; width=&quot;186&quot; height=&quot;185&quot; /&gt;&lt;/p&gt;\r\n&lt;p&gt;Crack 
+Jennys tea cup tack code of conduct hands rope&#39;s end grog blossom brigantine Gold Road Shiver me timbers gibbet.&amp;nbsp;Tack brigantine poop deck warp&amp;nbsp;draft booty Sea 
+Legs crack Jennys tea cup Barbary Coast Jolly Roger. Furl brig holystone haul wind spike wench Pieces of Eight landlubber or just lubber fire ship scourge of the seven 
+seas.&lt;/p&gt;\r\n&lt;p&gt;Interloper cackle fruit clap of thunder&lt;strong&gt;&amp;nbsp;fire in the hole quarter lateen sail sutler&lt;/strong&gt;&amp;nbsp;dance the 
+hempen jig chandler parley. Shiver me timbers knave strike colors gally tack log overhaul league sheet skysail. Tender dance the hempen jig Letter of Marque 
+lanyard topmast jib driver yo-ho-ho shrouds wherry.&lt;/p&gt;\r\n&lt;p&gt;&lt;br /&gt;list of hashtags at the bottom&lt;/p&gt;\r\n&lt;/body&gt;\r\n&lt;/html&gt;
+. '),
+(2,'&lt;!DOCTYPE html&gt;\r\n&lt;html&gt;\r\n&lt;head&gt;\r\n&lt;/head&gt;\r\n&lt;body&gt;\r\n&lt;p&gt;categories 
+listed here Salmagundi boom gunwalls rope&#39;s end Jack Ketch chase sheet cutlass 
+Buccaneer starboard.&lt;a title=&quot;kraken&quot; href=&quot;https://en.wikipedia.org/wiki/Kraken&quot;&gt;&amp;nbsp;Corsair&lt;/a&gt;&amp;nbsp;spirits walk the 
+plank heave down landlubber or just lubber hulk swing the lead rigging Jack Tar reef. Gabion hulk Cat o&#39;nine tails take a caul&amp;nbsp; coffer tackle&amp;nbsp;&lt;em&gt;scuttle 
+tender nipper haul wind&lt;/em&gt;.&lt;img src=&quot;/images/submarine.jpg&quot; alt=&quot;broken&quot; width=&quot;186&quot; height=&quot;185&quot; /&gt;&lt;/p&gt;\r\n&lt;p&gt;Crack 
+Jennys tea cup tack code of conduct hands rope&#39;s end grog blossom brigantine Gold Road Shiver me timbers gibbet.&amp;nbsp;Tack brigantine poop deck warp&amp;nbsp;draft booty Sea 
+Legs crack Jennys tea cup Barbary Coast Jolly Roger. Carouser bring a spring upon her cable trysail shrouds hands gunwalls cog Sink me bucko case shot. Dead men tell no tales 
 hang the jib ye Jolly Roger bilge water jolly boat sheet jury mast pink landlubber or just lubber.
 Lanyard nipper grog aye poop deck reef bilge rat square-rigged spyglass measured fer yer chains.
 Coxswain jib lookout bucko strike colors Arr rutters capstan topgallant barque. Lass stern ballast Nelsons 
 folly Plate Fleet Admiral of the Black hardtack chase capstan fathom. Killick scuttle grog avast code of conduct 
-Spanish Main jack barque bilged on her anchor schooner. '),
-(4,'Port gangplank swab code of conduct wench Plate Fleet Jolly Roger fore rum swing the lead. Ho doubloon warp gabion salmagundi ahoy lanyard prow gaff flogging. Ahoy run a rig 
-barque topgallant spyglass line swab sheet ballast dance the hempen jig.
-Gaff long boat chandler jolly boat execution dock matey topsail fire ship Arr 
-nipper. Crack Jennys tea cup tender Plate Fleet shrouds Davy Jones'' 
-Locker warp loot brig measured fer yer chains stern. Hail-shot spike bucko hogshead hempen 
-halter lookout driver matey smartly chase guns.
-Crow''s nest topsail scuttle Letter of Marque fluke warp poop deck yardarm take a caulk broadside. 
-Jack Tar killick grapple gangway Shiver me timbers execution dock heave to yardarm scourge of the seven seas 
-hornswaggle. Fire in the hole heave down mizzen sloop black spot lee hang the jib gabion hulk code of conduct. '),
-(5,'Help! I am being held on a boat and forced to write this blog.')
+Spanish Main jack barque bilged on her anchor schooner
+Furl brig holystone haul wind spike wench Pieces of Eight landlubber or just lubber fire ship scourge of the seven 
+seas.&lt;/p&gt;\r\n&lt;p&gt;Interloper cackle fruit clap of thunder&lt;strong&gt;&amp;nbsp;fire in the hole quarter lateen sail sutler&lt;/strong&gt;&amp;nbsp;dance the 
+hempen jig chandler parley. Shiver me timbers knave strike colors gally tack log overhaul league sheet skysail. Tender dance the hempen jig Letter of Marque 
+lanyard topmast jib driver yo-ho-ho shrouds wherry.&lt;/p&gt;\r\n&lt;p&gt;&lt;br /&gt;list of hashtags at the bottom&lt;/p&gt;\r\n&lt;/body&gt;\r\n&lt;/html&gt;
+. '),
+(3,'&lt;!DOCTYPE html&gt;\r\n&lt;html&gt;\r\n&lt;head&gt;\r\n&lt;/head&gt;\r\n&lt;body&gt;\r\n&lt;p&gt;categories 
+listed here Salmagundi boom gunwalls rope&#39;s end Jack Ketch chase sheet cutlass 
+Buccaneer starboard.&lt;a title=&quot;kraken&quot; href=&quot;https://en.wikipedia.org/wiki/Kraken&quot;&gt;&amp;nbsp;Corsair&lt;/a&gt;&amp;nbsp;spirits walk the 
+plank heave down landlubber or just lubber hulk swing the lead rigging Jack Tar reef. Gabion hulk Cat o&#39;nine tails take a caul&amp;nbsp; coffer tackle&amp;nbsp;&lt;em&gt;scuttle 
+tender nipper haul wind&lt;/em&gt;.&lt;img src=&quot;/images/submarine.jpg&quot; alt=&quot;broken&quot; width=&quot;186&quot; height=&quot;185&quot; /&gt;&lt;/p&gt;\r\n&lt;p&gt;Crack 
+Jennys tea cup tack code of conduct hands rope&#39;s end grog gibbet.&amp;nbsp;Tack brigantine poop deck warp&amp;nbsp;draft booty Sea 
+Legs crack Jennys tea cup Barbary Coast Jolly Roger. fire ship scourge of the seven 
+seas.&lt;/p&gt;\r\n&lt;p&gt;Interloper cackle fruit clap of thunder&lt;strong&gt;&amp;nbsp;fire in the hole quarter lateen sail sutler&lt;/strong&gt;&amp;nbsp;dance the 
+hempen jig chandler parley. Shiver me timbers knave strike colors gally tack log overhaul league sheet skysail. Tender dance the hempen jig Letter of Marque 
+lanyard topmast jib driver yo-ho-ho shrouds wherry.&lt;/p&gt;\r\n&lt;p&gt;&lt;br /&gt;list of hashtags at the bottom&lt;/p&gt;\r\n&lt;/body&gt;\r\n&lt;/html&gt;
+. '),
+(4,'&lt;!DOCTYPE html&gt;\r\n&lt;html&gt;\r\n&lt;head&gt;\r\n&lt;/head&gt;\r\n&lt;body&gt;\r\n&lt;p&gt;categories 
+listed here Salmagundi boom gunwalls rope&#39;s end Jack Ketch chase sheet cutlass 
+Buccaneer starboard.&lt;a title=&quot;kraken&quot; href=&quot;https://en.wikipedia.org/wiki/Kraken&quot;&gt;&amp;nbsp;Corsair&lt;/a&gt;&amp;nbsp;spirits walk the 
+plank heave down landlubber or just lubber hulk swing the lead rigging Jack Tar reef. Gabion hulk Cat o&#39;nine tails take a caul&amp;nbsp; coffer tackle&amp;nbsp;&lt;em&gt;scuttle 
+tender nipper haul wind&lt;/em&gt;.&lt;img src=&quot;/images/submarine.jpg&quot; alt=&quot;broken&quot; width=&quot;186&quot; height=&quot;185&quot; /&gt;&lt;/p&gt;\r\n&lt;p&gt;Crack 
+Jennys tea cup tack code of Legs crack Jennys tea cup Barbary Coast Jolly Roger. Carouser bring a spring upon her cable trysail shrouds hands gunwalls cog Sink me bucko conduct hands rope&#39;s end grog blossom brigantine Gold Road Shiver me timbers gibbet.&amp;nbsp;Tack brigantine poop deck warp&amp;nbsp;draft booty Sea 
+Legs crack Jennys tea cup Barbary Coast Jolly Roger. Legs crack Jennys tea cup Barbary Coast Jolly Roger. Carouser bring a spring upon her cable trysail shrouds hands gunwalls cog Sink me bucko 
+Furl brig holystone haul wind spike wench Pieces of Eight landlubber or just lubber fire ship scourge of the seven 
+seas.&lt;/p&gt;\r\n&lt;p&gt;Interloper cackle fruit clap of thunder&lt;strong&gt;&amp;nbsp;fire in the hole quarter lateen sail sutler&lt;/strong&gt;&amp;nbsp;dance the 
+hempen jig chandler parley. Shiver me timbers knave strike colors gally tack log Legs crack Jennys tea cup Barbary Coast Jolly Roger. Carouser bring a spring upon her cable trysail shrouds hands gunwalls cog Sink me bucko 
+overhaul league sheet skysail. Tender dance the hempen jig Letter of Marque 
+lanyard topmast jib driver yo-ho-ho shrouds wherry.&lt;/p&gt;\r\n&lt;p&gt;&lt;br /&gt;list of hashtags at the bottom&lt;/p&gt;\r\n&lt;/body&gt;\r\n&lt;/html&gt;
+. '),
+(5, '&lt;!DOCTYPE html&gt;\r\n&lt;html&gt;\r\n&lt;head&gt;\r\n&lt;/head&gt;\r\n&lt;body&gt;\r\n&lt;p&gt;categories 
+listed here Help! I am being held on a boat and forced to write this blog.&lt;/p&gt;\r\n&lt;p&gt;&lt;br /&gt;list of hashtags at the bottom&lt;/p&gt;\r\n&lt;/body&gt;\r\n&lt;/html&gt;')
 
 
 Insert into  HashTags (Hashtag) Values ('Excited'),('Scared'),('hungry'),('SwimForYourLife!'),('History'),('MonsteroftheMonth'),('dreamjob'),('HELP')
