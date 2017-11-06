@@ -28,12 +28,14 @@ if exists (select * from sys.tables where name='Hashtags')
 Drop table Hashtags
 GO
 
-if exists (select * from sys.tables where name='Categories')
-Drop table Categories
-GO
+
 
 if exists (select * from sys.tables where name='CategoryPost')
 Drop table CategoryPost
+GO
+
+if exists (select * from sys.tables where name='Categories')
+Drop table Categories
 GO
 
 
@@ -68,7 +70,7 @@ Create Table Post
 	 isStatic bit default 0 not null,
 	 isforReview bit default 0 not null,
 	 DisplayAuthor nvarchar(40) default Current_User,
-	 DisplayDate datetime2 not null default(getdate())
+	 DisplayDate datetime2 default(getdate())
 	)
 GO
 

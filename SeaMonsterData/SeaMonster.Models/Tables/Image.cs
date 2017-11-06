@@ -10,6 +10,6 @@ namespace SeaMonster.Models.Tables
     {
         public int ImageId { get; set; }
         public string ImageName { get; set; }
-        public int PostId { get; set; }
+       
     }
 }
