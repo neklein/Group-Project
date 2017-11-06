@@ -16,10 +16,7 @@ namespace SeaMonster.Data_CLW
         List<Reply> GetReplies(int CommentID);
         List<Reply> GetPublishedReplies(int CommentID);
         void Approvepost(int postID);
-        int CreatePost(string PostTitle, string posttext, string displayauthor, string displaydate);
-        int CreatePost(string PostTitle, string posttext, string displayauthor, DateTime displaydate, DateTime expdate);
-        int CreatePostDelayed(string PostTitle, string posttext, string displayauthor, DateTime displaydate, DateTime postdate);
-        int CreatePostDelayed(string PostTitle, string posttext, DateTime postdate, string displayauthor, DateTime displaydate, DateTime expdate);
+        int CreatePost(Post post);
         void ApproveComment(int CommentID);
         void ApproveReply(int ReplyID);
         void CreateComment(int postId, string commenterName, string commentText);
@@ -50,7 +47,11 @@ namespace SeaMonster.Data_CLW
         List<Post> GetPublishedPostbyAuthor(string name);
         Category GetCategoryByCatName(string name);
         void ADMINSavePost(Post post);
-
-
+        //add admin dashboard count methods for items for review
+        List<Image> GetAllImages();
+        int FindNextPublishedPost(int PostID);
+        int FindPreviousPublishedPost(int PostID);
+        int FindFirstPublishedPost();
+        int FindLastPublishedPost();
     }
 }

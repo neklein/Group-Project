@@ -84,98 +84,72 @@ namespace SeaMonster.Data_CLW
             }
         }
 
-        public int CreatePost(string PostTitle, string posttext, string displayauthor, string displaydate) //fix to take a Post as argument
+        public int CreatePost(Post post) //fix to take a Post as argument
         { int x = 0;
             using (SqlConnection cn = new SqlConnection(cs))
             {
-                SqlCommand cmd = new SqlCommand("CreatePost", cn);
+                SqlCommand cmd = new SqlCommand("CreatePostComplete", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 SqlParameter Param = new SqlParameter("@PostID", SqlDbType.Int);
                 Param.Direction = ParameterDirection.Output;
                 cmd.Parameters.Add(Param);
-                cmd.Parameters.AddWithValue("@PostTitle", PostTitle);
-                cmd.Parameters.AddWithValue("@PostText", posttext);
-                cmd.Parameters.AddWithValue("@DisplayAuthor", displayauthor);
-                cmd.Parameters.AddWithValue("@DisplayDate", (DateTime.Parse(displaydate)));
-                cmd.Parameters.AddWithValue("@ExpDate", ' ');
-                cmd.Parameters.AddWithValue("@ToPostDate", ' ');
+                cmd.Parameters.AddWithValue("@PostTitle", post.PostTitle);
+                cmd.Parameters.AddWithValue("@PostText", post.PostText);
+                cmd.Parameters.AddWithValue("@DisplayAuthor", post.DisplayAuthor);
+                cmd.Parameters.AddWithValue("@isPublished", post.IsPublished);
+                cmd.Parameters.AddWithValue("@isforreview", post.IsForReview);
+                cmd.Parameters.AddWithValue("@isStatic", post.IsStatic);
+                if (post.DisplayDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@DisplayDate", DBNull.Value);
+                }
+                if (post.ExpDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ExpDate", post.ExpDate);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@ExpDate", DBNull.Value);
+                }
+                if (post.ToPostDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@ToPostDate", DBNull.Value);
+                }
                 cn.Open();
                 cmd.ExecuteNonQuery();
                 x = (int)Param.Value;
+                if (!string.IsNullOrEmpty(post.HashtagInput))
+                {
+                    AddHashtags(post.HashtagInput, x);
+                }
+                if (post.PostCategories!=null)
+                {
+                    foreach(Category c in post.PostCategories)
+                    {
+                        SqlCommand cmd2 = new SqlCommand("AddCategoryPost", cn);
+                        cmd2.CommandType = CommandType.StoredProcedure;
+                        cmd2.Parameters.AddWithValue("@PostID", x);
+                        cmd2.Parameters.AddWithValue("@CategoryID", c.CategoryID);                     
+                        cmd2.ExecuteNonQuery();
+                    }
+                }
+
+               
             }
             return x;
             
         }
 
-        public int CreatePost(string PostTitle, string posttext, string displayauthor, DateTime displaydate, DateTime expdate)
-        {
-            int x = 0;
-            using (SqlConnection cn = new SqlConnection(cs))
-            {
-                SqlCommand cmd = new SqlCommand("CreatePost", cn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                SqlParameter Param = new SqlParameter("@PostID", SqlDbType.Int);
-                Param.Direction = ParameterDirection.Output;
-                cmd.Parameters.Add(Param);
-                cmd.Parameters.AddWithValue("@PostTitle", PostTitle);
-                cmd.Parameters.AddWithValue("@PostText", posttext);
-                cmd.Parameters.AddWithValue("@DisplayAuthor", displayauthor);
-                cmd.Parameters.AddWithValue("@DisplayDate", displaydate);
-                cmd.Parameters.AddWithValue("@ExpDate", expdate);
-                cmd.Parameters.AddWithValue("@ToPostDate", ' ');
-                cn.Open();
-                cmd.ExecuteNonQuery();
-                x = (int)Param.Value; 
-            }
-            return x;
-        }
+        
 
-        public int CreatePostDelayed(string PostTitle, string posttext, string displayauthor, DateTime displaydate, DateTime postdate)
-        {
-            int x = 0;
-            using (SqlConnection cn = new SqlConnection(cs))
-            { 
-
-                SqlCommand cmd = new SqlCommand("CreatePost", cn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                SqlParameter Param = new SqlParameter("@PostID", SqlDbType.Int);
-                Param.Direction = ParameterDirection.Output;
-                cmd.Parameters.Add(Param);
-                cmd.Parameters.AddWithValue("@PostTitle", PostTitle);
-                cmd.Parameters.AddWithValue("@PostText", posttext);
-                cmd.Parameters.AddWithValue("@DisplayAuthor", displayauthor);
-                cmd.Parameters.AddWithValue("@DisplayDate", displaydate);
-                cmd.Parameters.AddWithValue("@ToPostDate", postdate);
-                cmd.Parameters.AddWithValue("@ExpDate", ' ');
-                cn.Open();
-                cmd.ExecuteNonQuery();
-                x = (int)Param.Value;
-            }
-            return x;
-        }
-
-        public int CreatePostDelayed(string PostTitle, string posttext, DateTime postdate, string displayauthor, DateTime displaydate, DateTime expdate)
-        {
-            int x;
-            using (SqlConnection cn = new SqlConnection(cs))
-            {
-                SqlCommand cmd = new SqlCommand("CreatePost", cn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                SqlParameter Param = new SqlParameter("@PostID", SqlDbType.Int);
-                Param.Direction = ParameterDirection.Output;
-                cmd.Parameters.Add(Param);
-                cmd.Parameters.AddWithValue("@PostTitle", PostTitle);
-                cmd.Parameters.AddWithValue("@PostText", posttext);
-                cmd.Parameters.AddWithValue("@ToPostDate", postdate);
-                cmd.Parameters.AddWithValue("@ExpDate", expdate);
-                cmd.Parameters.AddWithValue("@DisplayAuthor", displayauthor);
-                cmd.Parameters.AddWithValue("@DisplayDate", displaydate);
-                cn.Open();
-                cmd.ExecuteNonQuery();
-                x = (int)Param.Value;
-            }
-            return x;
-        }
 
         public void CreateReply(int commentId, string replyName, string replyText)
         {
@@ -296,6 +270,11 @@ namespace SeaMonster.Data_CLW
                         post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
                         post.DisplayAuthor = dr["DisplayAuthor"].ToString();
                         post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
+                        string expdate = dr["Expdate"].ToString();
+                        if (!string.IsNullOrWhiteSpace(expdate))
+                        {
+                            post.ExpDate = DateTime.Parse(expdate);
+                        }
                         post.IsStatic = (bool)dr["isStatic"];
                         post.IsPublished = (bool)dr["ispublished"];
                         post.IsForReview = (bool)dr["isforReview"];
@@ -308,7 +287,7 @@ namespace SeaMonster.Data_CLW
 
         }
 
-        public Post GetPostDetails(int postId)
+        public Post GetPostDetails(int postId) //Make date pulls sfe as per GetALLPosts
         {
             Post post = new Post();
             string cs = "Server=localhost;Database=SeaMonster;User Id=SeamonsterSA; Password=ocean;";
@@ -326,18 +305,28 @@ namespace SeaMonster.Data_CLW
                     if (dr.Read())
                     {
 
-                        post.PostId = postId;
+                        post.PostId = (int)dr["PostID"];
                         post.PostTitle = dr["PostTitle"].ToString();
+                        post.PostText = dr["PostText"].ToString();
                         post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
                         post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
-                        post.PostText = dr["PostText"].ToString();
+                        post.DisplayAuthor = dr["DisplayAuthor"].ToString();
+                        post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
+                        string expdate = dr["Expdate"].ToString();
+                        if (!string.IsNullOrWhiteSpace(expdate))
+                        {
+                            post.ExpDate = DateTime.Parse(expdate);
+                        }
+                        post.IsStatic = (bool)dr["isStatic"];
+                        post.IsPublished = (bool)dr["ispublished"];
+                        post.IsForReview = (bool)dr["isforReview"];
 
                     }
                 }
             }
             PostRepo repo = new PostRepo();
             post.Images = repo.GetImagesByPost(postId);
-
+           
             return post;
         }
 
@@ -363,7 +352,6 @@ namespace SeaMonster.Data_CLW
                     {
                         Image image = new Image();
                         image.ImageId = (int)dr["ImageId"];
-                        image.PostId = postId;
                         image.ImageName = dr["ImageName"].ToString();
 
                         images.Add(image);
@@ -528,18 +516,28 @@ namespace SeaMonster.Data_CLW
                 {
                     while (dr.Read())
                     {
-                        Post post = new Post();
-                        post.PostId = (int)dr["PostID"];
-                        post.PostTitle = dr["PostTitle"].ToString();
-                        post.PostText = dr["PostText"].ToString();
-                        post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
-                        post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
-                        post.DisplayAuthor = dr["DisplayAuthor"].ToString();
-                        post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
-                        post.IsStatic = (bool)dr["isStatic"];
-                        post.IsPublished = (bool)dr["ispublished"];
-                        post.IsForReview = (bool)dr["isforReview"];
-                        posts.Add(post);
+                        
+                        
+                            Post post = new Post();
+
+                            post.PostId = (int)dr["PostID"];
+                            post.PostTitle = dr["PostTitle"].ToString();
+                            post.PostText = dr["PostText"].ToString();
+                            post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
+                            post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
+                            post.DisplayAuthor = dr["DisplayAuthor"].ToString();
+                            post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
+                            string expdate = dr["Expdate"].ToString();
+                            if (!string.IsNullOrWhiteSpace(expdate))
+                            {
+                                post.ExpDate = DateTime.Parse(expdate);
+                            }
+                            post.IsStatic = (bool)dr["isStatic"];
+                            post.IsPublished = (bool)dr["ispublished"];
+                            post.IsForReview = (bool)dr["isforReview"];
+
+                            posts.Add(post);
+                        
                     }
                 }
             }
@@ -709,14 +707,25 @@ namespace SeaMonster.Data_CLW
                 {
                     while (dr.Read())
                     {
-                        Post current = new Post();
-                        current.PostId = (int)dr["PostID"];
-                        current.PostTitle = dr["PostTitle"].ToString();
-                        current.PostText = dr["PostText"].ToString();
-                        current.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
-                        current.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
-                        current.IsPublished = (bool)dr["IsPublished"];
-                        posts.Add(current);
+                        Post post = new Post();
+
+                        post.PostId = (int)dr["PostID"];
+                        post.PostTitle = dr["PostTitle"].ToString();
+                        post.PostText = dr["PostText"].ToString();
+                        post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
+                        post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
+                        post.DisplayAuthor = dr["DisplayAuthor"].ToString();
+                        post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
+                        string expdate = dr["Expdate"].ToString();
+                        if (!string.IsNullOrWhiteSpace(expdate))
+                        {
+                            post.ExpDate = DateTime.Parse(expdate);
+                        }
+                        post.IsStatic = (bool)dr["isStatic"];
+                        post.IsPublished = (bool)dr["ispublished"];
+                        post.IsForReview = (bool)dr["isforReview"];
+
+                        posts.Add(post);
                     }
                 }
             }
@@ -736,14 +745,25 @@ namespace SeaMonster.Data_CLW
                 {
                     while (dr.Read())
                     {
-                        Post current = new Post();
-                        current.PostId = (int)dr["PostID"];
-                        current.PostTitle = dr["PostTitle"].ToString();
-                        current.PostText = dr["PostText"].ToString();
-                        current.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
-                        current.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
-                        current.IsPublished = (bool)dr["IsPublished"];
-                        posts.Add(current);
+                        Post post = new Post();
+
+                        post.PostId = (int)dr["PostID"];
+                        post.PostTitle = dr["PostTitle"].ToString();
+                        post.PostText = dr["PostText"].ToString();
+                        post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
+                        post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
+                        post.DisplayAuthor = dr["DisplayAuthor"].ToString();
+                        post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
+                        string expdate = dr["Expdate"].ToString();
+                        if (!string.IsNullOrWhiteSpace(expdate))
+                        {
+                            post.ExpDate = DateTime.Parse(expdate);
+                        }
+                        post.IsStatic = (bool)dr["isStatic"];
+                        post.IsPublished = (bool)dr["ispublished"];
+                        post.IsForReview = (bool)dr["isforReview"];
+
+                        posts.Add(post);
                     }
                 }
             }
@@ -867,8 +887,17 @@ namespace SeaMonster.Data_CLW
                 cmd.Parameters.AddWithValue("@PostTitle", post.PostTitle);
                 cmd.Parameters.AddWithValue("@PostText", post.PostText);
                 cmd.Parameters.AddWithValue("@DisplayAuthor", post.DisplayAuthor);
-                cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
                 cmd.Parameters.AddWithValue("@isForReview", post.IsForReview);
+                cmd.Parameters.AddWithValue("@isStatic", post.IsStatic);
+                if (post.DisplayDate != null)  //what about erasing these? may need to retool
+                {
+                    cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
+                }
+                else
+                {
+
+                }
+                
                 if (post.ToPostDate != null)
                 {
                     cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
@@ -876,8 +905,9 @@ namespace SeaMonster.Data_CLW
 
                 if (post.ExpDate != null)
                 {
-                    cmd.Parameters.AddWithValue("@ExpDate", ' ');
+                    cmd.Parameters.AddWithValue("@ExpDate", post.ExpDate);
                 }
+                
                 cn.Open();
                 cmd.ExecuteNonQuery();
             }
@@ -905,9 +935,18 @@ namespace SeaMonster.Data_CLW
                 cmd.Parameters.AddWithValue("@PostTitle", post.PostTitle);
                 cmd.Parameters.AddWithValue("@PostText", post.PostText);
                 cmd.Parameters.AddWithValue("@DisplayAuthor", post.DisplayAuthor);
-                cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
                 cmd.Parameters.AddWithValue("@isForReview", post.IsForReview);
-                cmd.Parameters.AddWithValue("@IsPublished", post.IsPublished);
+                cmd.Parameters.AddWithValue("@isStatic", post.IsStatic);
+                cmd.Parameters.AddWithValue("@isPublished", post.IsPublished);
+                if (post.DisplayDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
+                }
+                else
+                {
+
+                }
+
                 if (post.ToPostDate != null)
                 {
                     cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
@@ -915,11 +954,76 @@ namespace SeaMonster.Data_CLW
 
                 if (post.ExpDate != null)
                 {
-                    cmd.Parameters.AddWithValue("@ExpDate", ' ');
+                    cmd.Parameters.AddWithValue("@ExpDate", post.ExpDate);
                 }
                 cn.Open();
                 cmd.ExecuteNonQuery();
             }
+        }
+
+        public List<Image> GetAllImages()
+        {
+            List<Image> Images = new List<Image>();
+            using (SqlConnection cn = new SqlConnection(cs))
+            {
+               
+                SqlCommand cmd = new SqlCommand("Select* from Images",cn);
+                cmd.CommandType = CommandType.Text;
+                cn.Open();
+                using(SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        Image imago = new Image();
+                        imago.ImageId = (int)dr["ImageID"];
+                        imago.ImageName = dr["ImageName"].ToString();
+                        Images.Add(imago);
+                    }
+                }
+                
+            }
+            return Images;
+        }
+
+        public int FindNextPublishedPost(int PostID)
+        {
+            
+            List<Post> posts = GetPublishedPosts().Where(p=>p.IsStatic==false).ToList();
+            int next = posts.Max(p=>p.PostId);
+            int curr = posts.IndexOf(posts.Where(p => p.PostId == PostID).FirstOrDefault());
+            if (curr < posts.Count - 1)
+            {
+                next = posts[curr + 1].PostId;
+            }
+            return next;
+        }
+
+        public int FindPreviousPublishedPost(int PostID)
+        {
+            int prev = 1;
+            List<Post> posts = GetPublishedPosts().Where(p => p.IsStatic == false).ToList();
+
+            int curr = posts.IndexOf(posts.Where(p => p.PostId == PostID).FirstOrDefault());
+            if (curr>0 && posts[curr - 1] != null)
+            {
+                prev = posts[curr - 1].PostId;
+            }
+            
+            return prev;
+        }
+
+        public int FindFirstPublishedPost()
+        {
+            List<Post> posts = GetPublishedPosts().Where(p => p.IsStatic == false).ToList();
+            int first = posts[0].PostId;
+            return first;
+        }
+
+        public int FindLastPublishedPost()
+        {
+            List<Post> posts = GetPublishedPosts().Where(p => p.IsStatic == false).ToList();
+            int last = posts.Max(p => p.PostId);
+            return last;
         }
     }
 

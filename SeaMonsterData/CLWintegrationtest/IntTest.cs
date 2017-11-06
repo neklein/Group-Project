@@ -25,6 +25,16 @@ namespace CLWintegrationtest
             }
         }
 
+        Post TestPost = new Post
+        {
+            PostTitle="TestPost",
+            PostText="This is a test of a tests post",
+            DisplayAuthor="Test Author",
+            
+            ExpDate= DateTime.Parse("2017-12-25"),
+
+        };
+
       [Test]
       public void CanLoadHashtags()
         {
@@ -59,9 +69,11 @@ namespace CLWintegrationtest
         public void CanCreatePost()
         {
             PostRepo repo = new PostRepo();
-            repo.CreatePost("testTitle", "This is text for a test of the ability to add text to a new post","author","12/12/2017");
+            List<Post> posts1 = repo.GetAllPosts();
+            Assert.AreEqual(7, posts1.Count());
+            repo.CreatePost(TestPost);
             List<Post> posts = repo.GetAllPosts();
-            Assert.AreEqual(6, posts.Count());
+            Assert.AreEqual(8, posts.Count());
         }
 
         [Test]
@@ -107,7 +119,7 @@ namespace CLWintegrationtest
             PostRepo repo = new PostRepo();
             List<Post> posts = repo.GetAllPosts().ToList();
 
-            Assert.AreEqual(5, posts.Count());
+            Assert.AreEqual(7, posts.Count());
         }
 
 
@@ -119,7 +131,7 @@ namespace CLWintegrationtest
             PostRepo repo = new PostRepo();
             List<Post> posts = repo.GetPublishedPosts();
 
-            Assert.AreEqual(4, posts.Count());
+            Assert.AreEqual(5, posts.Count());
             Assert.AreEqual("Hello Fellow Monster Hunters", posts[0].PostTitle);
         }
 
@@ -129,7 +141,7 @@ namespace CLWintegrationtest
             PostRepo repo = new PostRepo();
             List<Post> posts = repo.GetAllStatic();
 
-            Assert.AreEqual(0, posts.Count());
+            Assert.AreEqual(1, posts.Count());
         }
 
         [Test]
@@ -138,7 +150,7 @@ namespace CLWintegrationtest
             PostRepo repo = new PostRepo();
             List<Post> posts = repo.GetAllStaticPublished();
 
-            Assert.AreEqual(0, posts.Count());
+            Assert.AreEqual(1, posts.Count());
         }
 
 
@@ -232,7 +244,7 @@ namespace CLWintegrationtest
         {
             PostRepo repo = new PostRepo();
             List<Post> posts = repo.GetPostbyHashtag(1);
-            Assert.AreEqual(2, posts.Count());
+            Assert.AreEqual(3, posts.Count());
             List<Post> posts2 = repo.GetPostbyHashtag(8);
             Assert.AreEqual(posts2.Count, 1);
         }
@@ -241,7 +253,7 @@ namespace CLWintegrationtest
         {
             PostRepo repo = new PostRepo();
             List<Post> posts = repo.GetPublishedPostbyHashtag(1);
-            Assert.AreEqual(2, posts.Count());
+            Assert.AreEqual(3, posts.Count());
             List<Post> posts2 = repo.GetPublishedPostbyHashtag(8);
             Assert.AreEqual(posts2.Count, 0);
         }
@@ -250,9 +262,9 @@ namespace CLWintegrationtest
         {
             PostRepo repo = new PostRepo();
             List<Post> posts = repo.GetPostByCategory(1);
-            Assert.AreEqual(3, posts.Count());
+            Assert.AreEqual(4, posts.Count());
             List<Post> posts2 = repo.GetPostByCategory(3);
-            Assert.AreEqual(posts2.Count, 1);
+            Assert.AreEqual(posts2.Count, 2);
         }
         [Test]
         public void CanGetPublishedPostByCat()
@@ -261,8 +273,85 @@ namespace CLWintegrationtest
             List<Post> posts = repo.GetPublishedPostByCategory(1);
             Assert.AreEqual(2, posts.Count());
             List<Post> posts2 = repo.GetPublishedPostByCategory(3);
-            Assert.AreEqual(posts2.Count, 1);
+            Assert.AreEqual(posts2.Count, 2);
         }
 
+        [Test]
+        public void CanSavePost()
+        {
+            PostRepo repo = new PostRepo();
+            repo.CreatePost(TestPost);
+            List<Post> post = repo.GetAllPosts();
+            Assert.AreEqual(8, post.Count);
+            TestPost = post[7];
+            TestPost.PostTitle = "ModifiedyTestTitle";
+            TestPost.PostText = "Modified Modified";
+            TestPost.ToPostDate = DateTime.Parse("2017-11-14");
+            repo.SavePost(TestPost);
+            List<Post> post1 = repo.GetAllPosts();
+            Assert.AreEqual("ModifiedyTestTitle", post1[7].PostTitle);
+            Assert.AreEqual("Modified Modified", post1[7].PostText);
+            Assert.AreEqual(8, post.Count);
+        }
+        [Test]
+        public void CanAddPostWithHashtags()
+        {
+            TestPost.HashtagInput = "#Test1,#Test2";
+            PostRepo repo = new PostRepo();
+            repo.CreatePost(TestPost);
+            List<HashTag> hts = repo.GetHashtags();
+            Assert.AreEqual(10, hts.Count);
+            TestPost = repo.GetAllPosts()[7];
+            repo.SetPostLists(TestPost);
+            Assert.AreEqual(2, TestPost.Hashtags.Count);
+        }
+        [Test]
+        public void CanAddPostWithCats()
+        {
+            PostRepo repo = new PostRepo();
+            List<Category> Cats = repo.GetAllCategories();
+            TestPost.PostCategories = Cats;
+            repo.CreatePost(TestPost);
+            TestPost = repo.GetAllPosts()[7];
+            List<Category> Cats2 = repo.GetCategoryByPost(8);
+            Assert.AreEqual(3, Cats2.Count);
+        }
+        [Test]
+        [TestCase(1,2)]
+        [TestCase(4,4)]
+        
+        public void CanFindNextPublished(int postid, int x)
+        {
+            PostRepo repo = new PostRepo();
+
+            int next = repo.FindNextPublishedPost(postid);
+            Assert.AreEqual(x, next);
+        }
+        [Test]
+        [TestCase(2, 1)]
+        [TestCase(1, 1)]
+        [TestCase(4, 3)]
+        public void CanFindPreviousPublishedPost(int postid, int x)
+        {
+            PostRepo repo = new PostRepo();
+            int prev = repo.FindPreviousPublishedPost(postid);
+            Assert.AreEqual(x, prev);
+        }
+        [Test]
+        public void CanFindFirstPublishedpost()
+        {
+            PostRepo repo = new PostRepo();
+            int first = repo.FindFirstPublishedPost();
+            Assert.AreEqual(1, first);
+
+        }
+        [Test]
+        public void CanFindLastPub()
+        {
+            PostRepo repo = new PostRepo();
+            int last = repo.FindLastPublishedPost();
+            Assert.AreEqual(4, last);
+        }
     }
 }
+

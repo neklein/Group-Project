@@ -103,15 +103,34 @@ namespace SeaMonsterBlog.UI.Controllers
             return View(authorVM);
         }
 
-        //public ActionResult Next(int PostId)
-        //{
-        //    return RedirectToAction("Details", nextId);
-        //}
 
-        //public ActionResult Last(int PostId)
-        //{
-        //    return RedirectToAction("Details", lastId);
+        public ActionResult Next(int PostId)
+        {
+            var repo = RepositoryFactory.GetRepository();
 
-        //}
+            return RedirectToAction("Details", repo.FindNextPublishedPost(PostId));
+        }
+
+        public ActionResult Previous(int PostId)
+        {
+            var repo = RepositoryFactory.GetRepository();
+
+            return RedirectToAction("Details", repo.FindPreviousPublishedPost(PostId));
+        }
+
+        public ActionResult First()
+        {
+            var repo = RepositoryFactory.GetRepository();
+
+            return RedirectToAction("Details", repo.FindFirstPublishedPost());
+        }
+
+        public ActionResult Last()
+        {
+            var repo = RepositoryFactory.GetRepository();
+
+            return RedirectToAction("Details", repo.FindLastPublishedPost());
+
+        }
     }
 }

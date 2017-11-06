@@ -85,13 +85,21 @@ GO
  if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='GetALLPosts')
  drop procedure GetALLPosts
  GO
+
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='CreatePostComplete')
+ drop procedure CreatePostComplete
+ GO
+
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='AddCategoryPost')
+ drop procedure AddCategoryPost
+ GO
  --------------------Searches and Gets------------------------------------------
 
  
  Create Procedure GetALLPosts as
  begin
- select p.PostID, p.PostTitle, p.DateCreated, p.ToPostDate, p.DisplayAuthor, 
- p.DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby 
+ select p.PostID, p.PostTitle, p.DateCreated, isnull(p.ToPostDate, p.DateCreated)AS ToPostDate, p.DisplayAuthor, 
+ isnull(p.DisplayDate, p.DateCreated)AS DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby 
  from Post p
  left join PostText pt on pt.PostId=p.PostID
  order by p.DateCreated
@@ -116,6 +124,7 @@ select p.PostID, p.PostTitle, p.DateCreated, p.ToPostDate, p.DisplayAuthor,
  p.DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby
   from Post p
  left join PostText pt on pt.PostId=p.PostID
+ where p.PostID=@PostID
  order by p.DateCreated
  End
  GO
@@ -215,7 +224,7 @@ where ReplyId=@ReplyId
 END
 GO
 
-Create Procedure CreatePost(@PostID int Output, @PostTitle nvarchar(50), @PostText nvarchar(max), @ExpDate DateTime2 null, @ToPostDate DateTime2 null, @DisplayAuthor nvarchar(40), @DisplayDate datetime2) AS
+Create Procedure CreatePost(@PostID int Output, @PostTitle nvarchar(50), @PostText nvarchar(max), @ExpDate DateTime2 = null, @ToPostDate DateTime2 =null, @DisplayAuthor nvarchar(40), @DisplayDate datetime2 =null) AS
 begin 
 insert into Post (PostTitle, Expdate,ToPostDate,DisplayAuthor,DisplayDate) values (@PostTitle, @ExpDate,@ToPostDate, @DisplayAuthor,@DisplayDate)
 set @PostID=SCOPE_IDENTITY();
@@ -247,7 +256,7 @@ Insert into HashtagPost (HashtagID, PostID) Values (@HashtagID, @PostId)
 End
 Go
 
-Create Procedure SavePost (@PostID int, @PostTitle nvarchar(50), @PostText nvarchar(max), @ExpDate DateTime2 null, @ToPostDate DateTime2 null, @DisplayAuthor nvarchar(40), @DisplayDate datetime2, @isForReview bit) AS
+Create Procedure SavePost (@PostID int, @PostTitle nvarchar(50), @PostText nvarchar(max), @ExpDate DateTime2 null, @ToPostDate DateTime2 null, @DisplayAuthor nvarchar(40), @DisplayDate datetime2, @isForReview bit, @isStatic bit) AS
 Begin
 Update Post SET 
 PostTitle=@PostTitle,
@@ -255,7 +264,8 @@ ExpDate=@ExpDate,
 ToPostDate=@ToPostDate,
 DisplayAuthor=@DisplayAuthor,
 DisplayDate=@DisplayDate,
-isforReview=@isForReview
+isforReview=@isForReview,
+isStatic=@isStatic
 where PostID=@PostID
 
 update PostText Set
@@ -280,7 +290,27 @@ update PostText Set
 PostText=@PostText
 where PostId=@PostID
 END
+GO
 
+
+
+Create Procedure CreatePostComplete(@PostID int Output, @PostTitle nvarchar(50), @PostText nvarchar(max), @ExpDate DateTime2 = null, @ToPostDate DateTime2 =null, @DisplayAuthor nvarchar(40), @DisplayDate datetime2 =null, @isPublished bit, @isforreview bit, @isStatic bit) AS
+begin 
+insert into Post (PostTitle, Expdate,ToPostDate,DisplayAuthor,DisplayDate, ispublished, isforReview, isStatic) 
+values (@PostTitle, @ExpDate,@ToPostDate, @DisplayAuthor,@DisplayDate, @isPublished, @isforreview, @isStatic)
+set @PostID=SCOPE_IDENTITY();
+insert into PostText (PostId, PostText) Values (@PostID, @PostText)
+END
+Go
+
+Create Procedure AddCategoryPost (@PostID int, @CategoryID int) As
+begin
+If Not Exists (select * from CategoryPost where PostID=@PostID and CategoryID=@CategoryID)
+insert into CategoryPost (CategoryID, PostID) Values (@CategoryID, @PostID)
+end
+GO
 
 select * from post
 select* from PostText
+
+
