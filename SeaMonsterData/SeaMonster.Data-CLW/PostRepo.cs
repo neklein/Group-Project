@@ -910,6 +910,11 @@ namespace SeaMonster.Data_CLW
                 
                 cn.Open();
                 cmd.ExecuteNonQuery();
+
+                if (!string.IsNullOrEmpty(post.HashtagInput))
+                {
+                    AddHashtags(post.HashtagInput, post.PostId);
+                }
             }
         }
 
@@ -958,6 +963,10 @@ namespace SeaMonster.Data_CLW
                 }
                 cn.Open();
                 cmd.ExecuteNonQuery();
+                if (!string.IsNullOrEmpty(post.HashtagInput))
+                {
+                    AddHashtags(post.HashtagInput, post.PostId);
+                }
             }
         }
 

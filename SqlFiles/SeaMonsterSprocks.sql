@@ -312,5 +312,7 @@ GO
 
 select * from post
 select* from PostText
-
-
+select * from Hashtags
+select * from HashtagPost
+select * from CategoryPost
+select * from post where ispublished=1
