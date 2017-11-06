@@ -51,7 +51,7 @@ namespace SeaMonster.Data_CLW
         List<Image> GetAllImages();
         int FindNextPublishedPost(int PostID);
         int FindPreviousPublishedPost(int PostID);
-        int FindFirstPublishedPost(int PostID);
-        int FindLastPublishedPost(int PostID);
+        int FindFirstPublishedPost();
+        int FindLastPublishedPost();
     }
 }

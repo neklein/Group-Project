@@ -987,22 +987,43 @@ namespace SeaMonster.Data_CLW
 
         public int FindNextPublishedPost(int PostID)
         {
-            throw new NotImplementedException();
+            
+            List<Post> posts = GetPublishedPosts().Where(p=>p.IsStatic==false).ToList();
+            int next = posts.Max(p=>p.PostId);
+            int curr = posts.IndexOf(posts.Where(p => p.PostId == PostID).FirstOrDefault());
+            if (curr < posts.Count - 1)
+            {
+                next = posts[curr + 1].PostId;
+            }
+            return next;
         }
 
         public int FindPreviousPublishedPost(int PostID)
         {
-            throw new NotImplementedException();
+            int prev = 1;
+            List<Post> posts = GetPublishedPosts().Where(p => p.IsStatic == false).ToList();
+
+            int curr = posts.IndexOf(posts.Where(p => p.PostId == PostID).FirstOrDefault());
+            if (curr>0 && posts[curr - 1] != null)
+            {
+                prev = posts[curr - 1].PostId;
+            }
+            
+            return prev;
         }
 
-        public int FindFirstPublishedPost(int PostID)
+        public int FindFirstPublishedPost()
         {
-            throw new NotImplementedException();
+            List<Post> posts = GetPublishedPosts().Where(p => p.IsStatic == false).ToList();
+            int first = posts[0].PostId;
+            return first;
         }
 
-        public int FindLastPublishedPost(int PostID)
+        public int FindLastPublishedPost()
         {
-            throw new NotImplementedException();
+            List<Post> posts = GetPublishedPosts().Where(p => p.IsStatic == false).ToList();
+            int last = posts.Max(p => p.PostId);
+            return last;
         }
     }
 

@@ -316,6 +316,42 @@ namespace CLWintegrationtest
             List<Category> Cats2 = repo.GetCategoryByPost(8);
             Assert.AreEqual(3, Cats2.Count);
         }
+        [Test]
+        [TestCase(1,2)]
+        [TestCase(4,4)]
+        
+        public void CanFindNextPublished(int postid, int x)
+        {
+            PostRepo repo = new PostRepo();
+
+            int next = repo.FindNextPublishedPost(postid);
+            Assert.AreEqual(x, next);
+        }
+        [Test]
+        [TestCase(2, 1)]
+        [TestCase(1, 1)]
+        [TestCase(4, 3)]
+        public void CanFindPreviousPublishedPost(int postid, int x)
+        {
+            PostRepo repo = new PostRepo();
+            int prev = repo.FindPreviousPublishedPost(postid);
+            Assert.AreEqual(x, prev);
+        }
+        [Test]
+        public void CanFindFirstPublishedpost()
+        {
+            PostRepo repo = new PostRepo();
+            int first = repo.FindFirstPublishedPost();
+            Assert.AreEqual(1, first);
+
+        }
+        [Test]
+        public void CanFindLastPub()
+        {
+            PostRepo repo = new PostRepo();
+            int last = repo.FindLastPublishedPost();
+            Assert.AreEqual(4, last);
+        }
     }
 }
 
