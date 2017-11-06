@@ -27,8 +27,87 @@
     {
         foreach (var comment in Model.Post.Comments)
         {
-            <p><strong>@comment.CommenterName |  @comment.CommentDate</strong></p>
+            <p>
+                <strong>@comment.CommenterName |  @comment.CommentDate</strong>
+                @if ((Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator")) && !comment.IsShown)
+                {
+                    if (comment.IsShown)
+                    {
+                        <input type="radio" name="approval-comment-@comment.CommentId" value="approve" checked> <text>Approve</text>
+                        <input type="radio" name="approval-comment-@comment.CommentId" value="delete"> <text>Delete</text>
+                    }
+                    else
+                    {
+                        <input type="radio" name="approval-comment-@comment.CommentId" value="approve" > <text>Approve</text>
+                        <input type="radio" name="approval-comment-@comment.CommentId" value="delete" checked> <text>Delete</text>
+                    }
+                <button class="btn btn-danger">Submit</button>                  
+                }
+            </p>
+            <p>@comment.CommentText</p>
+
+            if (comment.Replies != null)
+            {
+                <div class="row">
+                    <div class="col-md-11 col-md-offset-1">
+                        <a id="comment-replies-@comment.CommentId" class="comment-replies" onclick="openReplies(@comment.CommentId)">View Replies or Reply</a>
+                    </div>
+                    <div class="col-md-11 col-md-offset-1" id="comment-dropdown-@comment.CommentId" hidden>
+                        @foreach (var reply in comment.Replies)
+                        {
+                            <p><strong>@reply.ReplyName | @reply.ReplyDate</strong>
+                                @if ((Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator")) && !comment.IsShown)
+                                {
+                                    if(reply.IsShown)
+                                    { 
+                                    <input type="radio" name="approval-reply-@reply.ReplyID" value="approve" checked> <text>Approve</text>
+                                    <input type="radio" name="approval-reply-@reply.ReplyID" value="delete"> <text>Delete</text>
+                                    }
+                                    else
+                                    {
+                                        <input type="radio" name="approval-reply-@reply.ReplyID" value="approve"> <text>Approve</text>
+                                        <input type="radio" name="approval-reply-@reply.ReplyID" value="delete" checked> <text>Delete</text>
+    }
+                                    <button class="btn btn-danger">Submit</button>
+                                }
+                        </p>
+                            <p>@reply.ReplyText</p>
+                            
+                        }
+                        <form>
+                            <div class="form-group row">
+                                <label class="control-label col-sm-2">Name</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control form-group-sm" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="control-label col-sm-2">New Reply</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control form-group-sm" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
         }
+        <form>
+            <h4><strong>New Comment</strong></h4>
+            <div class="form-group row">
+                <label class="control-label col-sm-2">Name</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control form-group-sm" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="control-label col-sm-2">New Reply</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control form-group-sm" />
+                </div>
+            </div>
+        </form>
+
     }
 </div>
 
@@ -38,15 +117,14 @@
 {
     <script>
         $(document).ready(function () {
-
-            $(".comment-box").hide();
-
-            $(".comment-button").click(function () {
-                $(".comment-box").show();
-            });
-
+            
         });
 
+        function openReplies(commentId) {
+            $("#comment-replies-" + commentId).hide();
+            $("#comment-dropdown-" + commentId).show();
+
+        }
     </script>
 
 }
