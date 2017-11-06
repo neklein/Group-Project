@@ -334,8 +334,6 @@ namespace SeaMonster.Data_CLW
 
             PostRepo repo = new PostRepo();
 
-            repo.SetPostLists(post);
-
             return post;
         }
 
@@ -776,19 +774,126 @@ namespace SeaMonster.Data_CLW
             return posts;
         }
 
+        public List<Post> GetAllPostByAuthor(string name)
+        {
+            List<Post> posts = GetAllPosts().Where(p => p.Author.ToLower() == name.ToLower()).ToList();
+            return posts;
+        }
+
+        public List<Post> GetPublishedPostbyAuthor(string name)
+        {
+            List<Post> posts = GetAllPostByAuthor(name).Where(p => p.IsPublished).ToList();
+            return posts;
+        }
+
+
         public List<Image> GetAllImages()
         {
-            throw new NotImplementedException();
+            List<Image> images = new List<Image>();
+
+            string cs = "Server=localhost;Database=SeaMonster;User Id=SeamonsterSA; Password=ocean;";
+
+            using (var cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = cn;
+
+                cmd.CommandText = "SELECT * FROM Images";
+
+                cn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        Image image = new Image();
+                        image.ImageId = (int)dr["ImageId"];
+                        image.ImageName = dr["ImageName"].ToString();
+
+                        images.Add(image);
+                    }
+                }
+            }
+
+            return images;
+
         }
 
         public void SavePost(Post post)
         {
-            throw new NotImplementedException();
+            using (SqlConnection cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("SavePost", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PostID", post.PostId);
+                cmd.Parameters.AddWithValue("@PostTitle", post.PostTitle);
+                cmd.Parameters.AddWithValue("@PostText", post.PostText);
+                cmd.Parameters.AddWithValue("@DisplayAuthor", post.Author);
+                cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
+                cmd.Parameters.AddWithValue("@isForReview", post.IsForReview);
+                if (post.ToPostDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
+                }
+
+                if (post.ExpDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ExpDate", ' ');
+                }
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
         }
 
-        public void SaveNewImage(string fileName)
+        public void ADMINSavePost(Post post)
         {
-            throw new NotImplementedException();
+            using (SqlConnection cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("AdminSavePost", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PostID", post.PostId);
+                cmd.Parameters.AddWithValue("@PostTitle", post.PostTitle);
+                cmd.Parameters.AddWithValue("@PostText", post.PostText);
+                cmd.Parameters.AddWithValue("@DisplayAuthor", post.Author);
+                cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
+                cmd.Parameters.AddWithValue("@isForReview", post.IsForReview);
+                cmd.Parameters.AddWithValue("@IsPublished", post.IsPublished);
+                if (post.ToPostDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
+                }
+
+                if (post.ExpDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ExpDate", ' ');
+                }
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void SaveNewImage(string imageName)
+        {
+            using (var cn = new SqlConnection(cs))
+            {
+                Image image = new Image();
+                image.ImageName = imageName;
+
+                SqlCommand cmd = new SqlCommand("AddImage", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                SqlParameter param = new SqlParameter("@ImageId", SqlDbType.Int);
+                param.Direction = ParameterDirection.Output;
+
+                cmd.Parameters.Add(param);
+
+                cmd.Parameters.AddWithValue("@ImageName", imageName);
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+
+                image.ImageId = (int)param.Value;
+            }
+
         }
     }
 

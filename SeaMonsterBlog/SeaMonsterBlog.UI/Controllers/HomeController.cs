@@ -55,15 +55,26 @@ namespace SeaMonsterBlog.UI.Controllers
             ByAuthorCategoryVM categoryVM = new ByAuthorCategoryVM();
 
             // all posts in category where id = categoryId
+            var repo = RepositoryFactory.GetRepository();
+            if (Request.IsAuthenticated && User.IsInRole("admin"))
+            {
+                categoryVM.Posts = repo.GetPostByCategory(id);
+            }
+            else
+            {
+                categoryVM.Posts = repo.GetPublishedPostByCategory(id);
+            }
+
 
             return View(categoryVM);
         }
 
-        public ActionResult ByAuthor(int id)
+        public ActionResult ByAuthor(string name)
         {
             ByAuthorCategoryVM authorVM = new ByAuthorCategoryVM();
 
-            // all posts by author where id = authorId
+            var repo = RepositoryFactory.GetRepository();
+            authorVM.Posts = repo.GetAllPostByAuthor(name);
 
             return View(authorVM);
         }

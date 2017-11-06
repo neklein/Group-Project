@@ -45,6 +45,9 @@ namespace SeaMonsterBlog.Data
         void DeleteComment(int CommentID);
         void DeleteReply(int ReplyID);
         void SavePost(Post post);
+        void ADMINSavePost(Post post);
         void SaveNewImage(string fileName);
+        List<Post> GetAllPostByAuthor(string name);
+        List<Post> GetPublishedPostbyAuthor(string name);
     }
 }
