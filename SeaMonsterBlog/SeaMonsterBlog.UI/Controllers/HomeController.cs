@@ -33,6 +33,9 @@ namespace SeaMonsterBlog.UI.Controllers
             DetailVM detailVM = new DetailVM();
 
             detailVM.Post = repo.GetPostByID(id);
+            detailVM.Post.PostText = WebUtility.HtmlDecode(detailVM.Post.PostText);
+            detailVM.Post.PostText = detailVM.Post.PostText.Substring(60);
+            detailVM.Post.PostText = detailVM.Post.PostText.Substring(0, detailVM.Post.PostText.Length - 16);
 
             detailVM.Categories = repo.GetAllCategories();
             if(Request.IsAuthenticated && User.IsInRole("admin")|| Request.IsAuthenticated && User.IsInRole("moderator"))
@@ -52,17 +55,39 @@ namespace SeaMonsterBlog.UI.Controllers
             ByAuthorCategoryVM categoryVM = new ByAuthorCategoryVM();
 
             // all posts in category where id = categoryId
+            var repo = RepositoryFactory.GetRepository();
+            if (Request.IsAuthenticated && User.IsInRole("admin"))
+            {
+                categoryVM.Posts = repo.GetPostByCategory(id);
+            }
+            else
+            {
+                categoryVM.Posts = repo.GetPublishedPostByCategory(id);
+            }
+
 
             return View(categoryVM);
         }
 
-        public ActionResult ByAuthor(int id)
+        public ActionResult ByAuthor(string name)
         {
             ByAuthorCategoryVM authorVM = new ByAuthorCategoryVM();
 
-            // all posts by author where id = authorId
+            var repo = RepositoryFactory.GetRepository();
+            authorVM.Posts = repo.GetAllPostByAuthor(name);
 
             return View(authorVM);
+        }
+
+        public ActionResult Next(int PostId)
+        {
+            return RedirectToAction("Details", nextId);
+        }
+
+        public ActionResult Last(int PostId)
+        {
+            return RedirectToAction("Details", lastId);
+
         }
     }
 }

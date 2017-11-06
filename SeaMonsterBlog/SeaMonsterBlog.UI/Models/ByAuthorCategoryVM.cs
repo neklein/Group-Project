@@ -8,6 +8,6 @@ namespace SeaMonsterBlog.UI.Models
 {
     public class ByAuthorCategoryVM : LayoutVM
     {
-        List<Post> Posts { get; set; }
+        public List<Post> Posts { get; set; }
     }
 }

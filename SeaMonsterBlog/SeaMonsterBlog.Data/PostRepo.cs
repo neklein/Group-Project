@@ -57,13 +57,8 @@ namespace SeaMonster.Data_CLW
         }
 
         //need to clarify procedure name
-        public void CreateComment(int postId, string commenterName, string commentText)
+        public void CreateComment(Comment comment)
         {
-            Comment comment = new Comment();
-
-            comment.PostId = postId;
-            comment.CommenterName = commenterName;
-            comment.CommentText = commentText;
 
             using (var cn = new SqlConnection(cs))
             {
@@ -94,6 +89,8 @@ namespace SeaMonster.Data_CLW
                 SqlParameter Param = new SqlParameter("@PostID", SqlDbType.Int);
                 Param.Direction = ParameterDirection.Output;
                 cmd.Parameters.Add(Param);
+
+                cmd.Parameters.AddWithValue("@DisplayAuthor", post.Author);
                 cmd.Parameters.AddWithValue("@PostTitle", post.PostTitle);
                 cmd.Parameters.AddWithValue("@PostText", post.PostText);
                 cmd.Parameters.AddWithValue("@ExpDate", ' ');
@@ -107,7 +104,7 @@ namespace SeaMonster.Data_CLW
             }
         }
 
-        public void CreatePost(string PostTitle, string posttext, DateTime expdate)
+        public int CreatePostExpDate(Post post)
         {
             using (SqlConnection cn = new SqlConnection(cs))
             {
@@ -116,16 +113,23 @@ namespace SeaMonster.Data_CLW
                 SqlParameter Param = new SqlParameter("@PostID", SqlDbType.Int);
                 Param.Direction = ParameterDirection.Output;
                 cmd.Parameters.Add(Param);
-                cmd.Parameters.AddWithValue("@PostTitle", PostTitle);
-                cmd.Parameters.AddWithValue("@PostText", posttext);
-                cmd.Parameters.AddWithValue("@ExpDate", expdate);
+
+                cmd.Parameters.AddWithValue("@DisplayAuthor", post.Author);
+                cmd.Parameters.AddWithValue("@PostTitle", post.PostTitle);
+                cmd.Parameters.AddWithValue("@PostText", post.PostText);
+                cmd.Parameters.AddWithValue("@ExpDate", post.ExpDate);
                 cmd.Parameters.AddWithValue("@ToPostDate", ' ');
                 cn.Open();
                 cmd.ExecuteNonQuery();
+
+                post.PostId = (int)Param.Value;
+                return post.PostId;
             }
+
+       
         }
 
-        public void CreatePostDelayed(string PostTitle, string posttext, DateTime postdate)
+        public int CreatePostDelayed(Post post)
         {
             using (SqlConnection cn = new SqlConnection(cs))
             {
@@ -134,16 +138,23 @@ namespace SeaMonster.Data_CLW
                 SqlParameter Param = new SqlParameter("@PostID", SqlDbType.Int);
                 Param.Direction = ParameterDirection.Output;
                 cmd.Parameters.Add(Param);
-                cmd.Parameters.AddWithValue("@PostTitle", PostTitle);
-                cmd.Parameters.AddWithValue("@PostText", posttext);
-                cmd.Parameters.AddWithValue("@ToPostDate", postdate);
+
+                cmd.Parameters.AddWithValue("@DisplayAuthor", post.Author);
+                cmd.Parameters.AddWithValue("@PostTitle", post.PostTitle);
+                cmd.Parameters.AddWithValue("@PostText", post.PostText);
+                cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
+                cmd.Parameters.AddWithValue("@ExpDate", ' '); //working on the white space
+
                 cn.Open();
                 cmd.ExecuteNonQuery();
+
+                post.PostId = (int)Param.Value;
+                return post.PostId;
             }
 
         }
 
-        public void CreatePostDelayed(string PostTitle, string posttext, DateTime postdate, DateTime expdate)
+        public int CreatePostDelayedAndExp(Post post)
         {
             using (SqlConnection cn = new SqlConnection(cs))
             {
@@ -152,24 +163,24 @@ namespace SeaMonster.Data_CLW
                 SqlParameter Param = new SqlParameter("@PostID", SqlDbType.Int);
                 Param.Direction = ParameterDirection.Output;
                 cmd.Parameters.Add(Param);
-                cmd.Parameters.AddWithValue("@PostTitle", PostTitle);
-                cmd.Parameters.AddWithValue("@PostText", posttext);
-                cmd.Parameters.AddWithValue("@ToPostDate", postdate);
-                cmd.Parameters.AddWithValue("@ExpDate", expdate);
+
+                cmd.Parameters.AddWithValue("@DisplayAuthor", post.Author);
+                cmd.Parameters.AddWithValue("@PostTitle", post.PostTitle);
+                cmd.Parameters.AddWithValue("@PostText", post.PostText);
+                cmd.Parameters.AddWithValue("@ExpDate", post.ExpDate);
+                cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
                 cn.Open();
                 cmd.ExecuteNonQuery();
+
+                post.PostId = (int)Param.Value;
+                return post.PostId;
+
             }
 
         }
 
-        public void CreateReply(int commentId, string replyName, string replyText)
+        public void CreateReply(Reply reply)
         {
-            Reply reply = new Reply();
-
-            reply.CommentID = commentId;
-            reply.ReplyName = replyName;
-            reply.ReplyText = replyText;
-
             using (var cn = new SqlConnection(cs))
             {
                 SqlCommand cmd = new SqlCommand("CreateReply", cn);
@@ -320,6 +331,9 @@ namespace SeaMonster.Data_CLW
                     }
                 }
             }
+
+            PostRepo repo = new PostRepo();
+
             return post;
         }
 
@@ -343,7 +357,6 @@ namespace SeaMonster.Data_CLW
 
         }
 
-        //May need to edit to match procedure in Sprocks
         public List<Reply> GetAllReply(int CommentID)
         {
             List<Reply> replies = new List<Reply>();
@@ -588,33 +601,6 @@ namespace SeaMonster.Data_CLW
             return Cats;
         }
 
-        public List<Comment> GetCommentsbyPost(int PostId)
-        {
-            List<Comment> comments = new List<Comment>();
-            using (SqlConnection cn = new SqlConnection(cs))
-            {
-                SqlCommand cmd = new SqlCommand("GetCommentbyID", cn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@PostID", PostId);
-                cn.Open();
-                using (SqlDataReader dr = cmd.ExecuteReader())
-                {
-                    while (dr.Read())
-                    {
-                        Comment cmt = new Comment();
-                        cmt.CommentId = (int)dr["CommentID"];
-                        cmt.CommenterName = dr["CommenterName"].ToString();
-                        cmt.CommentText = dr["CommentText"].ToString();
-                        string date = dr["CommentDate"].ToString();
-                        cmt.CommentDate = DateTime.Parse(date);
-                        comments.Add(cmt);
-                    }
-                }
-
-            }
-            return comments;
-        }
-
         public List<Post> GetAllStatic()
         {
             PostRepo repo = new PostRepo();
@@ -628,7 +614,7 @@ namespace SeaMonster.Data_CLW
             PostRepo repo = new PostRepo();
             post.SelectedCategories = GetCategoryByPost(post.PostId);
             post.Hashtags = repo.GetHashtagbyPost(post.PostId);
-            post.Comments = GetCommentsbyPost(post.PostId);
+            post.Comments = GetAllComments(post.PostId);
             foreach (Comment c in post.Comments)
             {
                 c.Replies = GetAllReply(c.CommentId);
@@ -752,7 +738,7 @@ namespace SeaMonster.Data_CLW
 
             return comment;
         }
-        /*
+
         public Reply GetReplyByReplyId(int replyId)
         {
             Reply reply = new Reply();
@@ -763,7 +749,7 @@ namespace SeaMonster.Data_CLW
                 SqlCommand cmd = new SqlCommand();
 
                 cmd.Connection = cn;
-                cmd.CommandText = "SELECT ReplyName, ReplyText, ReplyDate, PostId FROM Reply" +
+                cmd.CommandText = "SELECT ReplyName, ReplyText, ReplyDate, CommentID FROM Reply" +
                         " WHERE ReplyID = @ReplyId";
                 cmd.Parameters.AddWithValue("@ReplyId", replyId);
                 cn.Open();
@@ -771,12 +757,16 @@ namespace SeaMonster.Data_CLW
                 {
                     while (dr.Read())
                     {
+                        reply.CommentID = (int)dr["CommentID"];
+                        reply.ReplyName = dr["ReplyName"].ToString();
+                        reply.ReplyText = dr["ReplyText"].ToString();
+                        reply.ReplyDate = DateTime.Parse(dr["ReplyDate"].ToString());
 
-                    
                     }
                 }
             }
-            return ;*/
+            return reply;
+        }
 
         public List<Post> GetPublishedPostByCategory(int CatId)
         {
@@ -784,19 +774,126 @@ namespace SeaMonster.Data_CLW
             return posts;
         }
 
+        public List<Post> GetAllPostByAuthor(string name)
+        {
+            List<Post> posts = GetAllPosts().Where(p => p.Author.ToLower() == name.ToLower()).ToList();
+            return posts;
+        }
+
+        public List<Post> GetPublishedPostbyAuthor(string name)
+        {
+            List<Post> posts = GetAllPostByAuthor(name).Where(p => p.IsPublished).ToList();
+            return posts;
+        }
+
+
         public List<Image> GetAllImages()
         {
-            throw new NotImplementedException();
+            List<Image> images = new List<Image>();
+
+            string cs = "Server=localhost;Database=SeaMonster;User Id=SeamonsterSA; Password=ocean;";
+
+            using (var cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = cn;
+
+                cmd.CommandText = "SELECT * FROM Images";
+
+                cn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        Image image = new Image();
+                        image.ImageId = (int)dr["ImageId"];
+                        image.ImageName = dr["ImageName"].ToString();
+
+                        images.Add(image);
+                    }
+                }
+            }
+
+            return images;
+
         }
 
         public void SavePost(Post post)
         {
-            throw new NotImplementedException();
+            using (SqlConnection cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("SavePost", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PostID", post.PostId);
+                cmd.Parameters.AddWithValue("@PostTitle", post.PostTitle);
+                cmd.Parameters.AddWithValue("@PostText", post.PostText);
+                cmd.Parameters.AddWithValue("@DisplayAuthor", post.Author);
+                cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
+                cmd.Parameters.AddWithValue("@isForReview", post.IsForReview);
+                if (post.ToPostDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
+                }
+
+                if (post.ExpDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ExpDate", ' ');
+                }
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
         }
 
-        public void SaveNewImage(string fileName)
+        public void ADMINSavePost(Post post)
         {
-            throw new NotImplementedException();
+            using (SqlConnection cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("AdminSavePost", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PostID", post.PostId);
+                cmd.Parameters.AddWithValue("@PostTitle", post.PostTitle);
+                cmd.Parameters.AddWithValue("@PostText", post.PostText);
+                cmd.Parameters.AddWithValue("@DisplayAuthor", post.Author);
+                cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
+                cmd.Parameters.AddWithValue("@isForReview", post.IsForReview);
+                cmd.Parameters.AddWithValue("@IsPublished", post.IsPublished);
+                if (post.ToPostDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
+                }
+
+                if (post.ExpDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ExpDate", ' ');
+                }
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void SaveNewImage(string imageName)
+        {
+            using (var cn = new SqlConnection(cs))
+            {
+                Image image = new Image();
+                image.ImageName = imageName;
+
+                SqlCommand cmd = new SqlCommand("AddImage", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                SqlParameter param = new SqlParameter("@ImageId", SqlDbType.Int);
+                param.Direction = ParameterDirection.Output;
+
+                cmd.Parameters.Add(param);
+
+                cmd.Parameters.AddWithValue("@ImageName", imageName);
+
+                cn.Open();
+                cmd.ExecuteNonQuery();
+
+                image.ImageId = (int)param.Value;
+            }
+
         }
     }
 
