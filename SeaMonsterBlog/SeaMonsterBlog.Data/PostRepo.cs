@@ -275,10 +275,8 @@ namespace SeaMonster.Data_CLW
 
             using (var cn = new SqlConnection(cs))
             {
-                SqlCommand cmd = new SqlCommand();
-
-                cmd.Connection = cn;
-                cmd.CommandText = "SELECT * FROM Post";
+                SqlCommand cmd = new SqlCommand("GetAllPosts", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
 
                 cn.Open();
                 using (SqlDataReader dr = cmd.ExecuteReader())
@@ -289,8 +287,14 @@ namespace SeaMonster.Data_CLW
 
                         post.PostId = (int)dr["PostID"];
                         post.PostTitle = dr["PostTitle"].ToString();
+                        post.PostText = dr["PostText"].ToString();
                         post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
                         post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
+                        post.Author = dr["DisplayAuthor"].ToString();
+                        post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
+                        post.IsStatic = (bool)dr["isStatic"];
+                        post.IsPublished = (bool)dr["isPublished"];
+                        post.IsForReview = (bool)dr["isForReview"];
 
                         posts.Add(post);
                     }

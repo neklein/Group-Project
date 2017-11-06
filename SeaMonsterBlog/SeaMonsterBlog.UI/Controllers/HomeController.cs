@@ -16,11 +16,11 @@ namespace SeaMonsterBlog.UI.Controllers
             var repo = RepositoryFactory.GetRepository();
             HomeVM homeVM = new HomeVM();
             homeVM.Categories = repo.GetAllCategories();
-            homeVM.Posts = repo.GetAllPosts(); 
+            homeVM.Posts = repo.GetPublishedPosts(); 
             foreach (var p in homeVM.Posts)
             {
                 p.PostText = WebUtility.HtmlDecode(p.PostText);
-                p.PostText = p.PostText.Substring(53);
+                p.PostText = p.PostText.Substring(60);
                 p.PostText = p.PostText.Substring(0, p.PostText.Length - 16);
             }
 
@@ -32,10 +32,20 @@ namespace SeaMonsterBlog.UI.Controllers
             var repo = RepositoryFactory.GetRepository();
             DetailVM detailVM = new DetailVM();
 
-            detailVM.Categories = repo.GetAllCategories();
             detailVM.Post = repo.GetPostByID(id);
-            detailVM.Post.Comments = repo.GetAllComments(id);
-            //detailVM.Post.Comments.Replies = repo.GetAllReply();
+            detailVM.Post.PostText = WebUtility.HtmlDecode(detailVM.Post.PostText);
+            detailVM.Post.PostText = detailVM.Post.PostText.Substring(60);
+            detailVM.Post.PostText = detailVM.Post.PostText.Substring(0, detailVM.Post.PostText.Length - 16);
+
+            detailVM.Categories = repo.GetAllCategories();
+            if(Request.IsAuthenticated && User.IsInRole("admin")|| Request.IsAuthenticated && User.IsInRole("moderator"))
+            {
+                repo.ADMINSetPostList(detailVM.Post);
+            }
+            else
+            {
+                repo.SetPostLists(detailVM.Post);
+            }
 
             return View(detailVM);
         }

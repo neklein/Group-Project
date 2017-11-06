@@ -11,6 +11,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using SeaMonsterBlog.UI.Models;
+using Owin;
+using Microsoft.Owin.Security.Cookies;
 
 namespace SeaMonsterBlog.UI
 {
@@ -22,6 +24,7 @@ namespace SeaMonsterBlog.UI
             return Task.FromResult(0);
         }
     }
+
 
     public class SmsService : IIdentityMessageService
     {

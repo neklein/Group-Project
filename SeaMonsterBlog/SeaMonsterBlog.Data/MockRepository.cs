@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SeaMonsterBlog.Data
 {
-    public class MockRepository : IRepository
+    public class MockRepository //: IRepository
     {
         static IEnumerable<Category> categories;
         static IEnumerable<Post> posts;
@@ -148,6 +148,16 @@ namespace SeaMonsterBlog.Data
         }
 
         public List<Reply> GetAllReply(int commentId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ADMINSetPostList(Post post)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetPostLists(Post post)
         {
             throw new NotImplementedException();
         }
