@@ -5,129 +5,50 @@
     ViewBag.Categories = Model.Categories;
 }
 
-<div class="row">
-    <div class="col-sm-12">
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                <h3><storng>@Model.Post.PostTitle</storng></h3>
-                <h5><strong>@Model.Post.DisplayDate  |  {blog.author}</strong></h5>
-            </div>
-            <div class="panel-body">
-                @Html.Raw(Model.Post.PostText)
-            </div>
-        </div>
 
-        <div class="panel-body">
-            <span class="label label-success">
-                #Hashtags
-            </span>
-        </div>
+@Html.HiddenFor(m => m.Post.PostId)
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <h3><strong>@Model.Post.PostTitle</strong></h3>
+        <h5><strong>@Model.Post.DisplayDate  |  @Model.Post.Author</strong></h5>
+    </div>
+    <div class="panel-body">
+        <p>
+            categories listed here
+            @Html.Raw(Model.Post.PostText)
+            <br />
+            list of hashtags at the bottom
+        </p>
     </div>
 </div>
-
-<hr />
-
-<div class="row">
-    <div class="co-sm-12">
-        <h4>Comments</h4>
-        @if(Model.Post.Comments != null)
-        {
+<div class="col-sm-12">
+    <h4><strong>Comments</strong></h4>
+    @if (Model.Post.Comments != null)
+    {
         foreach (var comment in Model.Post.Comments)
         {
-            <p>@comment.CommenterName  |  @comment.CommentDate</p>
-            <p>@comment.CommentText</p>
-
-            if (comment.Replies == null)
-            {
-                <p></p>
-                <div class="form-inline">
-                    <div class="form-horizontal">
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-horizontal">
-                        <div class="form-group">
-                            <label for="reply">Reply</label>
-                                <input type="text" class="form-control">
-                            <div class="comment-button">
-                                <button id="btn-reply" class="btn btn-default">Reply</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-            else
-            {
-                foreach (var reply in comment.Replies)
-                {
-                    <p>@reply.ReplyName  |  @reply.ReplyDate</p>
-                    <p>@reply.ReplyText</p>
-
-                    <p></p>
-                    <div class="form-inline">
-                        <div class="form-horizontal">
-                            <div class="form-group">
-                                <label for="name">Name</label>
-                                <input type="text" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="form-horizontal">
-                            <div class="form-group">
-                                <label for="reply">Reply</label>
-                                    <input type="text" class="form-control">
-                                <div class="comment-button">
-                                    <button id="btn-reply" class="btn btn-default">Reply</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    }
-                }
-            }
-
+            <p><strong>@comment.CommenterName |  @comment.CommentDate</strong></p>
         }
-
-        <p></p>
-        <p></p>
-        <div class="form-inline">
-            <div class="comment-box">
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" class="form-control" />
-                    </div>
-                </div>
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label for="comment">Comment</label>
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-            </div>
-            <div class="comment-button">
-                <button id="btn-reply" class="btn btn-default">Comment</button>
-            </div>
-        </div>
-    </div>
+    }
 </div>
+
+
 
 @section Scripts
 {
     <script>
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        $(".comment-box").hide();
+            $(".comment-box").hide();
 
-        $(".comment-button").click(function () {
-            $(".comment-box").show();
+            $(".comment-button").click(function () {
+                $(".comment-box").show();
+            });
+
         });
 
-    });
-
     </script>
-    
+
 }
 
 

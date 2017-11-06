@@ -33,6 +33,9 @@ namespace SeaMonsterBlog.UI.Controllers
             DetailVM detailVM = new DetailVM();
 
             detailVM.Post = repo.GetPostByID(id);
+            detailVM.Post.PostText = WebUtility.HtmlDecode(detailVM.Post.PostText);
+            detailVM.Post.PostText = detailVM.Post.PostText.Substring(60);
+            detailVM.Post.PostText = detailVM.Post.PostText.Substring(0, detailVM.Post.PostText.Length - 16);
 
             detailVM.Categories = repo.GetAllCategories();
             if(Request.IsAuthenticated && User.IsInRole("admin")|| Request.IsAuthenticated && User.IsInRole("moderator"))
