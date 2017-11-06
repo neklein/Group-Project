@@ -27,71 +27,61 @@
 <span style="float:right">
     <a href="~home/next/@Model.Post.PostId" >Next</a>
 </span>
-
+@using (Html.BeginForm("Detail", "Home", FormMethod.Post))
+{
 <div class="col-sm-12">
     <h4><strong>Comments</strong></h4>
     @if (Model.Post.Comments != null)
     {
         foreach (var comment in Model.Post.Comments)
         {
+            @Html.HiddenFor(c => comment.CommentId)
             <p>
                 <strong>@comment.CommenterName |  @comment.CommentDate</strong>
                 @if ((Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator")) && !comment.IsShown)
                 {
-                    if (comment.IsShown)
-                    {
-                        <input type="radio" name="approval-comment-@comment.CommentId" value="approve" checked> <text>Approve</text>
-                        <input type="radio" name="approval-comment-@comment.CommentId" value="delete"> <text>Delete</text>
-                    }
-                    else
-                    {
-                        <input type="radio" name="approval-comment-@comment.CommentId" value="approve" > <text>Approve</text>
-                        <input type="radio" name="approval-comment-@comment.CommentId" value="delete" checked> <text>Delete</text>
-                    }
-                <button class="btn btn-danger">Submit</button>                  
+                    @Html.RadioButtonFor(r => comment.IsShown, true);  <text>Approve</text>
+                    @Html.RadioButtonFor(r => comment.IsShown, false); <text>Delete</text>
+                <button type="submit" class="btn btn-danger">Submit</button> 
                 }
             </p>
             <p>@comment.CommentText</p>
 
-            if (comment.Replies != null)
+            if (comment.Replies.Any())
             {
                 <div class="row">
                     <div class="col-md-11 col-md-offset-1">
                         <a id="comment-replies-@comment.CommentId" class="comment-replies" onclick="openReplies(@comment.CommentId)">View Replies or Reply</a>
                     </div>
-                    <div class="col-md-11 col-md-offset-1" id="comment-dropdown-@comment.CommentId" hidden>
+                    <div class="col-md-11 col-md-offset-1 reply-box" id="comment-dropdown-@comment.CommentId" hidden>
                         @foreach (var reply in comment.Replies)
                         {
+                            @Html.HiddenFor(r => reply.ReplyID)
                             <p><strong>@reply.ReplyName | @reply.ReplyDate</strong>
-                                @if ((Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator")) && !comment.IsShown)
+                                @if ((Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator")) && !reply.IsShown)
                                 {
-                                    if(reply.IsShown)
-                                    { 
-                                    <input type="radio" name="approval-reply-@reply.ReplyID" value="approve" checked> <text>Approve</text>
-                                    <input type="radio" name="approval-reply-@reply.ReplyID" value="delete"> <text>Delete</text>
-                                    }
-                                    else
-                                    {
-                                        <input type="radio" name="approval-reply-@reply.ReplyID" value="approve"> <text>Approve</text>
-                                        <input type="radio" name="approval-reply-@reply.ReplyID" value="delete" checked> <text>Delete</text>
-    }
-                                    <button class="btn btn-danger">Submit</button>
+                                    @Html.RadioButtonFor(r => reply.IsShown, true);  <text>Approve</text>
+                                    @Html.RadioButtonFor(r => reply.IsShown, false); <text>Delete</text>
+                                    <button type="submit" class="btn btn-danger">Submit</button>
                                 }
+                                
                         </p>
                             <p>@reply.ReplyText</p>
-                            
+
                         }
                         <form>
+                            @Html.Hidden("NewReply", comment.CommentId)
                             <div class="form-group row">
                                 <label class="control-label col-sm-2">Name</label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control form-group-sm" />
+                                    @Html.TextBoxFor(r => r.NewReply.ReplyName, new { @class = "form-control" })
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="control-label col-sm-2">New Reply</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control form-group-sm" />
+                                    @Html.TextBoxFor(r => r.NewReply.ReplyText, new { @class = "form-control" })
+                                    <button type="submit" class="btn btn-info">Submit Reply</button>
                                 </div>
                             </div>
                         </form>
@@ -100,23 +90,25 @@
             }
         }
         <form>
-            <h4><strong>New Comment</strong></h4>
+            <h4 style="padding-top:15px"><strong>New Comment</strong></h4>
             <div class="form-group row">
                 <label class="control-label col-sm-2">Name</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control form-group-sm" />
+                    @Html.TextBoxFor(m => m.NewComment.CommenterName, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group row">
-                <label class="control-label col-sm-2">New Reply</label>
+                <label class="control-label col-sm-2">Comment</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control form-group-sm" />
+                    @Html.TextBoxFor(m => m.NewComment.CommentText, new { @class = "form-control" })
+                    <button type="submit" class="btn btn-info">Submit Comment</button>
                 </div>
             </div>
         </form>
 
     }
 </div>
+}
 
 
 
@@ -129,6 +121,7 @@
 
         function openReplies(commentId) {
             $("#comment-replies-" + commentId).hide();
+            $(".reply-box").hide();
             $("#comment-dropdown-" + commentId).show();
 
         }
