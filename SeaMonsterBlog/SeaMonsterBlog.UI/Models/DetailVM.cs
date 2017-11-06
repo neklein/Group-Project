@@ -9,5 +9,7 @@ namespace SeaMonsterBlog.UI.Models
     public class DetailVM : LayoutVM
     {
         public Post Post { get; set; }
+        public Comment NewComment { get; set; }
+        public Reply NewReply { get; set; }
     }
 }

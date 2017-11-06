@@ -49,5 +49,11 @@ namespace SeaMonsterBlog.Data
         void SaveNewImage(string fileName);
         List<Post> GetAllPostByAuthor(string name);
         List<Post> GetPublishedPostbyAuthor(string name);
+
+        int FindNextPublishedPost(int PostID);
+        int FindPreviousPublishedPost(int PostID);
+        int FindFirstPublishedPost();
+        int FindLastPublishedPost();
+
     }
 }

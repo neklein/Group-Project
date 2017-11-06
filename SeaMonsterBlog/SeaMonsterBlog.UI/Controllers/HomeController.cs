@@ -1,4 +1,5 @@
 ﻿using SeaMonsterBlog.Data;
+using SeaMonsterBlog.Models.Tables;
 using SeaMonsterBlog.UI.Models;
 using System;
 using System.Collections.Generic;
@@ -50,6 +51,29 @@ namespace SeaMonsterBlog.UI.Controllers
             return View(detailVM);
         }
 
+        [HttpPost]
+        public ActionResult Detail (DetailVM model)
+        {
+            var repo = RepositoryFactory.GetRepository();
+            foreach (var c in model.Post.Comments)
+            {
+                if (!c.IsShown)
+                {
+                //delete comment and all related replies?
+                }
+                foreach (var r in c.Replies)
+                {
+                    if (!r.IsShown)
+                    {
+                        //delete reply
+                    }
+                }
+            }
+
+
+            return View("Detail", model);
+        }
+
         public ActionResult ByCategory(int id)
         {
             ByAuthorCategoryVM categoryVM = new ByAuthorCategoryVM();
@@ -79,14 +103,33 @@ namespace SeaMonsterBlog.UI.Controllers
             return View(authorVM);
         }
 
+
         public ActionResult Next(int PostId)
         {
-            return RedirectToAction("Details", nextId);
+            var repo = RepositoryFactory.GetRepository();
+
+            return RedirectToAction("Details", repo.FindNextPublishedPost(PostId));
         }
 
-        public ActionResult Last(int PostId)
+        public ActionResult Previous(int PostId)
         {
-            return RedirectToAction("Details", lastId);
+            var repo = RepositoryFactory.GetRepository();
+
+            return RedirectToAction("Details", repo.FindPreviousPublishedPost(PostId));
+        }
+
+        public ActionResult First()
+        {
+            var repo = RepositoryFactory.GetRepository();
+
+            return RedirectToAction("Details", repo.FindFirstPublishedPost());
+        }
+
+        public ActionResult Last()
+        {
+            var repo = RepositoryFactory.GetRepository();
+
+            return RedirectToAction("Details", repo.FindLastPublishedPost());
 
         }
     }
