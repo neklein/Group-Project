@@ -78,5 +78,16 @@ namespace SeaMonsterBlog.UI.Controllers
 
             return View(authorVM);
         }
+
+        public ActionResult Next(int PostId)
+        {
+            return RedirectToAction("Details", nextId);
+        }
+
+        public ActionResult Last(int PostId)
+        {
+            return RedirectToAction("Details", lastId);
+
+        }
     }
 }
