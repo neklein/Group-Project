@@ -111,7 +111,7 @@ GO
  
  Create Procedure GetALLPosts as
  begin
- select p.PostID, p.PostTitle, p.DateCreated, isnull(p.ToPostDate, p.DateCreated)AS ToPostDate, p.DisplayAuthor, 
+ select p.PostID, p.PostTitle, p.DateCreated, isnull(p.ToPostDate, p.DateCreated)AS PostDate, p.DisplayAuthor, 
  isnull(p.DisplayDate, p.DateCreated)AS DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby 
  from Post p
  left join PostText pt on pt.PostId=p.PostID
@@ -133,9 +133,9 @@ GO
 
 Create Procedure GetPostByID (@PostID int) AS
  Begin
-select p.PostID, p.PostTitle, p.DateCreated, p.ToPostDate, p.DisplayAuthor, 
- p.DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby
-  from Post p
+select p.PostID, p.PostTitle, p.DateCreated, isnull(p.ToPostDate, p.DateCreated)AS PostDate, p.DisplayAuthor, 
+ isnull(p.DisplayDate, p.DateCreated)AS DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby 
+ from Post p
  left join PostText pt on pt.PostId=p.PostID
  where p.PostID=@PostID
  order by p.DateCreated
@@ -181,8 +181,8 @@ go
 
 Create Procedure GetPostByHashtag (@HashtagID int) AS
 begin
- select p.PostID, p.PostTitle, p.DateCreated, p.ToPostDate, p.DisplayAuthor, 
- p.DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby
+ select p.PostID, p.PostTitle, p.DateCreated, isnull(p.ToPostDate, p.DateCreated)AS PostDate, p.DisplayAuthor, 
+ isnull(p.DisplayDate, p.DateCreated)AS DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby 
  from Post p
  left join PostText pt on pt.PostId=p.PostID
  left join HashtagPost h on h.PostID=p.PostID
@@ -193,9 +193,9 @@ Go
 
 Create Procedure GetPostByCategory (@CategoryID int)AS
 begin
-Select p.PostID, p.PostTitle, p.DateCreated, p.ToPostDate, p.DisplayAuthor, 
- p.DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby
-from Post p
+select p.PostID, p.PostTitle, p.DateCreated, isnull(p.ToPostDate, p.DateCreated)AS PostDate, p.DisplayAuthor, 
+ isnull(p.DisplayDate, p.DateCreated)AS DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby 
+ from Post p
 left join PostText pt on pt.PostId=p.PostID
 left join CategoryPost cp on cp.PostId=p.PostID
 where cp.CategoryID=@CategoryID
@@ -204,9 +204,9 @@ go
 
 Create Procedure GetPostByAuthor (@DisplayAuthor nvarchar(40)) AS
 Begin
- select p.PostID, p.PostTitle, p.DateCreated, p.ToPostDate, p.DisplayAuthor, 
- p.DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby
- from post p
+ select p.PostID, p.PostTitle, p.DateCreated, isnull(p.ToPostDate, p.DateCreated)AS PostDate, p.DisplayAuthor, 
+ isnull(p.DisplayDate, p.DateCreated)AS DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby 
+ from Post p
  left join PostText pt on pt.PostId=p.PostID
  where p.DisplayAuthor=@DisplayAuthor
  END
@@ -336,7 +336,7 @@ go
 
 Create Procedure TitleSearch (@Searchstring nvarchar(30)) As
 begin
- select p.PostID, p.PostTitle, p.DateCreated, isnull(p.ToPostDate, p.DateCreated)AS ToPostDate, p.DisplayAuthor, 
+ select p.PostID, p.PostTitle, p.DateCreated, isnull(p.ToPostDate, p.DateCreated)AS PostDate, p.DisplayAuthor, 
  isnull(p.DisplayDate, p.DateCreated)AS DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby 
  from Post p
  left join PostText pt on pt.PostId=p.PostID

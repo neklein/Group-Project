@@ -267,7 +267,7 @@ namespace SeaMonster.Data_CLW
                         post.PostTitle = dr["PostTitle"].ToString();
                         post.PostText = dr["PostText"].ToString();
                         post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
-                        post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
+                        post.ToPostDate = DateTime.Parse(dr["PostDate"].ToString());
                         post.DisplayAuthor = dr["DisplayAuthor"].ToString();
                         post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
                         string expdate = dr["Expdate"].ToString();
@@ -309,7 +309,7 @@ namespace SeaMonster.Data_CLW
                         post.PostTitle = dr["PostTitle"].ToString();
                         post.PostText = dr["PostText"].ToString();
                         post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
-                        post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
+                        post.ToPostDate = DateTime.Parse(dr["PostDate"].ToString());
                         post.DisplayAuthor = dr["DisplayAuthor"].ToString();
                         post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
                         string expdate = dr["Expdate"].ToString();
@@ -524,7 +524,7 @@ namespace SeaMonster.Data_CLW
                             post.PostTitle = dr["PostTitle"].ToString();
                             post.PostText = dr["PostText"].ToString();
                             post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
-                            post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
+                            post.ToPostDate = DateTime.Parse(dr["PostDate"].ToString());
                             post.DisplayAuthor = dr["DisplayAuthor"].ToString();
                             post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
                             string expdate = dr["Expdate"].ToString();
@@ -723,7 +723,7 @@ namespace SeaMonster.Data_CLW
                         post.PostTitle = dr["PostTitle"].ToString();
                         post.PostText = dr["PostText"].ToString();
                         post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
-                        post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
+                        post.ToPostDate = DateTime.Parse(dr["PostDate"].ToString());
                         post.DisplayAuthor = dr["DisplayAuthor"].ToString();
                         post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
                         string expdate = dr["Expdate"].ToString();
@@ -761,7 +761,7 @@ namespace SeaMonster.Data_CLW
                         post.PostTitle = dr["PostTitle"].ToString();
                         post.PostText = dr["PostText"].ToString();
                         post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
-                        post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
+                        post.ToPostDate = DateTime.Parse(dr["PostDate"].ToString());
                         post.DisplayAuthor = dr["DisplayAuthor"].ToString();
                         post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
                         string expdate = dr["Expdate"].ToString();
@@ -1092,7 +1092,7 @@ namespace SeaMonster.Data_CLW
                             post.PostTitle = dr["PostTitle"].ToString();
                             post.PostText = dr["PostText"].ToString();
                             post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
-                            post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
+                            post.ToPostDate = DateTime.Parse(dr["PostDate"].ToString());
                             post.DisplayAuthor = dr["DisplayAuthor"].ToString();
                             post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
                             string expdate = dr["Expdate"].ToString();
