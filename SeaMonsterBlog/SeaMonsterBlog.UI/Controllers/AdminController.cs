@@ -18,9 +18,24 @@ namespace SeaMonsterBlog.UI.Controllers
             var repo = RepositoryFactory.GetRepository();
             CreateEditVM createEditVM = new CreateEditVM();
             createEditVM.Categories = repo.GetAllCategories();
+            createEditVM.StaticPosts = repo.GetAllStaticPublished();
             createEditVM.Images = repo.GetAllImages();
             createEditVM.Post = new SeaMonsterBlog.Models.Tables.Post();            
             return View(createEditVM);
+        }
+
+        public ActionResult Edit(int id)
+        {
+            var repo = RepositoryFactory.GetRepository();
+            CreateEditVM createEditVM = new CreateEditVM();
+            createEditVM.Post = repo.GetPostByID(id);
+            createEditVM.Post.PostText = WebUtility.HtmlDecode(createEditVM.Post.PostText);
+            createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(53);
+            createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(0, createEditVM.Post.PostText.Length - 16);
+            createEditVM.Categories = repo.GetAllCategories();
+            createEditVM.StaticPosts = repo.GetAllStaticPublished();
+            createEditVM.Images = repo.GetAllImages();
+            return View("Create",createEditVM);
         }
 
 
@@ -90,6 +105,7 @@ namespace SeaMonsterBlog.UI.Controllers
             createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(53);
             createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(0, createEditVM.Post.PostText.Length - 16);
             createEditVM.Categories = repo.GetAllCategories();
+            createEditVM.StaticPosts = repo.GetAllStaticPublished();
 
             return View(createEditVM);
         }
@@ -102,6 +118,7 @@ namespace SeaMonsterBlog.UI.Controllers
             if (createEditVM.Post.IsForReview &&createEditVM.Post.IsPublished==false)
             {
                 createEditVM.Categories = repo.GetAllCategories();
+                createEditVM.StaticPosts = repo.GetAllStaticPublished();
                 createEditVM.Images = repo.GetAllImages();
                 return RedirectToAction("Create", createEditVM);
             }

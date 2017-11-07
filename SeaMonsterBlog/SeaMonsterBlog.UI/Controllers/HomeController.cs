@@ -17,6 +17,7 @@ namespace SeaMonsterBlog.UI.Controllers
             var repo = RepositoryFactory.GetRepository();
             HomeVM homeVM = new HomeVM();
             homeVM.Categories = repo.GetAllCategories();
+            homeVM.StaticPosts = repo.GetAllStaticPublished();
             homeVM.Posts = repo.GetPublishedPosts(); 
             foreach (var p in homeVM.Posts)
             {
@@ -39,7 +40,8 @@ namespace SeaMonsterBlog.UI.Controllers
             detailVM.Post.PostText = detailVM.Post.PostText.Substring(0, detailVM.Post.PostText.Length - 16);
 
             detailVM.Categories = repo.GetAllCategories();
-            if(Request.IsAuthenticated && User.IsInRole("admin")|| Request.IsAuthenticated && User.IsInRole("moderator"))
+            detailVM.StaticPosts = repo.GetAllStaticPublished();
+            if (Request.IsAuthenticated && User.IsInRole("admin")|| Request.IsAuthenticated && User.IsInRole("moderator"))
             {
                 repo.ADMINSetPostList(detailVM.Post);
             }
