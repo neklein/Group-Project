@@ -59,17 +59,24 @@ namespace SeaMonsterBlog.UI.Controllers
             {
                 if (!c.IsShown)
                 {
-                //delete comment and all related replies?
+                    repo.DeleteComment(c.CommentId);
                 }
                 foreach (var r in c.Replies)
                 {
                     if (!r.IsShown)
                     {
-                        //delete reply
+                        repo.DeleteReply(r.ReplyID);
                     }
                 }
             }
 
+            if (model.NewComment != null)
+            {
+                model.NewComment.PostId = model.Post.PostId;
+                repo.CreateComment(model.NewComment);
+            }
+            if (model.NewReply != null)
+                repo.CreateReply(model.NewReply);
 
             return View("Detail", model);
         }
@@ -79,6 +86,10 @@ namespace SeaMonsterBlog.UI.Controllers
             ByAuthorCategoryVM categoryVM = new ByAuthorCategoryVM();
 
             // all posts in category where id = categoryId
+
+            // are there categories assigned to published posts? 
+            // when running through debugger, int ID is passed in but GetPublishedPostBtyCategory returns list of 0
+
             var repo = RepositoryFactory.GetRepository();
             if (Request.IsAuthenticated && User.IsInRole("admin"))
             {
@@ -89,6 +100,7 @@ namespace SeaMonsterBlog.UI.Controllers
                 categoryVM.Posts = repo.GetPublishedPostByCategory(id);
             }
 
+            categoryVM.Categories = repo.GetAllCategories();
 
             return View(categoryVM);
         }
@@ -99,6 +111,7 @@ namespace SeaMonsterBlog.UI.Controllers
 
             var repo = RepositoryFactory.GetRepository();
             authorVM.Posts = repo.GetAllPostByAuthor(name);
+            authorVM.Categories = repo.GetAllCategories();
 
             return View(authorVM);
         }

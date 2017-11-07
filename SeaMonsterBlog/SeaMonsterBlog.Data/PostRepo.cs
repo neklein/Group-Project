@@ -837,7 +837,11 @@ namespace SeaMonster.Data_CLW
 
                 if (post.ExpDate != null)
                 {
-                    cmd.Parameters.AddWithValue("@ExpDate", ' ');
+                    cmd.Parameters.AddWithValue("@ExpDate", post.ExpDate);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@ExpDate", DBNull.Value);
                 }
                 cn.Open();
                 cmd.ExecuteNonQuery();
