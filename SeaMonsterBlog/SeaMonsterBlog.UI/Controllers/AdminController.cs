@@ -29,6 +29,7 @@ namespace SeaMonsterBlog.UI.Controllers
             var repo = RepositoryFactory.GetRepository();
             CreateEditVM createEditVM = new CreateEditVM();
             createEditVM.Post = repo.GetPostByID(id);
+            repo.SetPostLists(createEditVM.Post);
             createEditVM.Post.PostText = WebUtility.HtmlDecode(createEditVM.Post.PostText);
             createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(53);
             createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(0, createEditVM.Post.PostText.Length - 16);
@@ -88,6 +89,7 @@ namespace SeaMonsterBlog.UI.Controllers
             else 
             {
                 createEditVM.Post = repo.GetPostByID(createEditVM.Post.PostId);
+                repo.SetPostLists(createEditVM.Post);
                 createEditVM.StaticPosts = repo.GetAllStaticPublished();
                 createEditVM.Categories = repo.GetAllCategories();
                 createEditVM.Post.PostText = WebUtility.HtmlDecode(createEditVM.Post.PostText);
@@ -124,7 +126,7 @@ namespace SeaMonsterBlog.UI.Controllers
                 createEditVM.Categories = repo.GetAllCategories();
                 createEditVM.StaticPosts = repo.GetAllStaticPublished();
                 createEditVM.Images = repo.GetAllImages();
-                return RedirectToAction("Create", createEditVM);
+                return RedirectToAction("Edit/"+createEditVM.Post.PostId.ToString());
             }
             else if (createEditVM.Post.IsForReview == false && createEditVM.Post.IsPublished == false)  //returned to contributor
             {

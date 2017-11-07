@@ -510,14 +510,28 @@ namespace SeaMonster.Data_CLW
                 {
                     while (dr.Read())
                     {
+
+
                         Post post = new Post();
+
                         post.PostId = (int)dr["PostID"];
                         post.PostTitle = dr["PostTitle"].ToString();
-                        post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
-                        post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
                         post.PostText = dr["PostText"].ToString();
+                        post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
+                        post.ToPostDate = DateTime.Parse(dr["PostDate"].ToString());
+                        post.Author = dr["DisplayAuthor"].ToString();
+                        post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
+                        string expdate = dr["Expdate"].ToString();
+                        if (!string.IsNullOrWhiteSpace(expdate))
+                        {
+                            post.ExpDate = DateTime.Parse(expdate);
+                        }
+                        post.IsStatic = (bool)dr["isStatic"];
+                        post.IsPublished = (bool)dr["ispublished"];
+                        post.IsForReview = (bool)dr["isforReview"];
 
                         posts.Add(post);
+
                     }
                 }
             }
@@ -537,18 +551,20 @@ namespace SeaMonster.Data_CLW
         }
 
 
-
-
         public void SetPostLists(Post post)
         {
             PostRepo repo = new PostRepo();
-            //array or list?
             post.SelectedCategories = GetCategoryByPost(post.PostId);
             post.Hashtags = repo.GetHashtagbyPost(post.PostId);
             post.Comments = GetPublishedComments(post.PostId);
             foreach (Comment c in post.Comments)
             {
                 c.Replies = GetPublishedReplies(c.CommentId);
+            }
+            post.HashtagString = "";
+            foreach (Hashtag h in post.Hashtags)
+            {
+                post.HashtagString += "#" + h.HashtagName + ",";
             }
         }
 
