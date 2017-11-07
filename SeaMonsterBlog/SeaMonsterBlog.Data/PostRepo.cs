@@ -289,7 +289,7 @@ namespace SeaMonster.Data_CLW
                         post.PostTitle = dr["PostTitle"].ToString();
                         post.PostText = dr["PostText"].ToString();
                         post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
-                        post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
+                        post.ToPostDate = DateTime.Parse(dr["PostDate"].ToString());
                         post.Author = dr["DisplayAuthor"].ToString();
                         post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
                         post.IsStatic = (bool)dr["isStatic"];
@@ -326,7 +326,7 @@ namespace SeaMonster.Data_CLW
                         post.PostTitle = dr["PostTitle"].ToString();
                         post.PostText = dr["PostText"].ToString();
                         post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
-                        string toPostDate = dr["ToPostDate"].ToString();
+                        string toPostDate = dr["PostDate"].ToString();
                         if (!string.IsNullOrWhiteSpace(toPostDate))
                         {
                             post.ToPostDate = DateTime.Parse(toPostDate);
@@ -514,7 +514,7 @@ namespace SeaMonster.Data_CLW
                         post.PostId = (int)dr["PostID"];
                         post.PostTitle = dr["PostTitle"].ToString();
                         post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
-                        post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
+                        post.ToPostDate = DateTime.Parse(dr["PostDate"].ToString());
                         post.PostText = dr["PostText"].ToString();
 
                         posts.Add(post);
