@@ -64,13 +64,13 @@ Create Table Post
 	 PostTitle nvarchar(50) not null,
 	 DateCreated datetime2 default(getdate()),
 	 Expdate datetime2 default null,
-	 ToPostDate datetime2 default(getdate()),
+	 ToPostDate datetime2,
 	 ispublished bit not null default 0,
 	 addedby nvarchar(40) default Current_User,
 	 isStatic bit default 0 not null,
 	 isforReview bit default 0 not null,
 	 DisplayAuthor nvarchar(40) default Current_User,
-	 DisplayDate datetime2 default(getdate())
+	 DisplayDate datetime2
 	)
 GO
 
