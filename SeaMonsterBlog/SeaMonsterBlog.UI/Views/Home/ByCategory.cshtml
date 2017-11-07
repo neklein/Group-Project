@@ -38,10 +38,12 @@
             <tbody>
                 @foreach (var row in Model.Posts)
                 {
-                    <tr>@row.PostTitle</tr>
-                    <tr>@row.Author</tr>
-                    <tr>@row.DisplayDate</tr>
-                    <tr>@Html.ActionLink("VIEW","Home", "Detail", new { id = row.PostId }, new { @class = "btn btn-warning" })</tr>
+                    <tr>
+                        <td>@row.PostTitle</td>
+                        <td>@row.Author</td>
+                        <td>@row.DisplayDate</td>
+                        <td>@Html.ActionLink("VIEW", "Home", "Detail", new { id = row.PostId }, new { @class = "btn btn-warning" })</td>
+                    </tr>
                 }
             </tbody>
         </table>
