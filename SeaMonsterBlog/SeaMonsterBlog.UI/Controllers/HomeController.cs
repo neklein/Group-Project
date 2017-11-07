@@ -18,12 +18,14 @@ namespace SeaMonsterBlog.UI.Controllers
             HomeVM homeVM = new HomeVM();
             homeVM.Categories = repo.GetAllCategories();
             homeVM.StaticPosts = repo.GetAllStaticPublished();
-            homeVM.Posts = repo.GetPublishedPosts(); 
+            homeVM.Posts = repo.GetPublishedPosts();
+            
             foreach (var p in homeVM.Posts)
             {
                 p.PostText = WebUtility.HtmlDecode(p.PostText);
                 p.PostText = p.PostText.Substring(60);
                 p.PostText = p.PostText.Substring(0, p.PostText.Length - 16);
+                repo.SetPostLists(p);
             }
 
             return View(homeVM);
@@ -184,11 +186,11 @@ namespace SeaMonsterBlog.UI.Controllers
             }
             
             
-            authorVM.AuthorsSelectList = (from blog in repo.GetPublishedPosts()
+            authorVM.AuthorsSelectList = (from author in repo.GetAllAuthors()
                                           select new SelectListItem()
                                           {
-                                              Text = blog.Author,
-                                              Value = blog.Author,
+                                              Text = author,
+                                              Value = author,
                                           }).ToList();
                 
             
@@ -199,6 +201,7 @@ namespace SeaMonsterBlog.UI.Controllers
         public ActionResult ByAuthor(ByAuthorCategoryVM authorCategoryVM)
         {
             ByAuthorCategoryVM authorVM = new ByAuthorCategoryVM();
+            authorVM.AuthorName = authorCategoryVM.AuthorName;
 
             var repo = RepositoryFactory.GetRepository();
             if (Request.IsAuthenticated && User.IsInRole("admin"))
@@ -212,11 +215,11 @@ namespace SeaMonsterBlog.UI.Controllers
 
             authorVM.StaticPosts = repo.GetAllStaticPublished();
             authorVM.Categories = repo.GetAllCategories();
-            authorVM.AuthorsSelectList = (from blog in repo.GetPublishedPosts()
+            authorVM.AuthorsSelectList = (from author in repo.GetAllAuthors()
                                           select new SelectListItem()
                                           {
-                                              Text = blog.Author,
-                                              Value = blog.Author,
+                                              Text = author,
+                                              Value = author,
                                           }).ToList();
 
 
