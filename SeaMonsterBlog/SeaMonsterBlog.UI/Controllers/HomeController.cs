@@ -101,22 +101,90 @@ namespace SeaMonsterBlog.UI.Controllers
             }
 
             categoryVM.Categories = repo.GetAllCategories();
+            categoryVM.Category = categoryVM.Categories.FirstOrDefault(c => c.CategoryID == id);
+            categoryVM.CategoriesSelectList = (from category in categoryVM.Categories
+                                               select new SelectListItem()
+                                               {
+                                                   Text = category.CategoryTag,
+                                                   Value = category.CategoryID.ToString(),
+                                               }).ToList();
 
             return View(categoryVM);
         }
 
-        public ActionResult ByAuthor(string name)
+        [HttpPost]
+        public ActionResult ByCategory(ByAuthorCategoryVM authorCategoryVM)
+        {
+            ByAuthorCategoryVM categoryVM = new ByAuthorCategoryVM();
+
+            var repo = RepositoryFactory.GetRepository();
+            if (Request.IsAuthenticated && User.IsInRole("admin"))
+            {
+                categoryVM.Posts = repo.GetPostByCategory(authorCategoryVM.CategoryId);
+            }
+            else
+            {
+                categoryVM.Posts = repo.GetPublishedPostByCategory(authorCategoryVM.CategoryId);
+            }
+
+            categoryVM.Categories = repo.GetAllCategories();
+            categoryVM.Category = categoryVM.Categories.FirstOrDefault(c => c.CategoryID == authorCategoryVM.CategoryId);
+            categoryVM.CategoriesSelectList = (from category in categoryVM.Categories
+                                               select new SelectListItem()
+                                               {
+                                                   Text = category.CategoryTag,
+                                                   Value = category.CategoryID.ToString(),
+                                               }).ToList();
+
+            return View(categoryVM);
+        }
+
+        public ActionResult ByAuthor()
         {
             ByAuthorCategoryVM authorVM = new ByAuthorCategoryVM();
 
             var repo = RepositoryFactory.GetRepository();
-            authorVM.Posts = repo.GetAllPostByAuthor(name);
             authorVM.Categories = repo.GetAllCategories();
+
+            authorVM.AuthorsSelectList = (from blog in repo.GetPublishedPosts()
+                                          select new SelectListItem()
+                                          {
+                                              Text = blog.Author,
+                                              Value = blog.Author,
+                                          }).ToList();
+                
+            
+            return View(authorVM);
+        }
+
+        [HttpPost]
+        public ActionResult ByAuthor(ByAuthorCategoryVM authorCategoryVM)
+        {
+            ByAuthorCategoryVM authorVM = new ByAuthorCategoryVM();
+
+            var repo = RepositoryFactory.GetRepository();
+            if (Request.IsAuthenticated && User.IsInRole("admin"))
+            {
+                authorVM.Posts = repo.GetAllPostByAuthor(authorCategoryVM.AuthorName);
+            }
+            else
+            {
+                authorVM.Posts = repo.GetPublishedPostbyAuthor(authorCategoryVM.AuthorName);
+            }
+
+            authorVM.Categories = repo.GetAllCategories();
+            authorVM.AuthorsSelectList = (from blog in repo.GetPublishedPosts()
+                                          select new SelectListItem()
+                                          {
+                                              Text = blog.Author,
+                                              Value = blog.Author,
+                                          }).ToList();
+
 
             return View(authorVM);
         }
 
-
+        
         public ActionResult Next(int PostId)
         {
             var repo = RepositoryFactory.GetRepository();

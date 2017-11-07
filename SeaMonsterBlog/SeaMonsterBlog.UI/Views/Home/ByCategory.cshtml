@@ -6,7 +6,22 @@
     ViewBag.Categories = Model.Categories;
 }
 
-<h2>Blogs in the </h2>
+
+<h2>Blogs in the @Model.Category.CategoryTag Category</h2>
+
+<div class="row">
+    @using (Html.BeginForm("ByCategory", "Home", FormMethod.Post))
+    {
+        <div class="col-md-4 col-md-offset-8">
+            <div class="from-group">
+                <label>Category</label>
+                @Html.DropDownListFor(c => c.CategoryId, Model.CategoriesSelectList, new { @clas = "form-control" })
+            </div>
+            <button class="btn btn-warning">Select Category</button>
+        </div>
+    }
+</div>
+
 
 <div class="row">
     <div class="col-md-10">
@@ -33,5 +48,7 @@
 
     </div>
 </div>
+
+
 
 
