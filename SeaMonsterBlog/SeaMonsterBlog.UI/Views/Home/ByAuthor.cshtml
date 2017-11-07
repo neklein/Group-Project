@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = "ByAuthor";
     ViewBag.Categories = Model.Categories;
+    ViewBag.StaticPosts = Model.StaticPosts;
 }
 
 
@@ -38,10 +39,12 @@
                 {
                     foreach (var row in Model.Posts)
                     {
-                        <tr>@row.PostTitle</tr>
-                        <tr>@row.SelectedCategories</tr>
-                        <tr>@row.DisplayDate</tr>
-                        <tr>@Html.ActionLink("VIEW", "Home", "Detail", new { id = row.PostId }, new { @class = "btn btn-warning" })</tr>
+                        <tr>
+                            <td>@row.PostTitle</td>
+                            <td>@row.SelectedCategories</td>
+                            <td>@row.DisplayDate</td>
+                            <td>@Html.ActionLink("VIEW", "Home", "Detail", new { id = row.PostId }, new { @class = "btn btn-warning" })</td>
+                        </tr>
                     }
                 }
             </tbody>

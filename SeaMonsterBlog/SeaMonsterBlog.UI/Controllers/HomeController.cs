@@ -38,7 +38,7 @@ namespace SeaMonsterBlog.UI.Controllers
             detailVM.Post.PostText = WebUtility.HtmlDecode(detailVM.Post.PostText);
             detailVM.Post.PostText = detailVM.Post.PostText.Substring(60);
             detailVM.Post.PostText = detailVM.Post.PostText.Substring(0, detailVM.Post.PostText.Length - 16);
-
+            repo.SetPostLists(detailVM.Post);
             detailVM.Categories = repo.GetAllCategories();
             detailVM.StaticPosts = repo.GetAllStaticPublished();
             if (Request.IsAuthenticated && User.IsInRole("admin")|| Request.IsAuthenticated && User.IsInRole("moderator"))
@@ -102,6 +102,7 @@ namespace SeaMonsterBlog.UI.Controllers
                 categoryVM.Posts = repo.GetPublishedPostByCategory(id);
             }
 
+            categoryVM.StaticPosts = repo.GetAllStaticPublished();
             categoryVM.Categories = repo.GetAllCategories();
             categoryVM.Category = categoryVM.Categories.FirstOrDefault(c => c.CategoryID == id);
             categoryVM.CategoriesSelectList = (from category in categoryVM.Categories
@@ -110,6 +111,11 @@ namespace SeaMonsterBlog.UI.Controllers
                                                    Text = category.CategoryTag,
                                                    Value = category.CategoryID.ToString(),
                                                }).ToList();
+
+            foreach(var post in categoryVM.Posts)
+            {
+                repo.SetPostLists(post);
+            }
 
             return View(categoryVM);
         }
@@ -129,6 +135,7 @@ namespace SeaMonsterBlog.UI.Controllers
                 categoryVM.Posts = repo.GetPublishedPostByCategory(authorCategoryVM.CategoryId);
             }
 
+            categoryVM.StaticPosts = repo.GetAllStaticPublished();
             categoryVM.Categories = repo.GetAllCategories();
             categoryVM.Category = categoryVM.Categories.FirstOrDefault(c => c.CategoryID == authorCategoryVM.CategoryId);
             categoryVM.CategoriesSelectList = (from category in categoryVM.Categories
@@ -147,6 +154,7 @@ namespace SeaMonsterBlog.UI.Controllers
 
             var repo = RepositoryFactory.GetRepository();
             authorVM.Categories = repo.GetAllCategories();
+            authorVM.StaticPosts = repo.GetAllStaticPublished();
 
             authorVM.AuthorsSelectList = (from blog in repo.GetPublishedPosts()
                                           select new SelectListItem()
@@ -174,6 +182,7 @@ namespace SeaMonsterBlog.UI.Controllers
                 authorVM.Posts = repo.GetPublishedPostbyAuthor(authorCategoryVM.AuthorName);
             }
 
+            authorVM.StaticPosts = repo.GetAllStaticPublished();
             authorVM.Categories = repo.GetAllCategories();
             authorVM.AuthorsSelectList = (from blog in repo.GetPublishedPosts()
                                           select new SelectListItem()

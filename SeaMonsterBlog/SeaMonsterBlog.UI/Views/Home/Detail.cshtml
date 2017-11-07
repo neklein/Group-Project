@@ -6,7 +6,8 @@
     ViewBag.StaticPosts = Model.StaticPosts;
 }
 
-
+@using (Html.BeginForm("Detail", "Home", FormMethod.Post))
+{
 @Html.HiddenFor(m => m.Post.PostId)
 <div class="panel panel-success">
     <div class="panel-heading">
@@ -18,7 +19,7 @@
             categories listed here
             @Html.Raw(Model.Post.PostText)
             <br />
-            list of hashtags at the bottom
+            <strong>@Model.Post.HashtagString</strong>
         </p>
     </div>
 </div>
@@ -30,8 +31,7 @@
     <a href="~home/next/@Model.Post.PostId" >Next</a> |
     <a href="~home/last/@Model.Post.PostId">Last</a>
 </span>
-@using (Html.BeginForm("Detail", "Home", FormMethod.Post))
-{
+
 <div class="col-sm-12">
     <h4><strong>Comments</strong></h4>
     @if (Model.Post.Comments != null)
