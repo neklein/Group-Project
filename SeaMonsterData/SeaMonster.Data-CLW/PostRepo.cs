@@ -569,11 +569,12 @@ namespace SeaMonster.Data_CLW
             {
                 c.Replies = GetPublishedReplies(c.CommentId);
             }
-            post.HashtagInput = "";
+            string hashput = "";
             foreach (HashTag h in post.Hashtags)
             {
-                post.HashtagInput += "#" + h.Hashtag + ",";
+                hashput += "#" + h.Hashtag + ",";
             }
+            post.HashtagInput = hashput.Trim(',');
         }
 
         public List<Category> GetAllCategories()
@@ -690,11 +691,12 @@ namespace SeaMonster.Data_CLW
             {
                 c.Replies = GetReplies(c.CommentId);
             }
-            post.HashtagInput = "";
-            foreach(HashTag h in post.Hashtags)
+            string hashput = "";
+            foreach (HashTag h in post.Hashtags)
             {
-                post.HashtagInput += "#" + h.Hashtag + ",";
+                hashput += "#" + h.Hashtag + ",";
             }
+            post.HashtagInput = hashput.Trim(',');
         }
 
         public List<Post> GetPublishedPostbyHashtag(int HashtagID)

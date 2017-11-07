@@ -237,7 +237,7 @@ namespace CLWintegrationtest
             Assert.AreEqual(2, post.PostCategories.Count());
             Assert.AreEqual(2, post.Comments.Count);
             Assert.AreEqual(2, post.Comments[0].Replies.Count());
-            Assert.AreEqual("#excited,#swimforyourlife!,#monsterofthemonth,", post.HashtagInput.ToLower().Trim());
+            Assert.AreEqual("#excited,#swimforyourlife!,#monsterofthemonth", post.HashtagInput.ToLower().Trim());
         }
 
         [Test]

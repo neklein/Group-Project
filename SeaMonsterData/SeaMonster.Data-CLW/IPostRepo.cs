@@ -47,7 +47,7 @@ namespace SeaMonster.Data_CLW
         List<Post> GetPublishedPostbyAuthor(string name);
         Category GetCategoryByCatName(string name);
         void ADMINSavePost(Post post);
-        //add admin dashboard count methods for items for review
+        
         List<Image> GetAllImages();
         int FindNextPublishedPost(int PostID);
         int FindPreviousPublishedPost(int PostID);
@@ -56,7 +56,7 @@ namespace SeaMonster.Data_CLW
         List<Post> GetPostsbyTitle(string searchstring);
         List<Post>GetPublishedPostByTitle(string searchstring);
         //add category
-        //dashboard counts replies, comments, post
+     
         List<string> GetAllAuthors();
         List<Post> GetPostForReview();
         List<Comment> GetUnapprovedComments();
