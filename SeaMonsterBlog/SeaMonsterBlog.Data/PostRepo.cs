@@ -328,7 +328,13 @@ namespace SeaMonster.Data_CLW
                         post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
                         post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
                         post.Author = dr["DisplayAuthor"].ToString();
-                        post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
+
+                        string displayDate = dr["DisplayDate"].ToString();
+                        if (!string.IsNullOrWhiteSpace(displayDate))
+                        {
+                            post.DisplayDate = DateTime.Parse(displayDate);
+                        }
+
                         string expdate = dr["Expdate"].ToString();
                         if (!string.IsNullOrWhiteSpace(expdate))
                         {

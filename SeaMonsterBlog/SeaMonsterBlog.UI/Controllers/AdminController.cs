@@ -80,6 +80,7 @@ namespace SeaMonsterBlog.UI.Controllers
                     }
                 }
                 createEditVM.Categories = repo.GetAllCategories();
+                createEditVM.StaticPosts = repo.GetAllStaticPublished();
                 createEditVM.Images = repo.GetAllImages();
                 createEditVM.Post.PostText = WebUtility.HtmlDecode(createEditVM.Post.PostText);
                 return View("Create", createEditVM);
@@ -87,6 +88,7 @@ namespace SeaMonsterBlog.UI.Controllers
             else 
             {
                 createEditVM.Post = repo.GetPostByID(createEditVM.Post.PostId);
+                createEditVM.StaticPosts = repo.GetAllStaticPublished();
                 createEditVM.Categories = repo.GetAllCategories();
                 createEditVM.Post.PostText = WebUtility.HtmlDecode(createEditVM.Post.PostText);
                 createEditVM.Images = repo.GetAllImages();
