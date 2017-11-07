@@ -53,5 +53,10 @@ namespace SeaMonster.Data_CLW
         int FindPreviousPublishedPost(int PostID);
         int FindFirstPublishedPost();
         int FindLastPublishedPost();
+        List<Post> GetPostsbyTitle(string searchstring);
+        //add category
+        //dashboard counts replies, comments, post
+
+
     }
 }

@@ -93,6 +93,14 @@ GO
  if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='AddCategoryPost')
  drop procedure AddCategoryPost
  GO
+
+  if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='RemoveHashtag')
+ drop procedure RemoveHashtag
+ GO
+
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='ClearHashtags')
+ drop procedure ClearHashtags
+ GO
  --------------------Searches and Gets------------------------------------------
 
  
@@ -309,6 +317,17 @@ If Not Exists (select * from CategoryPost where PostID=@PostID and CategoryID=@C
 insert into CategoryPost (CategoryID, PostID) Values (@CategoryID, @PostID)
 end
 GO
+
+Create Procedure RemoveHashtag (@PostID int, @HashtagID int) As
+begin
+delete from HashtagPost where PostID=@PostID and HashtagID=@HashtagID
+end
+GO
+Create Procedure ClearHashtags (@PostID int) As
+Begin
+Delete from HashtagPost where PostID=@PostID
+End
+go
 
 select * from post
 select* from PostText

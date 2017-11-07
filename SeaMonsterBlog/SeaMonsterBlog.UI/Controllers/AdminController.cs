@@ -86,6 +86,7 @@ namespace SeaMonsterBlog.UI.Controllers
             }
             else 
             {
+                createEditVM.Post = repo.GetPostByID(createEditVM.Post.PostId);
                 createEditVM.Categories = repo.GetAllCategories();
                 createEditVM.Post.PostText = WebUtility.HtmlDecode(createEditVM.Post.PostText);
                 createEditVM.Images = repo.GetAllImages();
@@ -98,6 +99,7 @@ namespace SeaMonsterBlog.UI.Controllers
         public ActionResult Review(int id)
         {
             var repo = RepositoryFactory.GetRepository();
+
             CreateEditVM createEditVM = new CreateEditVM();
 
             createEditVM.Post = repo.GetPostByID(id);
@@ -115,7 +117,7 @@ namespace SeaMonsterBlog.UI.Controllers
         {
             var repo = RepositoryFactory.GetRepository();  //chose to edit
 
-            if (createEditVM.Post.IsForReview &&createEditVM.Post.IsPublished==false)
+            if (createEditVM.Post.IsForReview && !createEditVM.Post.IsPublished)
             {
                 createEditVM.Categories = repo.GetAllCategories();
                 createEditVM.StaticPosts = repo.GetAllStaticPublished();

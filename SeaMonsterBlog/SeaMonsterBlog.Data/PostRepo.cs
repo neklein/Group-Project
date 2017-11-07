@@ -820,6 +820,7 @@ namespace SeaMonster.Data_CLW
 
         public void SavePost(Post post)
         {
+            List<Hashtag> OriginalTags = GetHashtagbyPost(post.PostId);
             using (SqlConnection cn = new SqlConnection(cs))
             {
                 SqlCommand cmd = new SqlCommand("SavePost", cn);
@@ -828,21 +829,46 @@ namespace SeaMonster.Data_CLW
                 cmd.Parameters.AddWithValue("@PostTitle", post.PostTitle);
                 cmd.Parameters.AddWithValue("@PostText", post.PostText);
                 cmd.Parameters.AddWithValue("@DisplayAuthor", post.Author);
-                cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
                 cmd.Parameters.AddWithValue("@isForReview", post.IsForReview);
+                cmd.Parameters.AddWithValue("@isStatic", post.IsStatic);
+                if (post.DisplayDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@DisplayDate", DBNull.Value);
+                }
+                if (post.ExpDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ExpDate", post.ExpDate);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@ExpDate", DBNull.Value);
+                }
                 if (post.ToPostDate != null)
                 {
                     cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
                 }
-
-                if (post.ExpDate != null)
+                else
                 {
-                    cmd.Parameters.AddWithValue("@ExpDate", ' ');
+                    cmd.Parameters.AddWithValue("@ToPostDate", DBNull.Value);
                 }
                 cn.Open();
                 cmd.ExecuteNonQuery();
-            }
 
+                if (!string.IsNullOrEmpty(post.HashtagString))
+                {
+                    SqlCommand cmd3 = new SqlCommand("ClearHashtags", cn);
+                    cmd3.CommandType = CommandType.StoredProcedure;
+                    cmd3.Parameters.AddWithValue("@PostID", post.PostId);
+                    cmd3.ExecuteNonQuery();
+                    AddHashtags(post.HashtagString, post.PostId);
+                    List<Hashtag> newtags = GetHashtagbyPost(post.PostId);
+
+                }
+            }
         }
 
         public void ADMINSavePost(Post post)

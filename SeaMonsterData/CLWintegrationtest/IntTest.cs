@@ -31,7 +31,7 @@ namespace CLWintegrationtest
             PostText="This is a test of a tests post",
             DisplayAuthor="Test Author",
             
-            ExpDate= DateTime.Parse("2017-12-25"),
+          
 
         };
 
@@ -237,6 +237,7 @@ namespace CLWintegrationtest
             Assert.AreEqual(2, post.PostCategories.Count());
             Assert.AreEqual(2, post.Comments.Count);
             Assert.AreEqual(2, post.Comments[0].Replies.Count());
+            Assert.AreEqual("#excited,#swimforyourlife!,#monsterofthemonth,", post.HashtagInput.ToLower().Trim());
         }
 
         [Test]
@@ -352,6 +353,25 @@ namespace CLWintegrationtest
             int last = repo.FindLastPublishedPost();
             Assert.AreEqual(4, last);
         }
+        [Test]
+        public void CanDeleteHashtag()
+        {
+            TestPost.HashtagInput = "#Test1,#Test2";
+            PostRepo repo = new PostRepo();
+            repo.CreatePost(TestPost);
+            List<HashTag> hts = repo.GetHashtags();
+            Assert.AreEqual(10, hts.Count);
+            TestPost = repo.GetAllPosts()[7];
+            repo.SetPostLists(TestPost);
+            Assert.AreEqual(2, TestPost.Hashtags.Count);
+            TestPost.HashtagInput = "#Test1";
+            repo.SavePost(TestPost);
+            TestPost = repo.GetAllPosts()[7];
+            repo.SetPostLists(TestPost);
+            Assert.AreEqual(1, TestPost.Hashtags.Count);
+
+        }
+
     }
 }
 

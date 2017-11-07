@@ -10,6 +10,7 @@
     {
         @Html.AntiForgeryToken()
         <input type="text" name="Post.PostId" value="@Model.Post.PostId" class="hidden"/>
+        <input type="text" name="Post.PostId" value="@Model.Post.PostId" class="hidden" />
         <div style="padding-left:15px">
             @Html.CheckBoxFor(m => m.Post.IsForReview, new { @style = "visibility:hidden", id = "is-for-review" })
             <div class="row" style="padding-bottom:10px">
