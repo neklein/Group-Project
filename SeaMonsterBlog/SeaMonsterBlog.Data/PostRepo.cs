@@ -834,6 +834,10 @@ namespace SeaMonster.Data_CLW
                 {
                     cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
                 }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@ToPostDate", DBNull.Value);
+                }
 
                 if (post.ExpDate != null)
                 {
