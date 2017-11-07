@@ -102,6 +102,7 @@ namespace SeaMonsterBlog.UI.Controllers
                 categoryVM.Posts = repo.GetPublishedPostByCategory(id);
             }
 
+            categoryVM.StaticPosts = repo.GetAllStaticPublished();
             categoryVM.Categories = repo.GetAllCategories();
             categoryVM.Category = categoryVM.Categories.FirstOrDefault(c => c.CategoryID == id);
             categoryVM.CategoriesSelectList = (from category in categoryVM.Categories
@@ -134,6 +135,7 @@ namespace SeaMonsterBlog.UI.Controllers
                 categoryVM.Posts = repo.GetPublishedPostByCategory(authorCategoryVM.CategoryId);
             }
 
+            categoryVM.StaticPosts = repo.GetAllStaticPublished();
             categoryVM.Categories = repo.GetAllCategories();
             categoryVM.Category = categoryVM.Categories.FirstOrDefault(c => c.CategoryID == authorCategoryVM.CategoryId);
             categoryVM.CategoriesSelectList = (from category in categoryVM.Categories
@@ -152,6 +154,7 @@ namespace SeaMonsterBlog.UI.Controllers
 
             var repo = RepositoryFactory.GetRepository();
             authorVM.Categories = repo.GetAllCategories();
+            authorVM.StaticPosts = repo.GetAllStaticPublished();
 
             authorVM.AuthorsSelectList = (from blog in repo.GetPublishedPosts()
                                           select new SelectListItem()
@@ -179,6 +182,7 @@ namespace SeaMonsterBlog.UI.Controllers
                 authorVM.Posts = repo.GetPublishedPostbyAuthor(authorCategoryVM.AuthorName);
             }
 
+            authorVM.StaticPosts = repo.GetAllStaticPublished();
             authorVM.Categories = repo.GetAllCategories();
             authorVM.AuthorsSelectList = (from blog in repo.GetPublishedPosts()
                                           select new SelectListItem()
