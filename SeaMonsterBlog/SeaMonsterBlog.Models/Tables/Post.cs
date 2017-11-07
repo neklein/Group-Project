@@ -14,10 +14,10 @@ namespace SeaMonsterBlog.Models.Tables
         public int UserId { get; set; }
         public string PostTitle { get; set; }
         public string HashtagString { get; set; }
-        public DateTime ExpDate { get; set; }
+        public DateTime? ExpDate { get; set; }
         public DateTime DateCreated { get; set; }
-        public DateTime ToPostDate { get; set; }
-        public DateTime DisplayDate { get; set; }
+        public DateTime? ToPostDate { get; set; }
+        public DateTime? DisplayDate { get; set; }
         public bool IsStatic { get; set; }
         public bool IsPublished { get; set; }
         public bool IsForReview { get; set; }

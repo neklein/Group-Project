@@ -1,5 +1,4 @@
 ﻿using SeaMonsterBlog.Models.Tables;
-using SeaMonsterBlog.Models.ShortList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
