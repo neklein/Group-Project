@@ -101,6 +101,11 @@ GO
  if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='ClearHashtags')
  drop procedure ClearHashtags
  GO
+
+ 
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='TitleSearch')
+ drop procedure TitleSearch
+ GO
  --------------------Searches and Gets------------------------------------------
 
  
@@ -327,6 +332,18 @@ Create Procedure ClearHashtags (@PostID int) As
 Begin
 Delete from HashtagPost where PostID=@PostID
 End
+go
+
+Create Procedure TitleSearch (@Searchstring nvarchar(30)) As
+begin
+ select p.PostID, p.PostTitle, p.DateCreated, isnull(p.ToPostDate, p.DateCreated)AS ToPostDate, p.DisplayAuthor, 
+ isnull(p.DisplayDate, p.DateCreated)AS DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby 
+ from Post p
+ left join PostText pt on pt.PostId=p.PostID
+ where p.PostTitle like concat('%',@Searchstring,'%') and isStatic=0
+ order by p.DateCreated
+
+end
 go
 
 select * from post

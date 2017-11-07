@@ -371,7 +371,52 @@ namespace CLWintegrationtest
             Assert.AreEqual(1, TestPost.Hashtags.Count);
 
         }
-
+        [Test]
+        [TestCase("mo",3)]
+        [TestCase("mont",1)]
+        public void CanGetPostByTitleSearch(string input, int x)
+        {
+            PostRepo repo = new PostRepo();
+            List<Post> posts = repo.GetPostsbyTitle(input);
+            Assert.AreEqual(x, posts.Count);
+        }
+        [Test]
+        [TestCase("mo", 2)]
+        [TestCase("mont", 1)]
+        public void CanGetPublishedPostByTitleSearch(string input, int x)
+        {
+            PostRepo repo = new PostRepo();
+            List<Post> posts = repo.GetPublishedPostByTitle(input);
+            Assert.AreEqual(x, posts.Count);
+        }
+        [Test]
+        public void CanGetAuthors()
+        {
+            PostRepo repo = new PostRepo();
+            List<string> authors = repo.GetAllAuthors();
+            Assert.AreEqual(4, authors.Count);
+        }
+        [Test]
+        public void CanGetUnapprovedComments()
+        {
+            PostRepo repo = new PostRepo();
+            List<Comment> comms = repo.GetUnapprovedComments();
+            Assert.AreEqual(2, comms.Count);
+        }
+        [Test] 
+        public void CanGetUnapprovedReplies()
+        {
+            PostRepo repo = new PostRepo();
+            List<Reply> reps = repo.GetUnapprovedReplies();
+            Assert.AreEqual(1, reps.Count);
+        }
+        [Test]
+        public void CanGetPostForreview()
+        {
+            PostRepo repo = new PostRepo();
+            List<Post> posts = repo.GetPostForReview();
+            Assert.AreEqual(1, posts.Count);
+        }
     }
 }
 
