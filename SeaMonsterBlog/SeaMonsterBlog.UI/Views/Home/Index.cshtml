@@ -1,0 +1,44 @@
+﻿@model SeaMonsterBlog.UI.Models.HomeVM
+
+@{
+    ViewBag.Title = "Home Page";
+    ViewBag.Categories = Model.Categories;
+    ViewBag.StaticPosts = Model.StaticPosts;
+}
+
+
+<div class="row">
+    <div class="col-sm-12">
+        @foreach (var blog in Model.Posts)
+        {
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3><strong>@blog.PostTitle</strong></h3>
+                    <h5><strong>@blog.DisplayDate  |  @blog.Author</strong></h5>
+                    <h5>
+                        Categories:
+                        @foreach (var category in blog.SelectedCategories)
+                        {
+                            @Html.ActionLink((string)@category.CategoryTag, "ByCategory", "Home", new { id = category.CategoryID }, new { @class = "label label-default" })
+                        }
+                    </h5>
+                </div>
+                <div class="panel-body" style="height:300px; overflow:hidden">
+
+                    @Html.Raw(blog.PostText)
+                    <br />
+                    <p>@blog.HashtagString</p>
+
+                </div>
+            </div>
+
+
+            @Html.ActionLink("Read More and Comment", "Detail", "Home", new { id = blog.PostId }, new { @class = "btn btn-warning" })
+
+            <hr />
+        }
+
+
+
+    </div>
+</div>
