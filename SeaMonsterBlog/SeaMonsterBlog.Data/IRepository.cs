@@ -39,14 +39,12 @@ namespace SeaMonsterBlog.Data
         List<Post> GetAllStatic();
         void ADMINSetPostList(Post post); //May need the admin create method still
         int CreateNewPost(Post post);
-        int CreatePostExpDate(Post post);
-        int CreatePostDelayed(Post post);
-        int CreatePostDelayedAndExp(Post post);
         void DeleteComment(int CommentID);
         void DeleteReply(int ReplyID);
         void SavePost(Post post);
         void ADMINSavePost(Post post);
         void SaveNewImage(string fileName);
+        List<string> GetAllAuthors();
         List<Post> GetAllPostByAuthor(string name);
         List<Post> GetPublishedPostbyAuthor(string name);
 

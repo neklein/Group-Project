@@ -156,6 +156,34 @@ namespace SeaMonsterBlog.UI.Controllers
             authorVM.Categories = repo.GetAllCategories();
             authorVM.StaticPosts = repo.GetAllStaticPublished();
 
+            if (id == "1")
+            {
+                authorVM.AuthorName = "All Authors";
+
+                if (Request.IsAuthenticated && User.IsInRole("admin"))
+                {
+                    authorVM.Posts = repo.GetAllPosts();
+                }
+                else
+                {
+                    authorVM.Posts = repo.GetPublishedPosts();
+                }
+            }
+            else
+            {
+                authorVM.AuthorName = id;
+
+                if (Request.IsAuthenticated && User.IsInRole("admin"))
+                {
+                    authorVM.Posts = repo.GetAllPostByAuthor(id);
+                }
+                else
+                {
+                    authorVM.Posts = repo.GetPublishedPostbyAuthor(id);
+                }
+            }
+            
+            
             authorVM.AuthorsSelectList = (from blog in repo.GetPublishedPosts()
                                           select new SelectListItem()
                                           {
