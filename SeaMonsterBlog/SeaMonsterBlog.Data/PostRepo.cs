@@ -965,7 +965,6 @@ namespace SeaMonster.Data_CLW
                 {
                     authors.Add(p.Author);
                 }
-
             }
             return authors;
         }

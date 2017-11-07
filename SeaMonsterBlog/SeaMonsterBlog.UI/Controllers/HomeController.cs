@@ -224,32 +224,32 @@ namespace SeaMonsterBlog.UI.Controllers
         }
 
         
-        public ActionResult Next(int PostId)
+        public ActionResult Next(int id)
         {
             var repo = RepositoryFactory.GetRepository();
 
-            return RedirectToAction("Details", repo.FindNextPublishedPost(PostId));
+            return RedirectToAction("Detail/" + repo.FindNextPublishedPost(id).ToString());
         }
 
-        public ActionResult Previous(int PostId)
+        public ActionResult Previous(int id)
         {
             var repo = RepositoryFactory.GetRepository();
 
-            return RedirectToAction("Details", repo.FindPreviousPublishedPost(PostId));
+            return RedirectToAction("Detail/" + repo.FindPreviousPublishedPost(id).ToString());
         }
 
         public ActionResult First()
         {
             var repo = RepositoryFactory.GetRepository();
 
-            return RedirectToAction("Details", repo.FindFirstPublishedPost());
+            return RedirectToAction("Details/" + repo.FindFirstPublishedPost().ToString());
         }
 
         public ActionResult Last()
         {
             var repo = RepositoryFactory.GetRepository();
 
-            return RedirectToAction("Details", repo.FindLastPublishedPost());
+            return RedirectToAction("Details/" + repo.FindLastPublishedPost().ToString());
 
         }
     }
