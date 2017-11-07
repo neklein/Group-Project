@@ -148,7 +148,7 @@ namespace SeaMonsterBlog.UI.Controllers
             return View(categoryVM);
         }
 
-        public ActionResult ByAuthor()
+        public ActionResult ByAuthor(string id)
         {
             ByAuthorCategoryVM authorVM = new ByAuthorCategoryVM();
 
