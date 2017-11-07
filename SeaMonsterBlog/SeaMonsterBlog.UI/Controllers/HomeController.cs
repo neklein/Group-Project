@@ -55,20 +55,20 @@ namespace SeaMonsterBlog.UI.Controllers
         public ActionResult Detail (DetailVM model)
         {
             var repo = RepositoryFactory.GetRepository();
-            //foreach (var c in model.Post.Comments)
-            //{
-            //    if (!c.IsShown)
-            //    {
-            //    //delete comment and all related replies?
-            //    }
-            //    foreach (var r in c.Replies)
-            //    {
-            //        if (!r.IsShown)
-            //        {
-            //            //delete reply
-            //        }
-            //    }
-            //}
+            foreach (var c in model.Post.Comments)
+            {
+                if (!c.IsShown)
+                {
+                    repo.DeleteComment(c.CommentId);
+                }
+                foreach (var r in c.Replies)
+                {
+                    if (!r.IsShown)
+                    {
+                        repo.DeleteReply(r.ReplyID);
+                    }
+                }
+            }
 
             if (model.NewComment != null)
             {
