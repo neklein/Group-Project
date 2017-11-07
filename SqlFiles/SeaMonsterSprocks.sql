@@ -122,8 +122,8 @@ GO
 
  Create Procedure GetPublishedPosts AS
  Begin
-select p.PostID, p.PostTitle, p.DateCreated, p.ToPostDate, p.DisplayAuthor, 
- p.DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby 
+select p.PostID, p.PostTitle, p.DateCreated, isnull(p.ToPostDate, p.DateCreated)As PostDate, p.DisplayAuthor, 
+ isnull(p.DisplayDate, p.DateCreated)AS DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby 
  from Post p
  left join PostText pt on pt.PostId=p.PostID
  where p.ispublished=1
@@ -287,7 +287,7 @@ where PostId=@PostID
 END
 GO
 
-Create Procedure AdminSavePost (@PostID int, @PostTitle nvarchar(50), @PostText nvarchar(max), @ExpDate DateTime2 null, @ToPostDate DateTime2 null, @DisplayAuthor nvarchar(40), @DisplayDate datetime2 null, @isForReview bit, @isPublished bit) AS
+Create Procedure AdminSavePost (@PostID int, @PostTitle nvarchar(50), @PostText nvarchar(max), @ExpDate DateTime2 null, @ToPostDate DateTime2 null, @DisplayAuthor nvarchar(40), @DisplayDate datetime2, @isForReview bit, @isPublished bit) AS
 Begin
 Update Post SET 
 PostTitle=@PostTitle,
