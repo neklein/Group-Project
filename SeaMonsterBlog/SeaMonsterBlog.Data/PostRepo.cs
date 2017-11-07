@@ -197,35 +197,28 @@ namespace SeaMonster.Data_CLW
         public List<Comment> GetAllComments(int PostID)
         {
             List<Comment> comments = new List<Comment>();
-
-            using (var cn = new SqlConnection(cs))
+            using (SqlConnection cn = new SqlConnection(cs))
             {
-                SqlCommand cmd = new SqlCommand();
-
-                cmd.Connection = cn;
-                cmd.CommandText = "SELECT * FROM Comment" +
-                        " WHERE PostId = @PostID";
+                SqlCommand cmd = new SqlCommand("GetCommentbyID", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@PostID", PostID);
-
                 cn.Open();
                 using (SqlDataReader dr = cmd.ExecuteReader())
                 {
                     while (dr.Read())
                     {
-                        Comment comment = new Comment();
-
-                        comment.PostId = PostID;
-                        comment.CommentId = (int)dr["CommentID"];
-                        comment.CommenterName = dr["CommenterName"].ToString();
-                        comment.CommentDate = DateTime.Parse(dr["CommentDate"].ToString());
-                        comment.CommentText = dr["CommentText"].ToString();
-                        comment.IsShown = (bool)dr["IsShown"];
-                        comments.Add(comment);
+                        Comment cmt = new Comment();
+                        cmt.CommentId = (int)dr["CommentID"];
+                        cmt.CommenterName = dr["CommenterName"].ToString();
+                        cmt.CommentText = dr["CommentText"].ToString();
+                        string date = dr["CommentDate"].ToString();
+                        cmt.CommentDate = DateTime.Parse(date);
+                        comments.Add(cmt);
                     }
                 }
+
             }
             return comments;
-
         }
 
         public List<Post> GetAllPosts()
@@ -387,7 +380,7 @@ namespace SeaMonster.Data_CLW
                     categorysort.Add(s.ToLower());
                 }
             }
-            using (SqlConnection cn = new SqlConnection("Server=localhost;Database=SeaMonster;User Id=SeamonsterSA; Password=ocean;"))
+            using (SqlConnection cn = new SqlConnection(cs))
             {
                 foreach (string c in categorysort)
                 {
@@ -447,8 +440,6 @@ namespace SeaMonster.Data_CLW
         public List<Post> GetPublishedPosts()
         {
             List<Post> posts = new List<Post>();
-
-            string cs = "Server=localhost;Database=SeaMonster;User Id=SeamonsterSA; Password=ocean;";
 
             using (var cn = new SqlConnection(cs))
             {
@@ -516,11 +507,12 @@ namespace SeaMonster.Data_CLW
             {
                 c.Replies = GetPublishedReplies(c.CommentId);
             }
-            post.HashtagString = "";
+            string hashput = "";
             foreach (Hashtag h in post.Hashtags)
             {
-                post.HashtagString += "#" + h.HashtagName + ",";
+                hashput += "#" + h.HashtagName + ",";
             }
+            post.HashtagString = hashput.Trim(',');
         }
 
         public List<Category> GetAllCategories()
@@ -610,6 +602,12 @@ namespace SeaMonster.Data_CLW
             {
                 c.Replies = GetAllReply(c.CommentId);
             }
+            string hashput = "";
+            foreach (Hashtag h in post.Hashtags)
+            {
+                hashput += "#" + h.HashtagName + ",";
+            }
+            post.HashtagString = hashput.Trim(',');
         }
 
         public List<Post> GetPublishedPostbyHashtag(int HashtagID)
@@ -632,14 +630,25 @@ namespace SeaMonster.Data_CLW
                 {
                     while (dr.Read())
                     {
-                        Post current = new Post();
-                        current.PostId = (int)dr["PostID"];
-                        current.PostTitle = dr["PostTitle"].ToString();
-                        current.PostText = dr["PostText"].ToString();
-                        current.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
-                        current.ToPostDate = DateTime.Parse(dr["PostDate"].ToString());
-                        current.IsPublished = (bool)dr["IsPublished"];
-                        posts.Add(current);
+                        Post post = new Post();
+
+                        post.PostId = (int)dr["PostID"];
+                        post.PostTitle = dr["PostTitle"].ToString();
+                        post.PostText = dr["PostText"].ToString();
+                        post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
+                        post.ToPostDate = DateTime.Parse(dr["PostDate"].ToString());
+                        post.Author = dr["DisplayAuthor"].ToString();
+                        post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
+                        string expdate = dr["Expdate"].ToString();
+                        if (!string.IsNullOrWhiteSpace(expdate))
+                        {
+                            post.ExpDate = DateTime.Parse(expdate);
+                        }
+                        post.IsStatic = (bool)dr["isStatic"];
+                        post.IsPublished = (bool)dr["ispublished"];
+                        post.IsForReview = (bool)dr["isforReview"];
+
+                        posts.Add(post);
                     }
                 }
             }
@@ -659,14 +668,25 @@ namespace SeaMonster.Data_CLW
                 {
                     while (dr.Read())
                     {
-                        Post current = new Post();
-                        current.PostId = (int)dr["PostID"];
-                        current.PostTitle = dr["PostTitle"].ToString();
-                        current.PostText = dr["PostText"].ToString();
-                        current.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
-                        current.ToPostDate = DateTime.Parse(dr["PostDate"].ToString());
-                        current.IsPublished = (bool)dr["IsPublished"];
-                        posts.Add(current);
+                        Post post = new Post();
+
+                        post.PostId = (int)dr["PostID"];
+                        post.PostTitle = dr["PostTitle"].ToString();
+                        post.PostText = dr["PostText"].ToString();
+                        post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
+                        post.ToPostDate = DateTime.Parse(dr["PostDate"].ToString());
+                        post.Author = dr["DisplayAuthor"].ToString();
+                        post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
+                        string expdate = dr["Expdate"].ToString();
+                        if (!string.IsNullOrWhiteSpace(expdate))
+                        {
+                            post.ExpDate = DateTime.Parse(expdate);
+                        }
+                        post.IsStatic = (bool)dr["isStatic"];
+                        post.IsPublished = (bool)dr["ispublished"];
+                        post.IsForReview = (bool)dr["isforReview"];
+
+                        posts.Add(post);
                     }
                 }
             }
@@ -732,31 +752,28 @@ namespace SeaMonster.Data_CLW
 
         public Reply GetReplyByReplyId(int replyId)
         {
-            Reply reply = new Reply();
-            reply.ReplyID = replyId;
-
+            Reply rep = new Reply();
             using (var cn = new SqlConnection(cs))
             {
-                SqlCommand cmd = new SqlCommand();
-
-                cmd.Connection = cn;
-                cmd.CommandText = "SELECT ReplyName, ReplyText, ReplyDate, CommentID FROM Reply" +
-                        " WHERE ReplyID = @ReplyId";
-                cmd.Parameters.AddWithValue("@ReplyId", replyId);
+                SqlCommand cmd = new SqlCommand("Select * from Reply where replyID=@ReplyID", cn);
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.AddWithValue("@ReplyID", replyId);
                 cn.Open();
                 using (SqlDataReader dr = cmd.ExecuteReader())
                 {
-                    while (dr.Read())
+                    if (dr.Read())
                     {
-                        reply.CommentID = (int)dr["CommentID"];
-                        reply.ReplyName = dr["ReplyName"].ToString();
-                        reply.ReplyText = dr["ReplyText"].ToString();
-                        reply.ReplyDate = DateTime.Parse(dr["ReplyDate"].ToString());
-
+                        rep.ReplyID = (int)dr["ReplyID"];
+                        rep.ReplyName = dr["ReplyName"].ToString();
+                        rep.ReplyText = dr["ReplyText"].ToString();
+                        rep.CommentID = (int)dr["CommentID"];
+                        string date = dr["ReplyDate"].ToString();
+                        rep.ReplyDate = DateTime.Parse(date);
+                        rep.IsShown = (bool)dr["IsShown"];
                     }
                 }
             }
-            return reply;
+            return rep;
         }
 
         public List<Post> GetPublishedPostByCategory(int CatId)
@@ -777,12 +794,15 @@ namespace SeaMonster.Data_CLW
             return posts;
         }
 
+        public Category GetCategoryByCatID(int CatID)
+        {
+            Category cat = GetAllCategories().Where(c => c.CategoryID == CatID).FirstOrDefault();
+            return cat;
+        }
 
         public List<Image> GetAllImages()
         {
             List<Image> images = new List<Image>();
-
-            string cs = "Server=localhost;Database=SeaMonster;User Id=SeamonsterSA; Password=ocean;";
 
             using (var cn = new SqlConnection(cs))
             {
@@ -864,6 +884,7 @@ namespace SeaMonster.Data_CLW
 
         public void ADMINSavePost(Post post)
         {
+            List<Hashtag> OriginalTags = GetHashtagbyPost(post.PostId);
             using (SqlConnection cn = new SqlConnection(cs))
             {
                 SqlCommand cmd = new SqlCommand("AdminSavePost", cn);
@@ -872,20 +893,51 @@ namespace SeaMonster.Data_CLW
                 cmd.Parameters.AddWithValue("@PostTitle", post.PostTitle);
                 cmd.Parameters.AddWithValue("@PostText", post.PostText);
                 cmd.Parameters.AddWithValue("@DisplayAuthor", post.Author);
-                cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
                 cmd.Parameters.AddWithValue("@isForReview", post.IsForReview);
-                cmd.Parameters.AddWithValue("@IsPublished", post.IsPublished);
+                cmd.Parameters.AddWithValue("@isStatic", post.IsStatic);
+                cmd.Parameters.AddWithValue("@isPublished", post.IsPublished);
+
+                if (post.DisplayDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@DisplayDate", DBNull.Value);
+                }
+                if (post.ExpDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ExpDate", post.ExpDate);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@ExpDate", DBNull.Value);
+                }
                 if (post.ToPostDate != null)
                 {
                     cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
                 }
-
-                if (post.ExpDate != null)
+                else
                 {
-                    cmd.Parameters.AddWithValue("@ExpDate", ' ');
+                    cmd.Parameters.AddWithValue("@ToPostDate", DBNull.Value);
                 }
                 cn.Open();
                 cmd.ExecuteNonQuery();
+                if (!string.IsNullOrEmpty(post.HashtagString)) //if new list does not contain oldlist hashtag delete from hashtagpost
+                {
+                    AddHashtags(post.HashtagString, post.PostId);
+                    List<Hashtag> newtags = GetHashtagbyPost(post.PostId);
+                    foreach (Hashtag h in OriginalTags)
+                    {
+                        if (!newtags.Contains(h))
+                        {
+                            SqlCommand cmd3 = new SqlCommand("RemoveHashtag", cn);
+                            cmd3.CommandType = CommandType.StoredProcedure;
+                            cmd3.Parameters.AddWithValue("@PostID", post.PostId);
+                            cmd3.Parameters.AddWithValue("@HashtagID", h.HashtagID);
+                        }
+                    }
+                }
             }
         }
 
@@ -955,6 +1007,58 @@ namespace SeaMonster.Data_CLW
             return last;
         }
 
+        public List<Post> GetPostsbyTitle(string searchstring)
+        {
+            List<Post> posts = new List<Post>();
+            using (SqlConnection cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("TitleSearch", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Searchstring", searchstring);
+                cn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+
+
+                    while (dr.Read())
+                    {
+                        Post post = new Post();
+
+                        post.PostId = (int)dr["PostID"];
+                        post.PostTitle = dr["PostTitle"].ToString();
+                        post.PostText = dr["PostText"].ToString();
+                        post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
+                        post.ToPostDate = DateTime.Parse(dr["PostDate"].ToString());
+                        post.Author = dr["DisplayAuthor"].ToString();
+                        post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
+                        string expdate = dr["Expdate"].ToString();
+                        if (!string.IsNullOrWhiteSpace(expdate))
+                        {
+                            post.ExpDate = DateTime.Parse(expdate);
+                        }
+                        post.IsStatic = (bool)dr["isStatic"];
+                        post.IsPublished = (bool)dr["ispublished"];
+                        post.IsForReview = (bool)dr["isforReview"];
+
+                        posts.Add(post);
+                    }
+
+                }
+            }
+            return posts;
+        }
+
+        public List<Post> GetPublishedPostByTitle(string searchstring)
+        {
+            List<Post> posts = GetPostsbyTitle(searchstring);
+            List<Post> pubposts = new List<Post>();
+            if (posts.Count > 0)
+            {
+                pubposts = posts.Where(p => p.IsPublished == true).ToList();
+            }
+            return pubposts;
+        }
+
         public List<string> GetAllAuthors()
         {
             List<string> authors = new List<string>();
@@ -968,6 +1072,67 @@ namespace SeaMonster.Data_CLW
 
             }
             return authors;
+        }
+
+        public List<Post> GetPostForReview()
+        {
+            List<Post> posts = GetAllPosts().Where(p => p.IsForReview == true).ToList();
+            return posts;
+        }
+
+        public List<Comment> GetUnapprovedComments()
+        {
+            List<Comment> comm = new List<Comment>();
+            using (var cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Comment where IsShown=0", cn);
+                cmd.CommandType = CommandType.Text;
+                cn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        Comment comment = new Comment();
+
+                        comment.PostId = (int)dr["PostID"];
+                        comment.CommentId = (int)dr["CommentID"];
+                        comment.CommenterName = dr["CommenterName"].ToString();
+                        comment.CommentDate = DateTime.Parse(dr["CommentDate"].ToString());
+                        comment.CommentText = dr["CommentText"].ToString();
+                        comment.IsShown = (bool)dr["IsShown"];
+                        comm.Add(comment);
+                    }
+                }
+            }
+            return comm;
+        }
+
+        public List<Reply> GetUnapprovedReplies()
+        {
+            List<Reply> reps = new List<Reply>();
+            using (var cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Reply where IsShown=0", cn);
+                cmd.CommandType = CommandType.Text;
+
+                cn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        Reply reply = new Reply();
+                        reply.ReplyID = (int)dr["ReplyId"];
+                        reply.ReplyName = dr["ReplyName"].ToString();
+                        reply.ReplyDate = DateTime.Parse(dr["ReplyDate"].ToString());
+                        reply.ReplyText = dr["ReplyText"].ToString();
+                        reply.IsShown = (bool)dr["IsShown"];
+
+                        reps.Add(reply);
+                    }
+                }
+
+            }
+            return reps;
         }
 
     }
