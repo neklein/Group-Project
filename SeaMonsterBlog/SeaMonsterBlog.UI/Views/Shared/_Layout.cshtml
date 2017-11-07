@@ -84,7 +84,17 @@
                 <p></p>
                 <div id="StaticObjects">
 
-
+                    @foreach (var p in ViewBag.StaticPosts)
+                    {
+                        if (Request.IsAuthenticated && User.IsInRole("admin"))
+                        {
+                            <a href="admin/edit/@p.PostId"><h5>@p.PostTitle</h5></a>
+                        }
+                        else
+                        {
+                        <h5>@p.PostTitle</h5>
+                            }
+                        }
                 </div>
 
             </div>

@@ -61,6 +61,7 @@ namespace SeaMonsterBlog.UI.Controllers
             var repo = RepositoryFactory.GetRepository();
             LoginViewModel loginVM = new LoginViewModel();
             loginVM.Categories = repo.GetAllCategories();
+            loginVM.StaticPosts = repo.GetAllStaticPublished();
             ViewBag.ReturnUrl = returnUrl;
             return View(loginVM);
         }

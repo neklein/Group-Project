@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Create";
     ViewBag.Categories = Model.Categories;
+    ViewBag.StaticPosts = Model.StaticPosts;
 }
 
     @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-inline", id = "frmUpload" }))

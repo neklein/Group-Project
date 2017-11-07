@@ -1,5 +1,4 @@
-﻿using SeaMonsterBlog.Models.ShortList;
-using SeaMonsterBlog.Models.Tables;
+﻿using SeaMonsterBlog.Models.Tables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +8,7 @@ namespace SeaMonsterBlog.UI.Models
 {
     public class LayoutVM
     {
-        public List<StaticPageShort> StaticShortList { get; set; }
+        public List<Post> StaticPosts { get; set; }
         public List<Category> Categories { get; set; }
     }
 }
