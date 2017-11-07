@@ -111,6 +111,11 @@ namespace SeaMonsterBlog.UI.Controllers
                                                    Value = category.CategoryID.ToString(),
                                                }).ToList();
 
+            foreach(var post in categoryVM.Posts)
+            {
+                repo.SetPostLists(post);
+            }
+
             return View(categoryVM);
         }
 
