@@ -569,6 +569,11 @@ namespace SeaMonster.Data_CLW
             {
                 c.Replies = GetPublishedReplies(c.CommentId);
             }
+            post.HashtagInput = "";
+            foreach (HashTag h in post.Hashtags)
+            {
+                post.HashtagInput += "#" + h.Hashtag + ",";
+            }
         }
 
         public List<Category> GetAllCategories()
@@ -684,6 +689,11 @@ namespace SeaMonster.Data_CLW
             foreach (Comment c in post.Comments)
             {
                 c.Replies = GetReplies(c.CommentId);
+            }
+            post.HashtagInput = "";
+            foreach(HashTag h in post.Hashtags)
+            {
+                post.HashtagInput += "#" + h.Hashtag + ",";
             }
         }
 
@@ -878,7 +888,7 @@ namespace SeaMonster.Data_CLW
 
         public void SavePost(Post post)
         {
-
+            List<HashTag> OriginalTags = GetHashtagbyPost(post.PostId);
             using (SqlConnection cn = new SqlConnection(cs))
             {
                 SqlCommand cmd = new SqlCommand("SavePost", cn);
@@ -889,31 +899,42 @@ namespace SeaMonster.Data_CLW
                 cmd.Parameters.AddWithValue("@DisplayAuthor", post.DisplayAuthor);
                 cmd.Parameters.AddWithValue("@isForReview", post.IsForReview);
                 cmd.Parameters.AddWithValue("@isStatic", post.IsStatic);
-                if (post.DisplayDate != null)  //what about erasing these? may need to retool
+                if (post.DisplayDate != null)
                 {
                     cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
                 }
                 else
                 {
-
+                    cmd.Parameters.AddWithValue("@DisplayDate", DBNull.Value);
                 }
-                
-                if (post.ToPostDate != null)
-                {
-                    cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
-                }
-
                 if (post.ExpDate != null)
                 {
                     cmd.Parameters.AddWithValue("@ExpDate", post.ExpDate);
                 }
-                
+                else
+                {
+                    cmd.Parameters.AddWithValue("@ExpDate", DBNull.Value);
+                }
+                if (post.ToPostDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@ToPostDate", DBNull.Value);
+                }
                 cn.Open();
                 cmd.ExecuteNonQuery();
 
                 if (!string.IsNullOrEmpty(post.HashtagInput))
                 {
+                    SqlCommand cmd3 = new SqlCommand("ClearHashtags",cn);
+                    cmd3.CommandType = CommandType.StoredProcedure;
+                    cmd3.Parameters.AddWithValue("@PostID", post.PostId);
+                    cmd3.ExecuteNonQuery();
                     AddHashtags(post.HashtagInput, post.PostId);
+                    List<HashTag> newtags = GetHashtagbyPost(post.PostId);
+                                       
                 }
             }
         }
@@ -932,6 +953,7 @@ namespace SeaMonster.Data_CLW
 
         public void ADMINSavePost(Post post)
         {
+            List<HashTag> OriginalTags = GetHashtagbyPost(post.PostId);
             using (SqlConnection cn = new SqlConnection(cs))
             {
                 SqlCommand cmd = new SqlCommand("AdminSavePost", cn);
@@ -943,29 +965,47 @@ namespace SeaMonster.Data_CLW
                 cmd.Parameters.AddWithValue("@isForReview", post.IsForReview);
                 cmd.Parameters.AddWithValue("@isStatic", post.IsStatic);
                 cmd.Parameters.AddWithValue("@isPublished", post.IsPublished);
+               
                 if (post.DisplayDate != null)
                 {
                     cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
                 }
                 else
                 {
-
+                    cmd.Parameters.AddWithValue("@DisplayDate", DBNull.Value);
                 }
-
-                if (post.ToPostDate != null)
-                {
-                    cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
-                }
-
                 if (post.ExpDate != null)
                 {
                     cmd.Parameters.AddWithValue("@ExpDate", post.ExpDate);
                 }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@ExpDate", DBNull.Value);
+                }
+                if (post.ToPostDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@ToPostDate", DBNull.Value);
+                }
                 cn.Open();
                 cmd.ExecuteNonQuery();
-                if (!string.IsNullOrEmpty(post.HashtagInput))
+                if (!string.IsNullOrEmpty(post.HashtagInput)) //if new list does not contain oldlist hashtag delete from hashtagpost
                 {
                     AddHashtags(post.HashtagInput, post.PostId);
+                    List<HashTag> newtags = GetHashtagbyPost(post.PostId);
+                    foreach(HashTag h in OriginalTags)
+                    {
+                        if (!newtags.Contains(h))
+                        {
+                            SqlCommand cmd3 = new SqlCommand("RemoveHashtag", cn);
+                            cmd3.CommandType = CommandType.StoredProcedure;
+                            cmd3.Parameters.AddWithValue("@PostID", post.PostId);
+                            cmd3.Parameters.AddWithValue("@HashtagID", h.HashtagID);
+                        }
+                    }
                 }
             }
         }
@@ -1033,6 +1073,11 @@ namespace SeaMonster.Data_CLW
             List<Post> posts = GetPublishedPosts().Where(p => p.IsStatic == false).ToList();
             int last = posts.Max(p => p.PostId);
             return last;
+        }
+
+        public List<Post> GetPostsbyTitle(string searchstring)
+        {
+            throw new NotImplementedException();
         }
     }
 
