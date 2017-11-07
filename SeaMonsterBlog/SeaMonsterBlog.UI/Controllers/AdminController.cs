@@ -18,9 +18,24 @@ namespace SeaMonsterBlog.UI.Controllers
             var repo = RepositoryFactory.GetRepository();
             CreateEditVM createEditVM = new CreateEditVM();
             createEditVM.Categories = repo.GetAllCategories();
+            createEditVM.StaticPosts = repo.GetAllStaticPublished();
             createEditVM.Images = repo.GetAllImages();
             createEditVM.Post = new SeaMonsterBlog.Models.Tables.Post();            
             return View(createEditVM);
+        }
+
+        public ActionResult Edit(int id)
+        {
+            var repo = RepositoryFactory.GetRepository();
+            CreateEditVM createEditVM = new CreateEditVM();
+            createEditVM.Post = repo.GetPostByID(id);
+            createEditVM.Post.PostText = WebUtility.HtmlDecode(createEditVM.Post.PostText);
+            createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(53);
+            createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(0, createEditVM.Post.PostText.Length - 16);
+            createEditVM.Categories = repo.GetAllCategories();
+            createEditVM.StaticPosts = repo.GetAllStaticPublished();
+            createEditVM.Images = repo.GetAllImages();
+            return View("Create",createEditVM);
         }
 
 
@@ -65,12 +80,15 @@ namespace SeaMonsterBlog.UI.Controllers
                     }
                 }
                 createEditVM.Categories = repo.GetAllCategories();
+                createEditVM.StaticPosts = repo.GetAllStaticPublished();
                 createEditVM.Images = repo.GetAllImages();
                 createEditVM.Post.PostText = WebUtility.HtmlDecode(createEditVM.Post.PostText);
                 return View("Create", createEditVM);
             }
             else 
             {
+                createEditVM.Post = repo.GetPostByID(createEditVM.Post.PostId);
+                createEditVM.StaticPosts = repo.GetAllStaticPublished();
                 createEditVM.Categories = repo.GetAllCategories();
                 createEditVM.Post.PostText = WebUtility.HtmlDecode(createEditVM.Post.PostText);
                 createEditVM.Images = repo.GetAllImages();
@@ -83,6 +101,7 @@ namespace SeaMonsterBlog.UI.Controllers
         public ActionResult Review(int id)
         {
             var repo = RepositoryFactory.GetRepository();
+
             CreateEditVM createEditVM = new CreateEditVM();
 
             createEditVM.Post = repo.GetPostByID(id);
@@ -90,6 +109,7 @@ namespace SeaMonsterBlog.UI.Controllers
             createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(53);
             createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(0, createEditVM.Post.PostText.Length - 16);
             createEditVM.Categories = repo.GetAllCategories();
+            createEditVM.StaticPosts = repo.GetAllStaticPublished();
 
             return View(createEditVM);
         }
@@ -99,9 +119,10 @@ namespace SeaMonsterBlog.UI.Controllers
         {
             var repo = RepositoryFactory.GetRepository();  //chose to edit
 
-            if (createEditVM.Post.IsForReview &&createEditVM.Post.IsPublished==false)
+            if (createEditVM.Post.IsForReview && !createEditVM.Post.IsPublished)
             {
                 createEditVM.Categories = repo.GetAllCategories();
+                createEditVM.StaticPosts = repo.GetAllStaticPublished();
                 createEditVM.Images = repo.GetAllImages();
                 return RedirectToAction("Create", createEditVM);
             }

@@ -322,19 +322,39 @@ namespace SeaMonster.Data_CLW
                     if (dr.Read())
                     {
 
-                        post.PostId = postId;
+                        post.PostId = (int)dr["PostID"];
                         post.PostTitle = dr["PostTitle"].ToString();
-                        post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
-                        post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
                         post.PostText = dr["PostText"].ToString();
+                        post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
+                        string toPostDate = dr["ToPostDate"].ToString();
+                        if (!string.IsNullOrWhiteSpace(toPostDate))
+                        {
+                            post.ToPostDate = DateTime.Parse(toPostDate);
+                        }
+
+                        post.Author = dr["DisplayAuthor"].ToString();
+
+                        string displayDate = dr["DisplayDate"].ToString();
+                        if (!string.IsNullOrWhiteSpace(displayDate))
+                        {
+                            post.DisplayDate = DateTime.Parse(displayDate);
+                        }
+
+                        string expdate = dr["Expdate"].ToString();
+                        if (!string.IsNullOrWhiteSpace(expdate))
+                        {
+                            post.ExpDate = DateTime.Parse(expdate);
+                        }
+                        post.IsStatic = (bool)dr["isStatic"];
+                        post.IsPublished = (bool)dr["ispublished"];
+                        post.IsForReview = (bool)dr["isforReview"];
 
                     }
                 }
             }
 
-            PostRepo repo = new PostRepo();
-
             return post;
+
         }
 
         public List<Comment> GetPublishedComments(int PostID)
@@ -820,6 +840,7 @@ namespace SeaMonster.Data_CLW
 
         public void SavePost(Post post)
         {
+            List<Hashtag> OriginalTags = GetHashtagbyPost(post.PostId);
             using (SqlConnection cn = new SqlConnection(cs))
             {
                 SqlCommand cmd = new SqlCommand("SavePost", cn);
@@ -828,13 +849,16 @@ namespace SeaMonster.Data_CLW
                 cmd.Parameters.AddWithValue("@PostTitle", post.PostTitle);
                 cmd.Parameters.AddWithValue("@PostText", post.PostText);
                 cmd.Parameters.AddWithValue("@DisplayAuthor", post.Author);
-                cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
                 cmd.Parameters.AddWithValue("@isForReview", post.IsForReview);
-                if (post.ToPostDate != null)
+                cmd.Parameters.AddWithValue("@isStatic", post.IsStatic);
+                if (post.DisplayDate != null)
                 {
-                    cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
+                    cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
                 }
-
+                else
+                {
+                    cmd.Parameters.AddWithValue("@DisplayDate", DBNull.Value);
+                }
                 if (post.ExpDate != null)
                 {
                     cmd.Parameters.AddWithValue("@ExpDate", post.ExpDate);
@@ -843,10 +867,28 @@ namespace SeaMonster.Data_CLW
                 {
                     cmd.Parameters.AddWithValue("@ExpDate", DBNull.Value);
                 }
+                if (post.ToPostDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@ToPostDate", DBNull.Value);
+                }
                 cn.Open();
                 cmd.ExecuteNonQuery();
-            }
 
+                if (!string.IsNullOrEmpty(post.HashtagString))
+                {
+                    SqlCommand cmd3 = new SqlCommand("ClearHashtags", cn);
+                    cmd3.CommandType = CommandType.StoredProcedure;
+                    cmd3.Parameters.AddWithValue("@PostID", post.PostId);
+                    cmd3.ExecuteNonQuery();
+                    AddHashtags(post.HashtagString, post.PostId);
+                    List<Hashtag> newtags = GetHashtagbyPost(post.PostId);
+
+                }
+            }
         }
 
         public void ADMINSavePost(Post post)
