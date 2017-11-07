@@ -53,7 +53,6 @@ namespace SeaMonster.Data_CLW
                 cn.Open();
                 cmd.ExecuteNonQuery();
             }
-
         }
 
         //need to clarify procedure name
@@ -1002,7 +1001,6 @@ namespace SeaMonster.Data_CLW
             List<Post> posts = GetPublishedPosts().Where(p => p.IsStatic == false).ToList();
             int last = posts.Max(p => p.PostId);
             return last;
-
         }
     }
 }
