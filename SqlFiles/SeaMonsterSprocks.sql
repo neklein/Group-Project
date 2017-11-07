@@ -269,7 +269,7 @@ Insert into HashtagPost (HashtagID, PostID) Values (@HashtagID, @PostId)
 End
 Go
 
-Create Procedure SavePost (@PostID int, @PostTitle nvarchar(50), @PostText nvarchar(max), @ExpDate DateTime2 null, @ToPostDate DateTime2 null, @DisplayAuthor nvarchar(40), @DisplayDate datetime2, @isForReview bit, @isStatic bit) AS
+Create Procedure SavePost (@PostID int, @PostTitle nvarchar(50), @PostText nvarchar(max), @ExpDate DateTime2 null, @ToPostDate DateTime2 null, @DisplayAuthor nvarchar(40), @DisplayDate datetime2 null, @isForReview bit, @isStatic bit) AS
 Begin
 Update Post SET 
 PostTitle=@PostTitle,
@@ -287,7 +287,7 @@ where PostId=@PostID
 END
 GO
 
-Create Procedure AdminSavePost (@PostID int, @PostTitle nvarchar(50), @PostText nvarchar(max), @ExpDate DateTime2 null, @ToPostDate DateTime2 null, @DisplayAuthor nvarchar(40), @DisplayDate datetime2, @isForReview bit, @isPublished bit) AS
+Create Procedure AdminSavePost (@PostID int, @PostTitle nvarchar(50), @PostText nvarchar(max), @ExpDate DateTime2 null, @ToPostDate DateTime2 null, @DisplayAuthor nvarchar(40), @DisplayDate datetime2 null, @isForReview bit, @isPublished bit) AS
 Begin
 Update Post SET 
 PostTitle=@PostTitle,
