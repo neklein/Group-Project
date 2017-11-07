@@ -322,19 +322,28 @@ namespace SeaMonster.Data_CLW
                     if (dr.Read())
                     {
 
-                        post.PostId = postId;
+                        post.PostId = (int)dr["PostID"];
                         post.PostTitle = dr["PostTitle"].ToString();
+                        post.PostText = dr["PostText"].ToString();
                         post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
                         post.ToPostDate = DateTime.Parse(dr["ToPostDate"].ToString());
-                        post.PostText = dr["PostText"].ToString();
+                        post.Author = dr["DisplayAuthor"].ToString();
+                        post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
+                        string expdate = dr["Expdate"].ToString();
+                        if (!string.IsNullOrWhiteSpace(expdate))
+                        {
+                            post.ExpDate = DateTime.Parse(expdate);
+                        }
+                        post.IsStatic = (bool)dr["isStatic"];
+                        post.IsPublished = (bool)dr["ispublished"];
+                        post.IsForReview = (bool)dr["isforReview"];
 
                     }
                 }
             }
 
-            PostRepo repo = new PostRepo();
-
             return post;
+
         }
 
         public List<Comment> GetPublishedComments(int PostID)
