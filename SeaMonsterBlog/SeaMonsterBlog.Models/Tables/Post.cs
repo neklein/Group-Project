@@ -24,6 +24,7 @@ namespace SeaMonsterBlog.Models.Tables
         public List<Comment> Comments { get; set; }
         public List<Hashtag> Hashtags { get; set; }
         public List<Category> SelectedCategories { get; set; }
+        public int? NumberOfUnapprovedComments { get; set; }
 
         // JM -> ADDED MORNING 11/2
         public string Author { get; set; }
