@@ -4,6 +4,7 @@
     ViewBag.Title = "Detail";
     ViewBag.Categories = Model.Categories;
     ViewBag.StaticPosts = Model.StaticPosts;
+    ViewBag.SearchString = Model.SearchString;
 }
 
 @using (Html.BeginForm("Detail", "Home", FormMethod.Post))
@@ -46,7 +47,7 @@
                 <div id="c-div-@comment.CommentId">
                     <p style="padding-top:4px">
                         <strong>@comment.CommenterName |  @comment.CommentDate</strong>
-                        @if ((Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator")) && !comment.IsShown)
+                        @if (!comment.IsShown && (Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator")))
                         {
                             <i onclick="ApproveComment(@comment.CommentId)" class="fa fa-check-square-o icon-ch" id="c-approve-@comment.CommentId" aria-hidden="true" onmouseover="" style="color:green;padding-left:7px;cursor: pointer;"></i>
                             <i onclick="DeleteComment(@comment.CommentId)" id="c-delete-@comment.CommentId" class="fa fa-trash-o fa-lg" aria-hidden="true" onmouseover="" style="color:red;padding-left:7px;cursor: pointer;"></i>

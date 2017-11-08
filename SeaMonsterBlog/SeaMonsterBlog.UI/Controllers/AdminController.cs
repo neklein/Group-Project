@@ -182,12 +182,12 @@ namespace SeaMonsterBlog.UI.Controllers
             }
             else if (createEditVM.Post.IsForReview == false && createEditVM.Post.IsPublished == false)  //returned to contributor
             {
-                repo.SavePost(createEditVM.Post);
+                repo.Review(createEditVM.Post);
                 return RedirectToAction("Dashboard");  
             }
             else  //published
             {
-                repo.SavePost(createEditVM.Post);
+                repo.Review(createEditVM.Post);
                 return RedirectToAction("Dashboard");
             }
         }

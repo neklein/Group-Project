@@ -10,5 +10,6 @@ namespace SeaMonsterBlog.UI.Models
     {
         public List<Post> StaticPosts { get; set; }
         public List<Category> Categories { get; set; }
+        public string SearchString { get; set; }
     }
 }

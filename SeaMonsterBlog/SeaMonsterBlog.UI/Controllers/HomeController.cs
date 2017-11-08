@@ -19,6 +19,9 @@ namespace SeaMonsterBlog.UI.Controllers
             homeVM.Categories = repo.GetAllCategories();
             homeVM.StaticPosts = repo.GetAllStaticPublished();
             homeVM.Posts = repo.GetPublishedPosts();
+
+            // this doesn't actually seem to sort tho
+            homeVM.Posts.OrderByDescending(post => post.DisplayDate).Where(post => post.ToPostDate <= DateTime.Now).Take(10);
             
             foreach (var p in homeVM.Posts)
             {
@@ -40,7 +43,6 @@ namespace SeaMonsterBlog.UI.Controllers
             detailVM.Post.PostText = WebUtility.HtmlDecode(detailVM.Post.PostText);
             detailVM.Post.PostText = detailVM.Post.PostText.Substring(60);
             detailVM.Post.PostText = detailVM.Post.PostText.Substring(0, detailVM.Post.PostText.Length - 16);
-            repo.SetPostLists(detailVM.Post);
             detailVM.Categories = repo.GetAllCategories();
             detailVM.StaticPosts = repo.GetAllStaticPublished();
             if (Request.IsAuthenticated && User.IsInRole("admin")|| Request.IsAuthenticated && User.IsInRole("moderator"))
@@ -60,15 +62,15 @@ namespace SeaMonsterBlog.UI.Controllers
         {
             var repo = RepositoryFactory.GetRepository();
 
-            if (model.NewComment != null)
+            if (model.NewComment.CommenterName != null)
             {
                 model.NewComment.PostId = model.Post.PostId;
                 repo.CreateComment(model.NewComment);
             }
-            if (model.NewReply != null)
+            if (model.NewReply.ReplyName != null)
                 repo.CreateReply(model.NewReply);
 
-            return View("Detail", model);
+            return RedirectToAction("Detail", model.Post.PostId);
         }
 
         public ActionResult ByCategory(int id)
@@ -210,6 +212,29 @@ namespace SeaMonsterBlog.UI.Controllers
 
 
             return View(authorVM);
+        }
+
+        [HttpGet]
+        public ActionResult SearchResults (string id)
+        {
+            var repo = RepositoryFactory.GetRepository();
+
+            HomeVM homeVM = new HomeVM();
+            homeVM.Categories = repo.GetAllCategories();
+            homeVM.StaticPosts = repo.GetAllStaticPublished();
+            homeVM.Posts = repo.GetPostsbyTitle(id);
+
+            // this doesn't actually seem to sort tho
+            homeVM.Posts.OrderByDescending(post => post.DisplayDate).Where(post => post.ToPostDate <= DateTime.Now).Take(10);
+
+            foreach (var p in homeVM.Posts)
+            {
+                p.PostText = WebUtility.HtmlDecode(p.PostText);
+                p.PostText = p.PostText.Substring(60);
+                p.PostText = p.PostText.Substring(0, p.PostText.Length - 16);
+                repo.SetPostLists(p);
+            }
+            return View("Index", homeVM);
         }
 
         public ActionResult ByHashtag(int id)

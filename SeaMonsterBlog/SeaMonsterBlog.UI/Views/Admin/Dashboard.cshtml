@@ -4,6 +4,7 @@
     ViewBag.Title = "Dashboard";
     ViewBag.Categories = Model.Categories;
     ViewBag.StaticPosts = Model.StaticPosts;
+    ViewBag.SearchString = Model.SearchString;
 }
 
 <div>
@@ -49,7 +50,7 @@
                 {
                     <tr>
                         <td><a style="color:firebrick" href="~/home/detail/@p.PostId">@p.PostTitle</a></td>
-                        <td># Pending</td>
+                        <td>@p.NumberOfUnapprovedComments</td>
                     </tr>
                 }
 
