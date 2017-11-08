@@ -8,66 +8,64 @@
 
 @using (Html.BeginForm("Detail", "Home", FormMethod.Post))
 {
-@Html.HiddenFor(m => m.Post.PostId)
-<div class="panel panel-success">
-    <div class="panel-heading">
-        <h3><strong>@Model.Post.PostTitle</strong></h3>
-        <h5><strong>@Model.Post.DisplayDate  | <a href="~/Home/ByAuthor/@Model.Post.Author">@Model.Post.Author</a></strong></h5>
-    </div>
-    <div class="panel-body">
-        <p>
-            categories listed here
-            @Html.Raw(Model.Post.PostText)
-            <br />
-            <strong>@Model.Post.HashtagString</strong>
-        </p>
-    </div>
-</div>
-<span>
-    <a href="~/home/previous/@Model.Post.PostId">Previous</a>
-</span>
-<span style="float:right">
-    <a href="~/home/next/@Model.Post.PostId" >Next</a> 
-</span>
+    @Html.HiddenFor(m => m.Post.PostId)
 
-<div class="col-sm-12">
-    <h4><strong>Comments</strong></h4>
-    @if (Model.Post.Comments != null)
-    {
-        foreach (var comment in Model.Post.Comments)
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3><strong>@Model.Post.PostTitle</strong></h3>
+            <h5><strong>@Model.Post.DisplayDate  | <a href="~/Home/ByAuthor/@Model.Post.Author">@Model.Post.Author</a></strong></h5>
+        </div>
+        <div class="panel-body">
+            <p>
+                categories listed here
+                @Html.Raw(Model.Post.PostText)
+                <br />
+                <strong>@Model.Post.HashtagString</strong>
+            </p>
+        </div>
+    </div>
+    <span>
+        <a href="~/home/previous/@Model.Post.PostId">Previous</a>
+    </span>
+    <span style="float:right">
+        <a href="~/home/next/@Model.Post.PostId" >Next</a> 
+    </span>
+
+    <div class="col-sm-12">
+        <h4><strong>Comments</strong></h4>
+        @if (Model.Post.Comments != null)
         {
-            @Html.HiddenFor(c => comment.CommentId)
-            <div id="div-comment-@comment.CommentId">
-                <p style="padding-top:4px">
-                    <strong>@comment.CommenterName |  @comment.CommentDate</strong>
-                    @if ((Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator")) && !comment.IsShown)
-                    {
-                        <i onclick="DeleteComment(this.id)" id="comment-@comment.CommentId" class="fa fa-times fa-lg" aria-hidden="true" onmouseover="" style="color:red;padding-left:7px;cursor: pointer;">@Html.CheckBoxFor(c => comment.IsShown, new { @checked = "checked", hidden = "hidden", id = "cb-comment-" + @comment.CommentId.ToString() })</i>
-                    }
-                </p>
-                <p>@comment.CommentText</p>
-            </div>
-            if (comment.Replies.Any())
+            foreach (var comment in Model.Post.Comments)
             {
-                <div class="row">
-                    <div class="col-md-11 col-md-offset-1">
-                        <a id="comment-replies-@comment.CommentId" class="comment-replies" onclick="openReplies(@comment.CommentId)">View Replies or Reply</a>
-                    </div>
-                    <div class="col-md-11 col-md-offset-1 reply-box" id="comment-dropdown-@comment.CommentId" hidden>
-                        @foreach (var reply in comment.Replies)
+                <div id="div-@Model.Post.PostId-@comment.CommentId">
+                    <p style="padding-top:4px">
+                        <strong>@comment.CommenterName |  @comment.CommentDate</strong>
+                        @if ((Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator")) && !comment.IsShown)
                         {
-                            @Html.HiddenFor(r => reply.ReplyID)
-                            <div id="div-comment-@comment.CommentId-reply-@reply.ReplyID">
-                                <p style="padding-top:4px">
-                                    <strong>@reply.ReplyName | @reply.ReplyDate</strong>
-                                    @if ((Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator")) && !reply.IsShown)
-                                {
-                                        <i onclick="DeleteReply(this.id)" class="fa fa-times fa-lg" id="comment-@comment.CommentId-reply-@reply.ReplyID" aria-hidden="true" onmouseover="" style="color:red;padding-left:7px;cursor: pointer;">@Html.CheckBoxFor(c => reply.IsShown, new { @checked = "checked", hidden = "hidden", id = "cb-comment-" + @comment.CommentId.ToString() + "-reply-" + @reply.ReplyID.ToString() })</i>
-                                    }
-                                </p>
-                                <p>@reply.ReplyText</p>
-                            </div>
+                            <i onclick="DeleteComment(@Model.Post.PostId,@comment.CommentId)" id="@Model.Post.PostId-@comment.CommentId" class="fa fa-times fa-lg" aria-hidden="true" onmouseover="" style="color:red;padding-left:7px;cursor: pointer;"></i>
                         }
+                    </p>
+                    <p>@comment.CommentText</p>
+                    @if (comment.Replies.Any())
+                    {
+                    <div class="row">
+                        <div class="col-md-11 col-md-offset-1">
+                            <a id="comment-replies-@comment.CommentId" class="comment-replies" onclick="openReplies(@comment.CommentId)">View Replies or Reply</a>
+                        </div>
+                        <div class="col-md-11 col-md-offset-1 reply-box" id="comment-dropdown-@comment.CommentId" hidden>
+                            @foreach (var reply in comment.Replies)
+                            {
+                                <div id="div-@Model.Post.PostId-@comment.CommentId-@reply.ReplyID">
+                                    <p style="padding-top:4px">
+                                        <strong>@reply.ReplyName | @reply.ReplyDate</strong>
+                                        @if ((Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator")) && !reply.IsShown)
+                                        {
+                                            <i onclick="DeleteReply(@Model.Post.PostId, @comment.CommentId, @reply.ReplyID)" class="fa fa-times fa-lg" id="@Model.Post.PostId-@comment.CommentId-@reply.ReplyID" aria-hidden="true" onmouseover="" style="color:red;padding-left:7px;cursor: pointer;"></i>
+                                        }
+                                    </p>
+                                    <p>@reply.ReplyText</p>
+                                </div>
+                            }
 
                             @Html.Hidden("NewReply.ReplyID", comment.CommentId)
                             <div class="form-group row">
@@ -83,27 +81,27 @@
                                     <button type="submit" class="btn btn-info">Submit Reply</button>
                                 </div>
                             </div>
-
+                        </div>
                     </div>
+                    }
                 </div>
             }
+                <h4 style="padding-top:15px"><strong>New Comment</strong></h4>
+                <div class="form-group row">
+                    <label class="control-label col-sm-2">Name</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.NewComment.CommenterName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="control-label col-sm-2">Comment</label>
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(m => m.NewComment.CommentText, new { @class = "form-control" })
+                        <button type="submit" class="btn btn-info">Submit Comment</button>
+                    </div>
+                </div>
         }
-            <h4 style="padding-top:15px"><strong>New Comment</strong></h4>
-            <div class="form-group row">
-                <label class="control-label col-sm-2">Name</label>
-                <div class="col-sm-6">
-                    @Html.TextBoxFor(m => m.NewComment.CommenterName, new { @class = "form-control" })
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="control-label col-sm-2">Comment</label>
-                <div class="col-sm-10">
-                    @Html.TextBoxFor(m => m.NewComment.CommentText, new { @class = "form-control" })
-                    <button type="submit" class="btn btn-info">Submit Comment</button>
-                </div>
-            </div>
-    }
-</div>
+    </div>
 }
 
 
@@ -122,14 +120,24 @@
 
         }
 
-        function DeleteComment(comment) {
-            $("#cb-" + comment).attr('checked', false);
-            $("#div-" + comment).hide();
+        function DeleteComment(postId, commentId) {
+            $.ajax({
+                type: 'DELETE',
+                url: 'http://localhost:51004/comment/' + postId +"/"+ commentId,
+                success: function () {
+                    $("#div-" + postId + "-" + commentId).hide();
+                }
+            });
         }
 
-        function DeleteReply(reply) {
-            $("#cb-" + reply).attr('checked', false);
-            $("#div-" + reply).hide();
+        function DeleteReply(postId, commentId, replyId) {
+            $.ajax({
+                type: 'DELETE',
+                url: 'http://localhost:51004/comment/' + postId + "/" + commentId + "/" + replyId,
+                success: function () {
+                    $("#div-" + postId + "-" + commentId + "-" + replyId).hide();
+                }
+            });
         }
     </script>
 
