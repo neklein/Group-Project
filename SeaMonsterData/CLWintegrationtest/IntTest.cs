@@ -30,7 +30,7 @@ namespace CLWintegrationtest
             PostTitle="TestPost",
             PostText="This is a test of a tests post",
             DisplayAuthor="Test Author",
-            
+            IsForReview=true
           
 
         };
@@ -155,7 +155,7 @@ namespace CLWintegrationtest
 
 
         
-
+        /*
         [Test]
         public void GetImages()
         {
@@ -165,7 +165,7 @@ namespace CLWintegrationtest
 
             Assert.AreEqual(2, images.Count());
             Assert.AreEqual("SeriousSelfie.jpg", images[0].ImageName);
-        }
+        }*/
 
         [Test]
         public void CanGetCommentsByPost()
@@ -416,6 +416,33 @@ namespace CLWintegrationtest
             PostRepo repo = new PostRepo();
             List<Post> posts = repo.GetPostForReview();
             Assert.AreEqual(1, posts.Count);
+        }
+        [Test]
+        public void CanDeletePost()
+        {
+            PostRepo repo = new PostRepo();
+            List<Post> posts = repo.GetAllPosts();
+            Assert.AreEqual(7, posts.Count);
+            repo.Deletepost(2);
+            List<Post>posts2 = repo.GetAllPosts();
+            Assert.AreEqual(3, posts2[1].PostId);
+        }
+        [Test]
+        public void CanReviewPost()
+        {
+            PostRepo repo = new PostRepo();
+            Post toreview = TestPost;
+            repo.CreatePost(toreview);
+            toreview.PostId = 8;
+            toreview.IsForReview = false;
+            toreview.IsPublished = true;
+            toreview.DisplayDate = DateTime.Parse("11/1/2017");
+            repo.Review(toreview);
+            Post test = repo.GetPostDetails(8);
+            Assert.AreEqual(true, repo.GetPostDetails(8).IsPublished);
+            Assert.AreEqual(false, test.IsForReview);
+            Assert.AreEqual("TestPost", test.PostTitle);
+
         }
     }
 }
