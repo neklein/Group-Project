@@ -131,7 +131,7 @@ namespace CLWintegrationtest
             PostRepo repo = new PostRepo();
             List<Post> posts = repo.GetPublishedPosts();
 
-            Assert.AreEqual(6, posts.Count());
+            Assert.AreEqual(5, posts.Count());
             Assert.AreEqual("Hello Fellow Monster Hunters", posts[0].PostTitle);
         }
 
@@ -272,7 +272,7 @@ namespace CLWintegrationtest
         {
             PostRepo repo = new PostRepo();
             List<Post> posts = repo.GetPublishedPostByCategory(1);
-            Assert.AreEqual(3, posts.Count());
+            Assert.AreEqual(2, posts.Count());
             List<Post> posts2 = repo.GetPublishedPostByCategory(3);
             Assert.AreEqual(posts2.Count, 2);
         }

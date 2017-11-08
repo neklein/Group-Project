@@ -40,6 +40,10 @@ update post set
 Expdate='2017-12-01'
 where PostID=9
 
+update post set
+ToPostDate='2017-11-23'
+where PostID=9
+
 Insert into PostText (PostId, PostText) values (1,'&lt;!DOCTYPE html&gt &lt;html&gt; &lt;head&gt; &lt;/head&gt; &lt;body&gt; &lt;p&gt;categories 
 listed here Salmagundi boom gunwalls rope&#39;s end Jack Ketch chase sheet cutlass 
 Buccaneer starboard.&lt;a title=&quot;kraken&quot; href=&quot;https://en.wikipedia.org/wiki/Kraken&quot;&gt;&amp;nbsp;Corsair&lt;/a&gt;&amp;nbsp;spirits walk the 
@@ -187,3 +191,4 @@ select * from Categories
 select * from categorypost
 select* from Reply
 select * from comment
+select* from Post
