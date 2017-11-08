@@ -62,15 +62,15 @@ namespace SeaMonsterBlog.UI.Controllers
         {
             var repo = RepositoryFactory.GetRepository();
 
-            if (model.NewComment != null)
+            if (model.NewComment.CommenterName != null)
             {
                 model.NewComment.PostId = model.Post.PostId;
                 repo.CreateComment(model.NewComment);
             }
-            if (model.NewReply != null)
+            if (model.NewReply.ReplyName != null)
                 repo.CreateReply(model.NewReply);
 
-            return View("Detail", model);
+            return RedirectToAction("Detail", model.Post.PostId);
         }
 
         public ActionResult ByCategory(int id)
