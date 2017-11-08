@@ -18,12 +18,14 @@ namespace SeaMonsterBlog.UI.Controllers
             HomeVM homeVM = new HomeVM();
             homeVM.Categories = repo.GetAllCategories();
             homeVM.StaticPosts = repo.GetAllStaticPublished();
-            homeVM.Posts = repo.GetPublishedPosts(); 
+            homeVM.Posts = repo.GetPublishedPosts();
+            
             foreach (var p in homeVM.Posts)
             {
                 p.PostText = WebUtility.HtmlDecode(p.PostText);
                 p.PostText = p.PostText.Substring(60);
                 p.PostText = p.PostText.Substring(0, p.PostText.Length - 16);
+                repo.SetPostLists(p);
             }
 
             return View(homeVM);
@@ -57,20 +59,6 @@ namespace SeaMonsterBlog.UI.Controllers
         public ActionResult Detail (DetailVM model)
         {
             var repo = RepositoryFactory.GetRepository();
-            foreach (var c in model.Post.Comments)
-            {
-                if (!c.IsShown)
-                {
-                    repo.DeleteComment(c.CommentId);
-                }
-                foreach (var r in c.Replies)
-                {
-                    if (!r.IsShown)
-                    {
-                        repo.DeleteReply(r.ReplyID);
-                    }
-                }
-            }
 
             if (model.NewComment != null)
             {
@@ -148,7 +136,7 @@ namespace SeaMonsterBlog.UI.Controllers
             return View(categoryVM);
         }
 
-        public ActionResult ByAuthor()
+        public ActionResult ByAuthor(string id)
         {
             ByAuthorCategoryVM authorVM = new ByAuthorCategoryVM();
 
@@ -156,11 +144,39 @@ namespace SeaMonsterBlog.UI.Controllers
             authorVM.Categories = repo.GetAllCategories();
             authorVM.StaticPosts = repo.GetAllStaticPublished();
 
-            authorVM.AuthorsSelectList = (from blog in repo.GetPublishedPosts()
+            if (id == "1")
+            {
+                authorVM.AuthorName = "All Authors";
+
+                if (Request.IsAuthenticated && User.IsInRole("admin"))
+                {
+                    authorVM.Posts = repo.GetAllPosts();
+                }
+                else
+                {
+                    authorVM.Posts = repo.GetPublishedPosts();
+                }
+            }
+            else
+            {
+                authorVM.AuthorName = id;
+
+                if (Request.IsAuthenticated && User.IsInRole("admin"))
+                {
+                    authorVM.Posts = repo.GetAllPostByAuthor(id);
+                }
+                else
+                {
+                    authorVM.Posts = repo.GetPublishedPostbyAuthor(id);
+                }
+            }
+            
+            
+            authorVM.AuthorsSelectList = (from author in repo.GetAllAuthors()
                                           select new SelectListItem()
                                           {
-                                              Text = blog.Author,
-                                              Value = blog.Author,
+                                              Text = author,
+                                              Value = author,
                                           }).ToList();
                 
             
@@ -171,6 +187,7 @@ namespace SeaMonsterBlog.UI.Controllers
         public ActionResult ByAuthor(ByAuthorCategoryVM authorCategoryVM)
         {
             ByAuthorCategoryVM authorVM = new ByAuthorCategoryVM();
+            authorVM.AuthorName = authorCategoryVM.AuthorName;
 
             var repo = RepositoryFactory.GetRepository();
             if (Request.IsAuthenticated && User.IsInRole("admin"))
@@ -184,11 +201,11 @@ namespace SeaMonsterBlog.UI.Controllers
 
             authorVM.StaticPosts = repo.GetAllStaticPublished();
             authorVM.Categories = repo.GetAllCategories();
-            authorVM.AuthorsSelectList = (from blog in repo.GetPublishedPosts()
+            authorVM.AuthorsSelectList = (from author in repo.GetAllAuthors()
                                           select new SelectListItem()
                                           {
-                                              Text = blog.Author,
-                                              Value = blog.Author,
+                                              Text = author,
+                                              Value = author,
                                           }).ToList();
 
 
@@ -196,32 +213,32 @@ namespace SeaMonsterBlog.UI.Controllers
         }
 
         
-        public ActionResult Next(int PostId)
+        public ActionResult Next(int id)
         {
             var repo = RepositoryFactory.GetRepository();
 
-            return RedirectToAction("Details", repo.FindNextPublishedPost(PostId));
+            return RedirectToAction("Detail/" + repo.FindNextPublishedPost(id).ToString());
         }
 
-        public ActionResult Previous(int PostId)
+        public ActionResult Previous(int id)
         {
             var repo = RepositoryFactory.GetRepository();
 
-            return RedirectToAction("Details", repo.FindPreviousPublishedPost(PostId));
+            return RedirectToAction("Detail/" + repo.FindPreviousPublishedPost(id).ToString());
         }
 
         public ActionResult First()
         {
             var repo = RepositoryFactory.GetRepository();
 
-            return RedirectToAction("Details", repo.FindFirstPublishedPost());
+            return RedirectToAction("Details/" + repo.FindFirstPublishedPost().ToString());
         }
 
         public ActionResult Last()
         {
             var repo = RepositoryFactory.GetRepository();
 
-            return RedirectToAction("Details", repo.FindLastPublishedPost());
+            return RedirectToAction("Details/" + repo.FindLastPublishedPost().ToString());
 
         }
     }

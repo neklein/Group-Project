@@ -32,6 +32,7 @@ namespace SeaMonsterBlog.Data
         Reply GetReplyByReplyId(int replyId);
         List<Hashtag> GetHashtagbyPost(int PostID);
         List<Category> GetCategoryByPost(int PostID);
+        Category GetCategoryByCatID(int CatID);
         void SetPostLists(Post post);
         Post GetPostByID(int postID);
         List<Post> GetPublishedPosts();
@@ -39,14 +40,12 @@ namespace SeaMonsterBlog.Data
         List<Post> GetAllStatic();
         void ADMINSetPostList(Post post); //May need the admin create method still
         int CreateNewPost(Post post);
-        int CreatePostExpDate(Post post);
-        int CreatePostDelayed(Post post);
-        int CreatePostDelayedAndExp(Post post);
         void DeleteComment(int CommentID);
         void DeleteReply(int ReplyID);
         void SavePost(Post post);
         void ADMINSavePost(Post post);
         void SaveNewImage(string fileName);
+        List<string> GetAllAuthors();
         List<Post> GetAllPostByAuthor(string name);
         List<Post> GetPublishedPostbyAuthor(string name);
 
@@ -55,5 +54,10 @@ namespace SeaMonsterBlog.Data
         int FindFirstPublishedPost();
         int FindLastPublishedPost();
 
+        List<Post> GetPostsbyTitle(string searchstring);
+        List<Post> GetPublishedPostByTitle(string searchstring);
+        List<Post> GetPostForReview();
+        List<Comment> GetUnapprovedComments();
+        List<Reply> GetUnapprovedReplies();
     }
 }

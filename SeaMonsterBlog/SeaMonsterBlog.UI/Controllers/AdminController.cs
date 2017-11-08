@@ -80,10 +80,7 @@ namespace SeaMonsterBlog.UI.Controllers
                         repo.SaveNewImage(fileName);
                     }
                 }
-                createEditVM.Categories = repo.GetAllCategories();
-                createEditVM.StaticPosts = repo.GetAllStaticPublished();
-                createEditVM.Images = repo.GetAllImages();
-                createEditVM.Post.PostText = WebUtility.HtmlDecode(createEditVM.Post.PostText);
+
                 return View("Create", createEditVM);
             }
             else 
@@ -94,7 +91,7 @@ namespace SeaMonsterBlog.UI.Controllers
                 createEditVM.Categories = repo.GetAllCategories();
                 createEditVM.Post.PostText = WebUtility.HtmlDecode(createEditVM.Post.PostText);
                 createEditVM.Images = repo.GetAllImages();
-                return View("Create", createEditVM);
+                return View("Edit", createEditVM.Post.PostId);
             }
            
         }
@@ -112,6 +109,7 @@ namespace SeaMonsterBlog.UI.Controllers
             createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(0, createEditVM.Post.PostText.Length - 16);
             createEditVM.Categories = repo.GetAllCategories();
             createEditVM.StaticPosts = repo.GetAllStaticPublished();
+            repo.SetPostLists(createEditVM.Post);
 
             return View(createEditVM);
         }
@@ -123,10 +121,7 @@ namespace SeaMonsterBlog.UI.Controllers
 
             if (createEditVM.Post.IsForReview && !createEditVM.Post.IsPublished)
             {
-                createEditVM.Categories = repo.GetAllCategories();
-                createEditVM.StaticPosts = repo.GetAllStaticPublished();
-                createEditVM.Images = repo.GetAllImages();
-                return RedirectToAction("Edit/"+createEditVM.Post.PostId.ToString());
+                return RedirectToAction("Edit/" + createEditVM.Post.PostId.ToString());
             }
             else if (createEditVM.Post.IsForReview == false && createEditVM.Post.IsPublished == false)  //returned to contributor
             {

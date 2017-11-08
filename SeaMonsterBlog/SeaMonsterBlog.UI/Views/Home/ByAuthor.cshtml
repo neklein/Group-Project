@@ -8,15 +8,15 @@
 }
 
 
-<h2>Blogs by Author</h2>
+<h2>Blogs written by @Model.AuthorName</h2>
 
 <div class="row">
-    @using (Html.BeginForm("ByCategory", "Home", FormMethod.Post))
+    @using (Html.BeginForm("ByAuthor", "Home", FormMethod.Post))
     {
         <div class="col-md-4 col-md-offset-8">
             <div class="from-group">
                 <label>Category</label>
-                @Html.DropDownListFor(c => c.AuthorName, Model.AuthorsSelectList, new { @clas = "form-control" })
+                @Html.DropDownListFor(c => c.AuthorName, Model.AuthorsSelectList, new { @class = "form-control" })
             </div>
             <button class="btn btn-warning">Select Author</button>
         </div>
@@ -43,7 +43,7 @@
                             <td>@row.PostTitle</td>
                             <td>@row.SelectedCategories</td>
                             <td>@row.DisplayDate</td>
-                            <td>@Html.ActionLink("VIEW", "Home", "Detail", new { id = row.PostId }, new { @class = "btn btn-warning" })</td>
+                            <td>@Html.ActionLink("View", "Detail", "Home", new { id = row.PostId }, new { @class = "btn btn-warning" })</td>
                         </tr>
                     }
                 }
