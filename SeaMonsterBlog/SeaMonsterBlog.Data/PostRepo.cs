@@ -211,6 +211,7 @@ namespace SeaMonster.Data_CLW
                         cmt.CommentId = (int)dr["CommentID"];
                         cmt.CommenterName = dr["CommenterName"].ToString();
                         cmt.CommentText = dr["CommentText"].ToString();
+                        cmt.IsShown = (bool)dr["IsShown"];
                         string date = dr["CommentDate"].ToString();
                         cmt.CommentDate = DateTime.Parse(date);
                         comments.Add(cmt);

@@ -504,7 +504,7 @@ namespace SeaMonster.Data_CLW
             List<Post> posts = new List<Post>();
 
             string cs = "Server=localhost;Database=SeaMonster;User Id=SeamonsterSA; Password=ocean;";
-
+            List<Post> posts3 = new List<Post>();
             using (var cn = new SqlConnection(cs))
             {
                 SqlCommand cmd = new SqlCommand("GetPublishedPosts", cn);
@@ -546,11 +546,25 @@ namespace SeaMonster.Data_CLW
                             {
                                 posts.Add(post);
                             }
-                        }
+                        }                      
                     }
                 }
             }
-            return posts;
+            foreach (Post e in posts)
+            {
+                if (e.ToPostDate == null)
+                {
+                    posts3.Add(e);
+                }
+                else
+                {
+                    if (DateTime.Compare(e.ToPostDate.Value, DateTime.Now) <= 0)
+                    {
+                        posts3.Add(e);
+                    }
+                }
+            }
+            return posts3;
         }
 
 
@@ -727,7 +741,22 @@ namespace SeaMonster.Data_CLW
                     }
                 }
             }
-            return posts2;
+            List<Post> posts3 = new List<Post>();
+            foreach (Post e in posts2)
+            {
+                if (e.ToPostDate == null)
+                {
+                    posts3.Add(e);
+                }
+                else
+                {
+                    if (DateTime.Compare(e.ToPostDate.Value, DateTime.Now) <= 0)
+                    {
+                        posts3.Add(e);
+                    }
+                }
+            }
+            return posts3;
         }
 
         public List<Post> GetPostbyHashtag(int HashtagID)
@@ -882,7 +911,22 @@ namespace SeaMonster.Data_CLW
                     }
                 }
             }
-            return posts2;
+            List<Post> posts3 = new List<Post>();
+            foreach (Post e in posts2)
+            {
+                if (e.ToPostDate == null)
+                {
+                    posts3.Add(e);
+                }
+                else
+                {
+                    if (DateTime.Compare(e.ToPostDate.Value, DateTime.Now) <= 0)
+                    {
+                        posts3.Add(e);
+                    }
+                }
+            }
+            return posts3;
         }
 
         public Reply GetReplyByReplyId(int replyId)
@@ -995,7 +1039,22 @@ namespace SeaMonster.Data_CLW
                     }
                 }
             }
-            return posts2;
+            List<Post> posts3 = new List<Post>();
+            foreach (Post e in posts2)
+            {
+                if (e.ToPostDate == null)
+                {
+                    posts3.Add(e);
+                }
+                else
+                {
+                    if(DateTime.Compare(e.ToPostDate.Value, DateTime.Now) <= 0)
+                        {
+                        posts3.Add(e);
+                    }
+                }
+            }
+            return posts3;
         }
 
         public Category GetCategoryByCatName(string name)
@@ -1172,12 +1231,43 @@ namespace SeaMonster.Data_CLW
         public List<Post> GetPublishedPostByTitle(string searchstring)
         {
             List<Post> posts = GetPostsbyTitle(searchstring);
-            List<Post> pubposts = new List<Post>();
+            List<Post> posts2 = new List<Post>();
             if (posts.Count > 0)
             {
-                pubposts = posts.Where(p => p.IsPublished == true).ToList();
+                posts2 = posts.Where(p => p.IsPublished == true).ToList();
             }
-            return pubposts;
+
+            foreach (Post p in posts)
+            {
+                if (p.ExpDate == null)
+                {
+                    posts2.Add(p);
+                }
+                if(p.ExpDate!=null)
+                {
+                    if (DateTime.Compare(p.ExpDate.Value, DateTime.Now) > 0)
+                    {
+                        posts2.Add(p);
+                    }
+                }
+            }
+            List<Post> posts3 = new List<Post>();
+            foreach (Post e in posts2)
+            {
+                if (e.ToPostDate == null)
+                {
+                    posts3.Add(e);
+                }
+                else
+                {
+                    if (DateTime.Compare(e.ToPostDate.Value, DateTime.Now) <= 0)
+                    {
+                        posts3.Add(e);
+                    }
+                }
+            }
+            return posts3;
+      
         }
 
         public List<string> GetAllAuthors()
