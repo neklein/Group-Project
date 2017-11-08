@@ -1106,6 +1106,38 @@ namespace SeaMonster.Data_CLW
             return comm;
         }
 
+        public List<Post> GetPostsWithUnapprovedCommentsAndReplies()
+        {
+            List<Post> posts = new List<Post>();
+            List<Comment> comments = GetUnapprovedComments();
+            List<Reply> replies = GetUnapprovedReplies();
+
+            foreach(var reply in replies)
+            {
+                var comment = GetCommentByCommentId(reply.CommentID);
+                var post = GetPostByID(comment.PostId);
+                posts.Add(post);
+            }
+
+            foreach(var comment in comments)
+            {
+                var post = GetPostByID(comment.PostId);
+                posts.Add(post);
+            }
+
+            return posts;
+        }
+
+        public int GetCountOfUnapprovedCommentsAndReplies()
+        {
+            int count = 0;
+
+            count += GetUnapprovedComments().Count();
+            count += GetUnapprovedReplies().Count();
+
+            return count;
+        }
+
         public List<Reply> GetUnapprovedReplies()
         {
             List<Reply> reps = new List<Reply>();
