@@ -38,7 +38,7 @@ namespace SeaMonster.Data_CLW
         List<Post> GetPostByCategory(int CatId);
         List<Post> GetPublishedPostByCategory(int CatId);
         void AddImage(string imageName);
-        List<Image> GetImagesByPost(int postId);
+      //  List<Image> GetImagesByPost(int postId);
         Comment GetCommentByCommentId(int commentId);
         Reply GetReplyByReplyId(int replyId);
         List<Post> GetAllPostByAuthor(string name);
@@ -64,6 +64,7 @@ namespace SeaMonster.Data_CLW
         int FindPostplus10(int PostID);
         int FindPostminus10(int PostID);
         void Review(Post post); //set dates, isForReview, ispublished 
+        void Deletepost(int postId);
 
 
     }
