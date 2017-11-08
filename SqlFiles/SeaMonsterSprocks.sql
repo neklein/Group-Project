@@ -106,6 +106,31 @@ GO
  if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='TitleSearch')
  drop procedure TitleSearch
  GO
+
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='CommentDelete')
+ drop procedure CommentDelete
+ GO
+
+ 
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='ReplyDelete')
+ drop procedure ReplyDelete
+ GO
+
+  if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='PostDelete')
+ drop procedure PostDelete
+ GO
+
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='AddComment')
+ drop procedure AddComment
+ GO
+
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='CreateReply')
+ drop procedure CreateReply
+ GO
+
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='ReviewPost')
+ drop procedure ReviewPost
+ GO
  --------------------Searches and Gets------------------------------------------
 
  
@@ -141,14 +166,14 @@ select p.PostID, p.PostTitle, p.DateCreated, isnull(p.ToPostDate, p.DateCreated)
  order by p.DateCreated
  End
  GO
-
+ /*
 Create procedure GetImagesForPost(@PostID int) As
 begin
 select * from Images i 
 where i.PostId=@PostID
 end
 go
-
+*/
 Create procedure GetCommentbyID (@PostID int) AS
 begin 
 select c.CommentID, c.CommenterName, c.CommentDate, c.CommentText from Comment c 
@@ -245,9 +270,9 @@ insert into PostText (PostId, PostText) Values (@PostID, @PostText)
 END
 Go
 
-Create Procedure AddImage(@ImageName varchar(30), @PostID int) AS
+Create Procedure AddImage(@ImageName varchar(30)) AS
 Begin
-insert into Images (ImageName, PostId) values (@ImageName, @PostID)
+insert into Images (ImageName) values (@ImageName)
 End
 Go
 
@@ -345,6 +370,62 @@ begin
 
 end
 go
+
+Create Procedure  CommentDelete (@CommentID int) AS
+begin
+begin transaction
+delete from Reply where Reply.CommentID=@CommentID
+delete from Comment where Comment.CommentID=@CommentID
+commit 
+end
+go
+
+Create Procedure ReplyDelete (@ReplyID int) As
+begin
+begin transaction
+delete from Reply where Reply.ReplyId=@ReplyID
+commit 
+end
+Go
+
+Create Procedure PostDelete (@PostID int) As
+begin
+begin transaction
+delete from reply where Reply.CommentID in (select c.PostId from reply r left join Comment c on c.CommentID=r.CommentID where c.PostId=@PostID)
+Delete from Comment Where Comment.PostId=@PostID
+Delete from PostText where PostText.PostId=@PostID
+Delete from HashtagPost where HashtagPost.PostID=@PostID
+Delete from CategoryPost where CategoryPost.PostID=@PostID
+Delete from Post where PostID=@PostID
+Commit
+End
+Go
+
+Create Procedure AddComment (@CommentID int output, @PostId int, @CommenterName nvarchar(30), @CommentText nvarchar(500))As
+begin
+Insert into Comment (PostId,CommenterName,CommentID) Values (@PostId,@CommenterName,@CommentText)
+set @CommentID =scope_Identity()
+end
+go
+
+Create Procedure CreateReply (@ReplyID int output, @CommentId int, @ReplyName nvarchar(30), @ReplyText nvarchar(500))AS
+begin
+Insert into reply (CommentID, ReplyName, ReplyText) values (@CommentId, @ReplyName, @ReplyText)
+set @ReplyID=SCOPE_IDENTITY()
+end
+go
+
+Create Procedure ReviewPost (@PostID int,@DisplayDate datetime2, @ExpDate DateTime2, @ToPostDate DateTime2, @IsForReview bit,@IsPublished bit ) As
+Begin
+update Post set
+DisplayDate=@DisplayDate,
+ExpDate=@ExpDate,
+ToPostDate=@ToPostDate,
+ispublished=@IsPublished,
+isforReview=@IsForReview
+where PostID=@PostID
+End
+Go
 
 select * from post
 select* from PostText

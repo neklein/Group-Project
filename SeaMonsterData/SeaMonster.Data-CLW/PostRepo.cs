@@ -66,7 +66,7 @@ namespace SeaMonster.Data_CLW
 
             using (var cn = new SqlConnection(cs))
             {
-                SqlCommand cmd = new SqlCommand("CreateComment", cn);
+                SqlCommand cmd = new SqlCommand("AddComment", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 SqlParameter param = new SqlParameter("@CommentId", SqlDbType.Int);
                 param.Direction = ParameterDirection.Output;
@@ -170,7 +170,7 @@ namespace SeaMonster.Data_CLW
 
                 cmd.Parameters.AddWithValue("@CommentId", reply.CommentID);
                 cmd.Parameters.AddWithValue("@ReplyName", reply.ReplyName);
-                cmd.Parameters.AddWithValue("@CommentText", reply.ReplyText);
+                cmd.Parameters.AddWithValue("@ReplyText", reply.ReplyText);
 
                 cn.Open();
                 cmd.ExecuteNonQuery();
@@ -325,14 +325,14 @@ namespace SeaMonster.Data_CLW
                 }
             }
             PostRepo repo = new PostRepo();
-            post.Images = repo.GetImagesByPost(postId);
+            
            
             return post;
         }
 
 
 
-        public List<Image> GetImagesByPost(int postId)
+       /* public List<Image> GetImagesByPost(int postId)
         {
             List<Image> images = new List<Image>();
 
@@ -360,7 +360,7 @@ namespace SeaMonster.Data_CLW
             }
 
             return images;
-        }
+        }*/
 
         public List<Comment> GetPublishedComments(int PostID)
         {
@@ -1199,6 +1199,66 @@ namespace SeaMonster.Data_CLW
 
             }
             return reps;
+        }
+
+        public int FindPostplus10(int PostID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int FindPostminus10(int PostID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Review(Post post)
+        {
+            using (var cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("ReviewPost", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PostID", post.PostId);
+                cmd.Parameters.AddWithValue("@IsForReview", post.IsForReview);
+                cmd.Parameters.AddWithValue("@IsPublished", post.IsPublished);
+                if (post.DisplayDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
+                }
+                if(post.DisplayDate==null)
+                {
+                    cmd.Parameters.AddWithValue("@DisplayDate", DBNull.Value);
+                }
+                if (post.ExpDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ExpDate", post.ExpDate);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@ExpDate", DBNull.Value);
+                }
+                if (post.ToPostDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@ToPostDate", DBNull.Value);
+                }
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void Deletepost(int postId)
+        {
+            using (var cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("PostDelete", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PostID", postId);
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 

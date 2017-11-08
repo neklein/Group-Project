@@ -126,13 +126,26 @@ namespace SeaMonsterBlog.UI.Controllers
             else if (createEditVM.Post.IsForReview == false && createEditVM.Post.IsPublished == false)  //returned to contributor
             {
                 repo.SavePost(createEditVM.Post);
-                throw new NotImplementedException();  //return to admin/console??
+                return RedirectToAction("Dashboard");  
             }
             else  //published
             {
                 repo.SavePost(createEditVM.Post);
-                throw new NotImplementedException();  //also admin/console??
+                return RedirectToAction("Dashboard");
             }
+        }
+
+        [HttpGet]
+        public ActionResult Dashboard()
+        {
+            var repo = RepositoryFactory.GetRepository();
+            DashboardVM dashboardVM = new DashboardVM();
+            dashboardVM.StaticPosts = repo.GetAllStaticPublished();
+            dashboardVM.Categories = repo.GetAllCategories();
+            dashboardVM.PostsUnderReview = repo.GetPostForReview();
+            dashboardVM.PostsPendingComments = repo.GetAllPosts();
+            
+            return View(dashboardVM);
         }
 
     }

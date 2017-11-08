@@ -1,0 +1,61 @@
+﻿@model SeaMonsterBlog.UI.Models.DashboardVM
+
+@{
+    ViewBag.Title = "Dashboard";
+    ViewBag.Categories = Model.Categories;
+    ViewBag.StaticPosts = Model.StaticPosts;
+}
+
+<h2>My Dashboard</h2>
+<div class="container">
+    @if (Request.IsAuthenticated && User.IsInRole("admin"))
+        {
+    <h2>Post Awaiting Approval</h2>
+    <div style="display:table">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Date Created</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model.PostsUnderReview)
+                {
+                    <tr>
+                        <td><a href="~/home/detail/@p.PostId">@p.PostTitle</a></td>
+                        <td><a href="~/home/byAuthor/@p.Author"> @p.Author</a></td>
+                        <td> @p.DateCreated.ToString("MM/dd/yyyy")</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+    }
+
+    @if (Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator"))
+    {
+        <h2>Posts With Pending Comments</h2>
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th># Pending</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model.PostsPendingComments)
+                {
+                    <tr>
+                        <td><a href="~/home/detail/@p.PostId">@p.PostTitle</a></td>
+                        <td># Pending</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    }
+</div>
