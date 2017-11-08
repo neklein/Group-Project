@@ -214,6 +214,29 @@ namespace SeaMonsterBlog.UI.Controllers
             return View(authorVM);
         }
 
+        [HttpGet]
+        public ActionResult SearchResults (string id)
+        {
+            var repo = RepositoryFactory.GetRepository();
+
+            HomeVM homeVM = new HomeVM();
+            homeVM.Categories = repo.GetAllCategories();
+            homeVM.StaticPosts = repo.GetAllStaticPublished();
+            homeVM.Posts = repo.GetPostsbyTitle(id);
+
+            // this doesn't actually seem to sort tho
+            homeVM.Posts.OrderByDescending(post => post.DisplayDate).Where(post => post.ToPostDate <= DateTime.Now).Take(10);
+
+            foreach (var p in homeVM.Posts)
+            {
+                p.PostText = WebUtility.HtmlDecode(p.PostText);
+                p.PostText = p.PostText.Substring(60);
+                p.PostText = p.PostText.Substring(0, p.PostText.Length - 16);
+                repo.SetPostLists(p);
+            }
+            return View("Index", homeVM);
+        }
+
         public ActionResult ByHashtag(int id)
         {
             var repo = RepositoryFactory.GetRepository();
