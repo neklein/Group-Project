@@ -24,6 +24,7 @@ namespace SeaMonsterBlog.UI.Controllers
             return View(createEditVM);
         }
 
+        [HttpGet]
         public ActionResult Edit(int id)
         {
             var repo = RepositoryFactory.GetRepository();
@@ -36,7 +37,63 @@ namespace SeaMonsterBlog.UI.Controllers
             createEditVM.Categories = repo.GetAllCategories();
             createEditVM.StaticPosts = repo.GetAllStaticPublished();
             createEditVM.Images = repo.GetAllImages();
-            return View("Create",createEditVM);
+            createEditVM.Post.IsPublished = false;
+            return View(createEditVM);
+        }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult Edit(CreateEditVM createEditVM)
+        {
+            createEditVM.Post.PostText = WebUtility.HtmlEncode(createEditVM.Post.PostText);
+            var repo = RepositoryFactory.GetRepository();
+
+            if (createEditVM.Post.PostId == 0)    //Save or add work regardless of button choice
+            {
+                createEditVM.Post.PostId = repo.CreateNewPost(createEditVM.Post);
+            }
+            else
+                repo.SavePost(createEditVM.Post);
+
+
+            string fileName;
+            if (createEditVM.Post.IsForReview)
+            {
+                return RedirectToAction("Review/" + createEditVM.Post.PostId);
+            }
+            else if (createEditVM.UploadedFile != null)
+            {
+                fileName = createEditVM.UploadedFile.FileName;
+
+                if (fileName != null && fileName.Contains(".jpg"))
+                {
+                    if (createEditVM.ImageTitle == null)
+                        fileName = createEditVM.UploadedFile.FileName;
+                    else
+                        fileName = createEditVM.ImageTitle + ".jpg";
+
+                    if (createEditVM.UploadedFile != null && createEditVM.UploadedFile.ContentLength > 0)
+                    {
+                        string path = Path.Combine(Server.MapPath("~/images"),
+                             Path.GetFileName(fileName));
+
+                        createEditVM.UploadedFile.SaveAs(path);
+                        repo.SaveNewImage(fileName);
+                    }
+                }
+
+                return View("Create", createEditVM);
+            }
+            else
+            {
+                createEditVM.Post = repo.GetPostByID(createEditVM.Post.PostId);
+                repo.SetPostLists(createEditVM.Post);
+                createEditVM.StaticPosts = repo.GetAllStaticPublished();
+                createEditVM.Categories = repo.GetAllCategories();
+                createEditVM.Post.PostText = WebUtility.HtmlDecode(createEditVM.Post.PostText);
+                createEditVM.Images = repo.GetAllImages();
+                return View("Edit", createEditVM);
+            }
         }
 
 
@@ -81,7 +138,7 @@ namespace SeaMonsterBlog.UI.Controllers
                     }
                 }
 
-                return View("Create", createEditVM);
+                return View(createEditVM);
             }
             else 
             {
@@ -91,7 +148,7 @@ namespace SeaMonsterBlog.UI.Controllers
                 createEditVM.Categories = repo.GetAllCategories();
                 createEditVM.Post.PostText = WebUtility.HtmlDecode(createEditVM.Post.PostText);
                 createEditVM.Images = repo.GetAllImages();
-                return View("Edit", createEditVM.Post.PostId);
+                return View(createEditVM);
             }
            
         }
@@ -143,8 +200,8 @@ namespace SeaMonsterBlog.UI.Controllers
             dashboardVM.StaticPosts = repo.GetAllStaticPublished();
             dashboardVM.Categories = repo.GetAllCategories();
             dashboardVM.PostsUnderReview = repo.GetPostForReview();
-            dashboardVM.PostsPendingComments = repo.GetAllPosts();
-            
+            dashboardVM.PostsPendingComments = repo.GetPostsWithUnapprovedCommentsAndReplies();
+
             return View(dashboardVM);
         }
 

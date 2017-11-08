@@ -1,15 +1,16 @@
-﻿@model SeaMonsterBlog.UI.Models.CreateEditVM
+﻿
+@model SeaMonsterBlog.UI.Models.CreateEditVM
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Edit";
     ViewBag.Categories = Model.Categories;
     ViewBag.StaticPosts = Model.StaticPosts;
 }
 
-    @using (Html.BeginForm("Create", "Admin", FormMethod.Post, new { @class = "form-inline", id = "frmUpload" }))
-    {
-        @Html.AntiForgeryToken()
-        <input type="text" name="Post.PostId" value="@Model.Post.PostId" class="hidden"/>
+@using (Html.BeginForm("Edit", "Admin", FormMethod.Post, new { @class = "form-inline", id = "frmUpload" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="text" name="Post.PostId" value="@Model.Post.PostId" class="hidden" />
         <input type="text" name="Post.PostId" value="@Model.Post.PostId" class="hidden" />
         <div style="padding-left:15px">
             @Html.CheckBoxFor(m => m.Post.IsForReview, new { @style = "visibility:hidden", id = "is-for-review" })
@@ -24,26 +25,26 @@
                 </div>
                 <div class="col-md-2">
                     <select name="Post.IsStatic" class="form-control" style="width:auto">
-                    @{ 
-                        if (Model.Post != null && Model.Post.IsStatic == false)
-                        {
-                        <text>
-                        <option value="false" selected>Blog Post</option>
-                        <option value="true">Static Page</option>
-                        </text>
-                        }
-                        else if (Model.Post != null && Model.Post.IsStatic == true)
-                        {
-                        <text>
-                            <option value="false">Blog Post</option>
-                            <option value="true" selected>Static Page</option>
-                        </text>
-                        }
-                        else
-                        {
-                            <option value="false" selected>Blog Post</option>
-                            <option value="true">Static Page</option>
-                        }
+                        @{
+                            if (Model.Post != null && Model.Post.IsStatic == false)
+                            {
+                                <text>
+                                    <option value="false" selected>Blog Post</option>
+                                    <option value="true">Static Page</option>
+                                </text>
+                            }
+                            else if (Model.Post != null && Model.Post.IsStatic == true)
+                            {
+                                <text>
+                                    <option value="false">Blog Post</option>
+                                    <option value="true" selected>Static Page</option>
+                                </text>
+                            }
+                            else
+                            {
+                                <option value="false" selected>Blog Post</option>
+                                <option value="true">Static Page</option>
+                            }
                         }
 
                     </select>
@@ -59,37 +60,37 @@
                     <input type="button" class="btn btn-primary" value="Submit For Review" onclick="FlagAndSend()" />
                 </div>
                 <div class="col-md-6">
-                @Html.ListBoxFor(m => m.Post.SelectedCategories,
+                    @Html.ListBoxFor(m => m.Post.SelectedCategories,
                                 Model.Categories.Select(x => new SelectListItem { Text = x.CategoryTag, Value = x.CategoryID.ToString() }), new { @class = "form-control" })
                 </div>
             </div>
         </div>
 
-    <div class="row" style="padding-top:20px;padding-left:20px;">
-        <div class="col-md-6" style="border: 2px solid white;height:200px">
-            <form class="form-inline">
-                <h4>Add an Image</h4>
-                <div class="form-group" style="padding-bottom:10px">
-                    @Html.TextBoxFor(m => m.UploadedFile, new { type = "file", @class = "form-control" })
-                </div>
-                <div class="form-group" style="padding-bottom:10px">
-                    <input type="text" name="ImageTitle" class="form-control" id="file-name" placeholder="enter new file name" style="width:500px">
-                    <button type="button" class="btn btn-default" onclick="UploadImage()">Submit</button>
-                </div>
-            </form>
-            
-        </div>
-        <div class="col-md-6" style="border: 2px solid white;height:200px">
-            <h4>Uploaded Images - click to insert in editor</h4>
-            <select name="images" class="image-choice" size="6" style="width:500px">
-                @foreach (var i in Model.Images)
+        <div class="row" style="padding-top:20px;padding-left:20px;">
+            <div class="col-md-6" style="border: 2px solid white;height:200px">
+                <form class="form-inline">
+                    <h4>Add an Image</h4>
+                    <div class="form-group" style="padding-bottom:10px">
+                        @Html.TextBoxFor(m => m.UploadedFile, new { type = "file", @class = "form-control" })
+                    </div>
+                    <div class="form-group" style="padding-bottom:10px">
+                        <input type="text" name="ImageTitle" class="form-control" id="file-name" placeholder="enter new file name" style="width:500px">
+                        <button type="button" class="btn btn-default" onclick="UploadImage()">Submit</button>
+                    </div>
+                </form>
+
+            </div>
+            <div class="col-md-6" style="border: 2px solid white;height:200px">
+                <h4>Uploaded Images - click to insert in editor</h4>
+                <select name="images" class="image-choice" size="6" style="width:500px">
+                    @foreach (var i in Model.Images)
                 {
-                <option>@i.ImageName</option>
-                }
-            </select>
+                        <option>@i.ImageName</option>
+                    }
+                </select>
+            </div>
         </div>
-    </div>
-}
+                            }
 @section scripts {
     <script>
         tinymce.init({
@@ -130,5 +131,5 @@
                 tinymce.activeEditor.insertContent('<img alt="broken" height="42" width="42" src="' + sr + '"/>');
             });
         });
-    </script>    
+    </script>
 }
