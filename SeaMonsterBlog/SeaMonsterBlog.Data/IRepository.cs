@@ -59,5 +59,7 @@ namespace SeaMonsterBlog.Data
         List<Post> GetPostForReview();
         List<Comment> GetUnapprovedComments();
         List<Reply> GetUnapprovedReplies();
+        List<Post> GetPostsWithUnapprovedCommentsAndReplies();
+        int GetCountOfUnapprovedCommentsAndReplies();
     }
 }
