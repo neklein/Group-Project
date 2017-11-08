@@ -106,6 +106,15 @@ GO
  if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='TitleSearch')
  drop procedure TitleSearch
  GO
+
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='CommentDelete')
+ drop procedure CommentDelete
+ GO
+
+ 
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='ReplyDelete')
+ drop procedure ReplyDelete
+ GO
  --------------------Searches and Gets------------------------------------------
 
  
@@ -345,6 +354,21 @@ begin
 
 end
 go
+
+Create Procedure  CommentDelete (@CommentID int) AS
+begin
+begin transaction
+delete from Reply where Reply.CommentID=@CommentID
+delete from Comment where Comment.CommentID=@CommentID
+commit 
+end
+go
+
+Create Procedure ReplyDelete (@ReplyID int) As
+begin
+delete from Reply where Reply.ReplyId=@ReplyID
+end
+Go
 
 select * from post
 select* from PostText

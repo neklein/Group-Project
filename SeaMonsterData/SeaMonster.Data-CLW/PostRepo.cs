@@ -1200,6 +1200,21 @@ namespace SeaMonster.Data_CLW
             }
             return reps;
         }
+
+        public int FindPostplus10(int PostID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int FindPostminus10(int PostID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Review(Post post)
+        {
+            throw new NotImplementedException();
+        }
     }
 
   
