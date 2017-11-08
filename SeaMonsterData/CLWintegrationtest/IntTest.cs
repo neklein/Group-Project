@@ -70,10 +70,10 @@ namespace CLWintegrationtest
         {
             PostRepo repo = new PostRepo();
             List<Post> posts1 = repo.GetAllPosts();
-            Assert.AreEqual(7, posts1.Count());
+            Assert.AreEqual(9, posts1.Count());
             repo.CreatePost(TestPost);
             List<Post> posts = repo.GetAllPosts();
-            Assert.AreEqual(8, posts.Count());
+            Assert.AreEqual(10, posts.Count());
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace CLWintegrationtest
             PostRepo repo = new PostRepo();
             List<Post> posts = repo.GetAllPosts().ToList();
 
-            Assert.AreEqual(7, posts.Count());
+            Assert.AreEqual(9, posts.Count());
         }
 
 
@@ -131,7 +131,7 @@ namespace CLWintegrationtest
             PostRepo repo = new PostRepo();
             List<Post> posts = repo.GetPublishedPosts();
 
-            Assert.AreEqual(5, posts.Count());
+            Assert.AreEqual(6, posts.Count());
             Assert.AreEqual("Hello Fellow Monster Hunters", posts[0].PostTitle);
         }
 
@@ -245,7 +245,7 @@ namespace CLWintegrationtest
         {
             PostRepo repo = new PostRepo();
             List<Post> posts = repo.GetPostbyHashtag(1);
-            Assert.AreEqual(3, posts.Count());
+            Assert.AreEqual(4, posts.Count());
             List<Post> posts2 = repo.GetPostbyHashtag(8);
             Assert.AreEqual(posts2.Count, 1);
         }
@@ -263,7 +263,7 @@ namespace CLWintegrationtest
         {
             PostRepo repo = new PostRepo();
             List<Post> posts = repo.GetPostByCategory(1);
-            Assert.AreEqual(4, posts.Count());
+            Assert.AreEqual(6, posts.Count());
             List<Post> posts2 = repo.GetPostByCategory(3);
             Assert.AreEqual(posts2.Count, 2);
         }
@@ -272,7 +272,7 @@ namespace CLWintegrationtest
         {
             PostRepo repo = new PostRepo();
             List<Post> posts = repo.GetPublishedPostByCategory(1);
-            Assert.AreEqual(2, posts.Count());
+            Assert.AreEqual(3, posts.Count());
             List<Post> posts2 = repo.GetPublishedPostByCategory(3);
             Assert.AreEqual(posts2.Count, 2);
         }
@@ -283,16 +283,16 @@ namespace CLWintegrationtest
             PostRepo repo = new PostRepo();
             repo.CreatePost(TestPost);
             List<Post> post = repo.GetAllPosts();
-            Assert.AreEqual(8, post.Count);
-            TestPost = post[7];
+            Assert.AreEqual(10, post.Count);
+            TestPost = post[9];
             TestPost.PostTitle = "ModifiedyTestTitle";
             TestPost.PostText = "Modified Modified";
             TestPost.ToPostDate = DateTime.Parse("2017-11-14");
             repo.SavePost(TestPost);
             List<Post> post1 = repo.GetAllPosts();
-            Assert.AreEqual("ModifiedyTestTitle", post1[7].PostTitle);
-            Assert.AreEqual("Modified Modified", post1[7].PostText);
-            Assert.AreEqual(8, post.Count);
+            Assert.AreEqual("ModifiedyTestTitle", post1[9].PostTitle);
+            Assert.AreEqual("Modified Modified", post1[9].PostText);
+            Assert.AreEqual(10, post.Count);
         }
         [Test]
         public void CanAddPostWithHashtags()
@@ -310,17 +310,19 @@ namespace CLWintegrationtest
         public void CanAddPostWithCats()
         {
             PostRepo repo = new PostRepo();
+            List<Post> posts = repo.GetAllPosts();
             List<Category> Cats = repo.GetAllCategories();
             TestPost.PostCategories = Cats;
             repo.CreatePost(TestPost);
-            TestPost = repo.GetAllPosts()[7];
-            List<Category> Cats2 = repo.GetCategoryByPost(8);
+            TestPost = repo.GetAllPosts()[9];
+            List<Post> posts2 = repo.GetAllPosts();
+            List<Category> Cats2 = repo.GetCategoryByPost(10);
             Assert.AreEqual(3, Cats2.Count);
         }
         [Test]
         [TestCase(1,2)]
-        [TestCase(4,4)]
-        
+        [TestCase(4,9)]
+        [TestCase(9, 9)]
         public void CanFindNextPublished(int postid, int x)
         {
             PostRepo repo = new PostRepo();
@@ -351,7 +353,7 @@ namespace CLWintegrationtest
         {
             PostRepo repo = new PostRepo();
             int last = repo.FindLastPublishedPost();
-            Assert.AreEqual(4, last);
+            Assert.AreEqual(9, last);
         }
         [Test]
         public void CanDeleteHashtag()
@@ -422,7 +424,7 @@ namespace CLWintegrationtest
         {
             PostRepo repo = new PostRepo();
             List<Post> posts = repo.GetAllPosts();
-            Assert.AreEqual(7, posts.Count);
+            Assert.AreEqual(9, posts.Count);
             repo.Deletepost(2);
             List<Post>posts2 = repo.GetAllPosts();
             Assert.AreEqual(3, posts2[1].PostId);
@@ -433,16 +435,25 @@ namespace CLWintegrationtest
             PostRepo repo = new PostRepo();
             Post toreview = TestPost;
             repo.CreatePost(toreview);
-            toreview.PostId = 8;
+            toreview.PostId = repo.GetAllPosts().Max(p => p.PostId);
             toreview.IsForReview = false;
             toreview.IsPublished = true;
             toreview.DisplayDate = DateTime.Parse("11/1/2017");
             repo.Review(toreview);
-            Post test = repo.GetPostDetails(8);
-            Assert.AreEqual(true, repo.GetPostDetails(8).IsPublished);
+            Post test = repo.GetPostDetails(10);
+            Assert.AreEqual(true, repo.GetPostDetails(10).IsPublished);
             Assert.AreEqual(false, test.IsForReview);
             Assert.AreEqual("TestPost", test.PostTitle);
-
+        }
+        [Test]
+        public void Expdateswork()
+        {
+            PostRepo repo = new PostRepo();
+            List<Post> AllPost = repo.GetAllPosts();
+            List<Post> NonExp = repo.GetPublishedPosts();
+            Assert.AreEqual(9, AllPost.Count);
+            Assert.IsTrue(AllPost.Count > NonExp.Count);
+            Assert.AreEqual(6, NonExp.Count); //2 unpublished 1 expired
         }
     }
 }

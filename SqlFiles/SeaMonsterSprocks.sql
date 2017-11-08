@@ -223,7 +223,7 @@ select p.PostID, p.PostTitle, p.DateCreated, isnull(p.ToPostDate, p.DateCreated)
  from Post p
 left join PostText pt on pt.PostId=p.PostID
 left join CategoryPost cp on cp.PostId=p.PostID
-where cp.CategoryID=@CategoryID
+where cp.CategoryID=@CategoryID 
 end
 go
 
@@ -423,7 +423,7 @@ ExpDate=@ExpDate,
 ToPostDate=@ToPostDate,
 ispublished=@IsPublished,
 isforReview=@IsForReview
-where PostID=@PostID
+where PostID=@PostID 
 End
 Go
 
