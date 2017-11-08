@@ -20,8 +20,14 @@
             categories listed here
             @Html.Raw(Model.Post.PostText)
             <br />
-            list of hashtags at the bottom
         </p>
+        <p>
+            @foreach (var hashtag in Model.Post.Hashtags)
+            {
+                @Html.ActionLink("#" + (string)hashtag.HashtagName, "ByHashtag", "Home", new { id = hashtag.HashtagID }, new { @class = "label label-success" })
+            }
+        </p>
+
     </div>
 </div>
 
