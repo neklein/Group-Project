@@ -92,7 +92,7 @@ Create Table Images
 	(
 		ImageID int identity(1,1) primary key,
 		ImageName varchar(30),
-		PostId int foreign key references Post(PostID),
+		
 	)
 GO
 

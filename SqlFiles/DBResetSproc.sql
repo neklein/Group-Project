@@ -122,8 +122,8 @@ Insert into  HashTags (Hashtag) Values ('Excited'),('Scared'),('hungry'),('SwimF
 
 insert into HashtagPost (HashtagID, PostID) Values (1,1),(2,1),(1,2),(4,2),(6,2),(7,3),(5,4),(6,4),(8,5),(7,6),(1,6),(2,7),(4,7)
 
-Insert into Images (ImageName, PostId) Values ('SeriousSelfie.jpg',1),('MyBoat.jpg',1),('KrakenMap.jpg',2),('KrakenDrawing.jpg',2),('GiantSquid.Jpg',2),
-('Leviathan.jpg',3),('MontereyMap.Jpg',4),('Monty.png',4),('sitingmap.jpg',4)
+Insert into Images (ImageName) Values ('SeriousSelfie.jpg'),('MyBoat.jpg'),('KrakenMap.jpg'),('KrakenDrawing.jpg'),('GiantSquid.Jpg'),
+('Leviathan.jpg'),('MontereyMap.Jpg'),('Monty.png'),('sitingmap.jpg')
 
 
 
