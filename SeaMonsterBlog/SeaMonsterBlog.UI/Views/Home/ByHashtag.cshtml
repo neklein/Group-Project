@@ -1,11 +1,12 @@
-﻿@model SeaMonsterBlog.UI.Models.HomeVM
+﻿@model SeaMonsterBlog.UI.Models.ByHashtagVM
 
 @{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "ByHashtag";
     ViewBag.Categories = Model.Categories;
     ViewBag.StaticPosts = Model.StaticPosts;
 }
 
+<h2><text>#</text>@Model.Hashtag.HashtagName</h2>
 
 <div class="row">
     <div class="col-sm-12">
@@ -27,14 +28,14 @@
 
                     @Html.Raw(blog.PostText)
                     <br />
-                   
+
                 </div>
                 <p>
                     @foreach (var hashtag in blog.Hashtags)
                     {
-                        @Html.ActionLink("#"+(string)hashtag.HashtagName, "ByHashtag", "Home", new { id = hashtag.HashtagID }, new { @class = "label label-success" })
+                        @Html.ActionLink("#" + (string)hashtag.HashtagName, "ByHashtag", "Home", new { id = hashtag.HashtagID }, new { @class = "label label-success" })
                     }
-            </p>
+                </p>
 
             </div>
 
