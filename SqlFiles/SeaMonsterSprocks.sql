@@ -403,7 +403,7 @@ Go
 
 Create Procedure AddComment (@CommentID int output, @PostId int, @CommenterName nvarchar(30), @CommentText nvarchar(500))As
 begin
-Insert into Comment (PostId,CommenterName,CommentID) Values (@PostId,@CommenterName,@CommentText)
+Insert into Comment (PostId,CommenterName,CommentText) Values (@PostId,@CommenterName,@CommentText)
 set @CommentID =scope_Identity()
 end
 go

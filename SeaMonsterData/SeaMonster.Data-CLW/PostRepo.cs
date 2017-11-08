@@ -1231,13 +1231,14 @@ namespace SeaMonster.Data_CLW
         public List<Post> GetPublishedPostByTitle(string searchstring)
         {
             List<Post> posts = GetPostsbyTitle(searchstring);
+            List<Post> postspub = new List<Post>();
             List<Post> posts2 = new List<Post>();
             if (posts.Count > 0)
             {
-                posts2 = posts.Where(p => p.IsPublished == true).ToList();
+                postspub = posts.Where(p => p.IsPublished == true).ToList();
             }
 
-            foreach (Post p in posts)
+            foreach (Post p in postspub)
             {
                 if (p.ExpDate == null)
                 {

@@ -321,8 +321,8 @@ namespace CLWintegrationtest
         }
         [Test]
         [TestCase(1,2)]
-        [TestCase(4,9)]
-        [TestCase(9, 9)]
+        [TestCase(4,4)]
+     
         public void CanFindNextPublished(int postid, int x)
         {
             PostRepo repo = new PostRepo();
@@ -353,7 +353,7 @@ namespace CLWintegrationtest
         {
             PostRepo repo = new PostRepo();
             int last = repo.FindLastPublishedPost();
-            Assert.AreEqual(9, last);
+            Assert.AreEqual(4, last);
         }
         [Test]
         public void CanDeleteHashtag()
@@ -440,8 +440,9 @@ namespace CLWintegrationtest
             toreview.IsPublished = true;
             toreview.DisplayDate = DateTime.Parse("11/1/2017");
             repo.Review(toreview);
-            Post test = repo.GetPostDetails(10);
-            Assert.AreEqual(true, repo.GetPostDetails(10).IsPublished);
+            int x = repo.GetAllPosts().Max(p => p.PostId);
+            Post test = repo.GetPostDetails(x);
+            Assert.AreEqual(true, repo.GetPostDetails(x).IsPublished);
             Assert.AreEqual(false, test.IsForReview);
             Assert.AreEqual("TestPost", test.PostTitle);
         }
@@ -453,7 +454,7 @@ namespace CLWintegrationtest
             List<Post> NonExp = repo.GetPublishedPosts();
             Assert.AreEqual(9, AllPost.Count);
             Assert.IsTrue(AllPost.Count > NonExp.Count);
-            Assert.AreEqual(6, NonExp.Count); //2 unpublished 1 expired
+            Assert.AreEqual(5, NonExp.Count); //2 unpublished 1 expired 1 to pubublish on 12/1/2017
         }
     }
 }
