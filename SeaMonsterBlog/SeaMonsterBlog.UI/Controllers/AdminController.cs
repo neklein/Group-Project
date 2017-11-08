@@ -135,15 +135,16 @@ namespace SeaMonsterBlog.UI.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         public ActionResult Dashboard()
         {
             var repo = RepositoryFactory.GetRepository();
             DashboardVM dashboardVM = new DashboardVM();
             dashboardVM.StaticPosts = repo.GetAllStaticPublished();
             dashboardVM.Categories = repo.GetAllCategories();
-            dashboardVM.PostsPendingComments = repo.GetPostForReview();
-
+            dashboardVM.PostsUnderReview = repo.GetPostForReview();
+            dashboardVM.PostsPendingComments = repo.GetAllPosts();
+            
             return View(dashboardVM);
         }
 

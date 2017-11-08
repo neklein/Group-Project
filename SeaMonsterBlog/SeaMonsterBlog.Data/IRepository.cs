@@ -57,7 +57,10 @@ namespace SeaMonsterBlog.Data
         List<Post> GetPostsbyTitle(string searchstring);
         List<Post> GetPublishedPostByTitle(string searchstring);
         List<Post> GetPostForReview();
-        List<Comment> GetUnapprovedComments();
-        List<Reply> GetUnapprovedReplies();
+        List<Comment> GetUnapprovedComments(int postId);
+        List<Reply> GetUnapprovedReplies(int postId);
+        List<Post> GetPostsWithUnapprovedCommentsAndReplies();
+        void Review(Post post);
+        void Deletepost(int postId);
     }
 }

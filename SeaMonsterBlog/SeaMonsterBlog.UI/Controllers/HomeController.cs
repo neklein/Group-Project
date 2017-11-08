@@ -212,7 +212,27 @@ namespace SeaMonsterBlog.UI.Controllers
             return View(authorVM);
         }
 
-        
+        public ActionResult ByHashtag(int id)
+        {
+            var repo = RepositoryFactory.GetRepository();
+            ByHashtagVM hashtagVM = new ByHashtagVM();
+            hashtagVM.Categories = repo.GetAllCategories();
+            hashtagVM.StaticPosts = repo.GetAllStaticPublished();
+            hashtagVM.Posts = repo.GetPublishedPostbyHashtag(id);
+            hashtagVM.Hashtag = repo.GetHashtags().FirstOrDefault(h => h.HashtagID == id);
+
+            foreach (var p in hashtagVM.Posts)
+            {
+                p.PostText = WebUtility.HtmlDecode(p.PostText);
+                p.PostText = p.PostText.Substring(60);
+                p.PostText = p.PostText.Substring(0, p.PostText.Length - 16);
+                repo.SetPostLists(p);
+            }
+
+            return View(hashtagVM);
+        }
+
+
         public ActionResult Next(int id)
         {
             var repo = RepositoryFactory.GetRepository();

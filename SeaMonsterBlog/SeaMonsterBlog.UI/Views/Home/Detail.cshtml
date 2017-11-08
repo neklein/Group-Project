@@ -13,15 +13,21 @@
     <div class="panel panel-success">
         <div class="panel-heading">
             <h3><strong>@Model.Post.PostTitle</strong></h3>
-            <h5><strong>@Model.Post.DisplayDate  | <a href="~/Home/ByAuthor/@Model.Post.Author">@Model.Post.Author</a></strong></h5>
+            <h5><strong>@Model.Post.DisplayDate.Value.ToShortDateString()  | <a href="~/Home/ByAuthor/@Model.Post.Author">@Model.Post.Author</a></strong></h5>
         </div>
         <div class="panel-body">
             <p>
                 categories listed here
                 @Html.Raw(Model.Post.PostText)
                 <br />
-                <strong>@Model.Post.HashtagString</strong>
             </p>
+            <p>
+                @foreach (var hashtag in Model.Post.Hashtags)
+                {
+                    @Html.ActionLink("#" + (string)hashtag.HashtagName, "ByHashtag", "Home", new { id = hashtag.HashtagID }, new { @class = "label label-success" })
+                }
+            </p>
+
         </div>
     </div>
     <span>
