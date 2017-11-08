@@ -67,7 +67,7 @@
             @if ((Request.IsAuthenticated && User.IsInRole("admin"))||(Request.IsAuthenticated && User.IsInRole("moderator")))
             {
                 <li>@Html.ActionLink("Create New", "Create", "Admin", null, new { @class = "btn btn-warning", style = "font-size:26px" })</li>
-                <li> @Html.ActionLink("My Dashboard", "Review", "Admin", null, new { @class = "btn btn-warning", style = "font-size:26px" })</li>
+                <li> @Html.ActionLink("My Dashboard", "Dashboard", "Admin", null, new { @class = "btn btn-warning", style = "font-size:26px" })</li>
             }
                 @foreach (var p in ViewBag.StaticPosts)
                 {

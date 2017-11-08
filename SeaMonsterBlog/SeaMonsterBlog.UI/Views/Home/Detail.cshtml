@@ -13,7 +13,7 @@
     <div class="panel panel-success">
         <div class="panel-heading">
             <h3><strong>@Model.Post.PostTitle</strong></h3>
-            <h5><strong>@Model.Post.DisplayDate  | <a href="~/Home/ByAuthor/@Model.Post.Author">@Model.Post.Author</a></strong></h5>
+            <h5><strong>@Model.Post.DisplayDate.Value.ToShortDateString()  | <a href="~/Home/ByAuthor/@Model.Post.Author">@Model.Post.Author</a></strong></h5>
         </div>
         <div class="panel-body">
             <p>
