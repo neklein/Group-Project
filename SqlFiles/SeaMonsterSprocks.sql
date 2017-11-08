@@ -176,7 +176,7 @@ go
 */
 Create procedure GetCommentbyID (@PostID int) AS
 begin 
-select c.CommentID, c.CommenterName, c.CommentDate, c.CommentText from Comment c 
+select c.CommentID, c.CommenterName, c.CommentDate, c.CommentText,c.IsShown from Comment c 
 where c.PostId=@PostID
 END
 GO
