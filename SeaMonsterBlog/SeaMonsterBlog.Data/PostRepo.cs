@@ -1079,13 +1079,14 @@ namespace SeaMonster.Data_CLW
             return posts;
         }
 
-        public List<Comment> GetUnapprovedComments()
+        public List<Comment> GetUnapprovedComments(int postId)
         {
             List<Comment> comm = new List<Comment>();
             using (var cn = new SqlConnection(cs))
             {
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Comment where IsShown=0", cn);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Comment where PostID = @PostId AND IsShown=0", cn);
                 cmd.CommandType = CommandType.Text;
+                cmd.Parameters.AddWithValue("@PostId", postId);
                 cn.Open();
                 using (SqlDataReader dr = cmd.ExecuteReader())
                 {
@@ -1109,42 +1110,45 @@ namespace SeaMonster.Data_CLW
         public List<Post> GetPostsWithUnapprovedCommentsAndReplies()
         {
             List<Post> posts = new List<Post>();
-            List<Comment> comments = GetUnapprovedComments();
-            List<Reply> replies = GetUnapprovedReplies();
 
-            foreach(var reply in replies)
-            {
-                var comment = GetCommentByCommentId(reply.CommentID);
-                var post = GetPostByID(comment.PostId);
-                posts.Add(post);
-            }
+            var allPosts = GetAllPosts();
 
-            foreach(var comment in comments)
+            foreach(var post in allPosts)
             {
-                var post = GetPostByID(comment.PostId);
-                posts.Add(post);
+                List<Comment> comments = GetUnapprovedComments(post.PostId);
+                List<Reply> replies = GetUnapprovedReplies(post.PostId);
+
+                if (comments.Any() || replies.Any())
+                {
+                    int count = 0;
+
+                    if (comments.Any())
+                    {
+                        count += comments.Count();
+                    }
+                    if (replies.Any())
+                    {
+                        count += replies.Count();
+                    }
+                    post.NumberOfUnapprovedComments = count;
+                    posts.Add(post);
+                }
             }
 
             return posts;
         }
 
-        public int GetCountOfUnapprovedCommentsAndReplies()
-        {
-            int count = 0;
-
-            count += GetUnapprovedComments().Count();
-            count += GetUnapprovedReplies().Count();
-
-            return count;
-        }
-
-        public List<Reply> GetUnapprovedReplies()
+        public List<Reply> GetUnapprovedReplies(int postId)
         {
             List<Reply> reps = new List<Reply>();
             using (var cn = new SqlConnection(cs))
             {
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Reply where IsShown=0", cn);
+                SqlCommand cmd = new SqlCommand("SELECT * " +
+                    "FROM Reply r " +
+                    "INNER JOIN Comment c ON r.CommentID = c. CommentID" +
+                    " WHERE c.PostId = @PostId AND r.IsShown=0", cn);
                 cmd.CommandType = CommandType.Text;
+                cmd.Parameters.AddWithValue("@PostId", postId);
 
                 cn.Open();
                 using (SqlDataReader dr = cmd.ExecuteReader())
@@ -1164,6 +1168,56 @@ namespace SeaMonster.Data_CLW
 
             }
             return reps;
+        }
+
+        public void Review(Post post)
+        {
+            using (var cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("ReviewPost", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PostID", post.PostId);
+                cmd.Parameters.AddWithValue("@IsForReview", post.IsForReview);
+                cmd.Parameters.AddWithValue("@IsPublished", post.IsPublished);
+                if (post.DisplayDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@DisplayDate", post.DisplayDate);
+                }
+                if (post.DisplayDate == null)
+                {
+                    cmd.Parameters.AddWithValue("@DisplayDate", DBNull.Value);
+                }
+                if (post.ExpDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ExpDate", post.ExpDate);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@ExpDate", DBNull.Value);
+                }
+                if (post.ToPostDate != null)
+                {
+                    cmd.Parameters.AddWithValue("@ToPostDate", post.ToPostDate);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@ToPostDate", DBNull.Value);
+                }
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void Deletepost(int postId)
+        {
+            using (var cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("PostDelete", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PostID", postId);
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
     }
