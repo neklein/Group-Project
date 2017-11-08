@@ -14,7 +14,7 @@
             <div class="panel panel-success">
                 <div class="panel-heading">
                     <h3><strong>@blog.PostTitle</strong></h3>
-                    <h5><strong>@blog.DisplayDate  |  @blog.Author</strong></h5>
+                    <h5><strong>@blog.DisplayDate  |  <a href="~/Home/ByAuthor/@blog.Author">@blog.Author</a></strong></h5>
                     <h5>
                         Categories:
                         @foreach (var category in blog.SelectedCategories)

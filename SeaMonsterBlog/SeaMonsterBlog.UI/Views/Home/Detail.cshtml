@@ -37,17 +37,16 @@
         foreach (var comment in Model.Post.Comments)
         {
             @Html.HiddenFor(c => comment.CommentId)
-            <p>
-                <strong>@comment.CommenterName |  @comment.CommentDate</strong>
-                @if ((Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator")) && !comment.IsShown)
-                {
-                    @Html.RadioButtonFor(r => comment.IsShown, true);  <text>Approve</text>
-                    @Html.RadioButtonFor(r => comment.IsShown, false); <text>Delete</text>
-                <button type="submit" class="btn btn-danger">Submit</button> 
-                }
-            </p>
-            <p>@comment.CommentText</p>
-
+            <div id="div-comment-@comment.CommentId">
+                <p style="padding-top:4px">
+                    <strong>@comment.CommenterName |  @comment.CommentDate</strong>
+                    @if ((Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator")) && !comment.IsShown)
+                    {
+                        <i onclick="DeleteComment(this.id)" id="comment-@comment.CommentId" class="fa fa-times fa-lg" aria-hidden="true" onmouseover="" style="color:red;padding-left:7px;cursor: pointer;">@Html.CheckBoxFor(c => comment.IsShown, new { @checked = "checked", hidden = "hidden", id = "cb-comment-" + @comment.CommentId.ToString() })</i>
+                    }
+                </p>
+                <p>@comment.CommentText</p>
+            </div>
             if (comment.Replies.Any())
             {
                 <div class="row">
@@ -58,17 +57,16 @@
                         @foreach (var reply in comment.Replies)
                         {
                             @Html.HiddenFor(r => reply.ReplyID)
-                            <p><strong>@reply.ReplyName | @reply.ReplyDate</strong>
-                                @if ((Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator")) && !reply.IsShown)
+                            <div id="div-comment-@comment.CommentId-reply-@reply.ReplyID">
+                                <p style="padding-top:4px">
+                                    <strong>@reply.ReplyName | @reply.ReplyDate</strong>
+                                    @if ((Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator")) && !reply.IsShown)
                                 {
-                                    @Html.RadioButtonFor(r => reply.IsShown, true);  <text>Approve</text>
-                                    @Html.RadioButtonFor(r => reply.IsShown, false); <text>Delete</text>
-                                    <button type="submit" class="btn btn-danger">Submit</button>
-                                }
-                                
-                        </p>
-                            <p>@reply.ReplyText</p>
-
+                                        <i onclick="DeleteReply(this.id)" class="fa fa-times fa-lg" id="comment-@comment.CommentId-reply-@reply.ReplyID" aria-hidden="true" onmouseover="" style="color:red;padding-left:7px;cursor: pointer;">@Html.CheckBoxFor(c => reply.IsShown, new { @checked = "checked", hidden = "hidden", id = "cb-comment-" + @comment.CommentId.ToString() + "-reply-" + @reply.ReplyID.ToString() })</i>
+                                    }
+                                </p>
+                                <p>@reply.ReplyText</p>
+                            </div>
                         }
 
                             @Html.Hidden("NewReply.ReplyID", comment.CommentId)
@@ -122,6 +120,16 @@
             $(".reply-box").hide();
             $("#comment-dropdown-" + commentId).show();
 
+        }
+
+        function DeleteComment(comment) {
+            $("#cb-" + comment).attr('checked', false);
+            $("#div-" + comment).hide();
+        }
+
+        function DeleteReply(reply) {
+            $("#cb-" + reply).attr('checked', false);
+            $("#div-" + reply).hide();
         }
     </script>
 
