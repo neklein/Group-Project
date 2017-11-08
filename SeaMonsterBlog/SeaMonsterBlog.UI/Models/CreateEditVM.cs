@@ -9,7 +9,6 @@ namespace SeaMonsterBlog.UI.Models
 {
     public class CreateEditVM : LayoutVM
     {
-
         public Post Post { get; set; }
         public List<Image> Images { get; set; }
         public string ImageTitle { get; set; }
