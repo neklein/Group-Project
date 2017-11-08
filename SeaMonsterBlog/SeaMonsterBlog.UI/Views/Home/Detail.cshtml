@@ -37,12 +37,13 @@
         {
             foreach (var comment in Model.Post.Comments)
             {
-                <div id="div-@Model.Post.PostId-@comment.CommentId">
+                <div id="c-div-@comment.CommentId">
                     <p style="padding-top:4px">
                         <strong>@comment.CommenterName |  @comment.CommentDate</strong>
                         @if ((Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator")) && !comment.IsShown)
                         {
-                            <i onclick="DeleteComment(@Model.Post.PostId,@comment.CommentId)" id="@Model.Post.PostId-@comment.CommentId" class="fa fa-times fa-lg" aria-hidden="true" onmouseover="" style="color:red;padding-left:7px;cursor: pointer;"></i>
+                            <i onclick="ApproveComment(@comment.CommentId)" class="fa fa-check-square-o icon-ch" id="c-approve-@comment.CommentId" aria-hidden="true" onmouseover="" style="color:green;padding-left:7px;cursor: pointer;"></i>
+                            <i onclick="DeleteComment(@comment.CommentId)" id="c-delete-@comment.CommentId" class="fa fa-trash-o fa-lg" aria-hidden="true" onmouseover="" style="color:red;padding-left:7px;cursor: pointer;"></i>
                         }
                     </p>
                     <p>@comment.CommentText</p>
@@ -55,12 +56,15 @@
                         <div class="col-md-11 col-md-offset-1 reply-box" id="comment-dropdown-@comment.CommentId" hidden>
                             @foreach (var reply in comment.Replies)
                             {
-                                <div id="div-@Model.Post.PostId-@comment.CommentId-@reply.ReplyID">
+                                <div id="r-div-@reply.ReplyID">
                                     <p style="padding-top:4px">
                                         <strong>@reply.ReplyName | @reply.ReplyDate</strong>
                                         @if ((Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator")) && !reply.IsShown)
                                         {
-                                            <i onclick="DeleteReply(@Model.Post.PostId, @comment.CommentId, @reply.ReplyID)" class="fa fa-times fa-lg" id="@Model.Post.PostId-@comment.CommentId-@reply.ReplyID" aria-hidden="true" onmouseover="" style="color:red;padding-left:7px;cursor: pointer;"></i>
+
+                                                <i onclick="ApproveReply(@reply.ReplyID)" class="fa fa-check-square-o icon-ch" id="r-approve-@reply.ReplyID" aria-hidden="true" onmouseover="" style="color:green;padding-left:7px;cursor: pointer;"></i>
+                                                <i onclick="DeleteReply(@reply.ReplyID)" class="fa fa-trash-o fa-lg" id="r-delete-@reply.ReplyID" aria-hidden="true" onmouseover="" style="color:red;padding-left:7px;cursor: pointer;"></i>
+
                                         }
                                     </p>
                                     <p>@reply.ReplyText</p>
@@ -110,7 +114,7 @@
 {
     <script>
         $(document).ready(function () {
-            
+
         });
 
         function openReplies(commentId) {
@@ -120,22 +124,44 @@
 
         }
 
-        function DeleteComment(postId, commentId) {
+        function DeleteComment(commentId) {
             $.ajax({
                 type: 'DELETE',
-                url: 'http://localhost:51004/comment/' + postId +"/"+ commentId,
+                url: 'http://localhost:51004/comment/' + commentId,
                 success: function () {
-                    $("#div-" + postId + "-" + commentId).hide();
+                    $("#c-div-" + commentId).hide();
                 }
             });
         }
 
-        function DeleteReply(postId, commentId, replyId) {
+        function DeleteReply(replyId) {
             $.ajax({
                 type: 'DELETE',
-                url: 'http://localhost:51004/comment/' + postId + "/" + commentId + "/" + replyId,
+                url: 'http://localhost:51004/reply/' + replyId,
                 success: function () {
-                    $("#div-" + postId + "-" + commentId + "-" + replyId).hide();
+                    $("#r-div-" + replyId).hide();
+                }
+            });
+        }
+
+        function ApproveComment(commentId) {
+            $.ajax({
+                type: 'DELETE',
+                url: 'http://localhost:51004/approveComment/' + commentId,
+                success: function () {
+                    $("#c-approve-" + commentId).hide();
+                    $("#c-delete-" + commentId).hide()
+                }
+            });
+        }
+
+        function ApproveReply(replyId) {
+            $.ajax({
+                type: 'DELETE',
+                url: 'http://localhost:51004/approveReply/' + replyId,
+                success: function () {
+                    $("#r-approve-" + replyId).hide();
+                    $("#r-delete-" + replyId).hide()
                 }
             });
         }
