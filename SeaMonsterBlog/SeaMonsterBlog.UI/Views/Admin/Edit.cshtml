@@ -5,6 +5,7 @@
     ViewBag.Title = "Edit";
     ViewBag.Categories = Model.Categories;
     ViewBag.StaticPosts = Model.StaticPosts;
+    ViewBag.SearchString = Model.SearchString;
 }
 
 @using (Html.BeginForm("Edit", "Admin", FormMethod.Post, new { @class = "form-inline", id = "frmUpload" }))
