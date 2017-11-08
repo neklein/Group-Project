@@ -4,6 +4,7 @@
     ViewBag.Title = "Detail";
     ViewBag.Categories = Model.Categories;
     ViewBag.StaticPosts = Model.StaticPosts;
+    ViewBag.SearchString = Model.SearchString;
 }
 
 @using (Html.BeginForm("Detail", "Home", FormMethod.Post))

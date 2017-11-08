@@ -44,6 +44,5 @@ namespace SeaMonsterBlog.UI.Controllers
             repo.ApproveReply(replyId);
             return Ok();
         }
-
     }
 }
