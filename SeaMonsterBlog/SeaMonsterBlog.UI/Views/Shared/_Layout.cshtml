@@ -59,28 +59,37 @@
         </div>
 
         <div class="container col-sm-3" style="background: #d6e9cb;border-radius:3px">
-            <input class="form-control" placeholder="Search by Category" id="search-term" type="text">
-        <div class="input-group-btn">
-            <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
-        </div>
-        <ul class="nav nav-pills nav-stacked">
-            @if ((Request.IsAuthenticated && User.IsInRole("admin"))||(Request.IsAuthenticated && User.IsInRole("moderator")))
-            {
-                <li>@Html.ActionLink("Create New", "Create", "Admin", null, new { @class = "btn btn-warning", style = "font-size:26px" })</li>
-                <li> @Html.ActionLink("My Dashboard", "Dashboard", "Admin", null, new { @class = "btn btn-warning", style = "font-size:26px" })</li>
-            }
-                @foreach (var p in ViewBag.StaticPosts)
-                {
-                    if (Request.IsAuthenticated && User.IsInRole("admin"))
-                    {
-                        <li class="btn btn-warning"><a href="~/admin/edit/@p.PostId" style="padding-top:0px;padding-bottom:0px"><h5 style="font-size:26px;color:white">@p.PostTitle</h5></a></li>
-                    }
-                    else
-                    {
-                        <li class="btn btn-warning"><a href="~/home/detail/@p.PostId" style="padding-top:0px;padding-bottom:0px"><h5 style="font-size:26px;color:white">@p.PostTitle</h5></a></li>
-                    }
-                }
-            </ul>
+            <div class="container col-sm-12">
+                    <div class="input-group">
+                        <input class="form-control" placeholder="Search by Category" id="search-term" type="text">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+               
+                
+                    <ul class="nav nav-pills nav-stacked">
+                        @if ((Request.IsAuthenticated && User.IsInRole("admin")) || (Request.IsAuthenticated && User.IsInRole("moderator")))
+                        {
+                            <li>@Html.ActionLink("Create New", "Create", "Admin", null, new { @class = "btn btn-warning", style = "font-size:26px" })</li>
+                            <li> @Html.ActionLink("My Dashboard", "Dashboard", "Admin", null, new { @class = "btn btn-warning", style = "font-size:26px" })</li>
+                        }
+                        @foreach (var p in ViewBag.StaticPosts)
+                        {
+                            if (Request.IsAuthenticated && User.IsInRole("admin"))
+                            {
+                                <li class="btn btn-warning"><a href="~/admin/edit/@p.PostId" style="padding-top:0px;padding-bottom:0px"><h5 style="font-size:26px;color:white">@p.PostTitle</h5></a></li>
+                            }
+                            else
+                            {
+                                <li class="btn btn-warning"><a href="~/home/detail/@p.PostId" style="padding-top:0px;padding-bottom:0px"><h5 style="font-size:26px;color:white">@p.PostTitle</h5></a></li>
+                            }
+                        }
+                    </ul>
+                
+                
+            </div>
+            
         </div>
     </div>
     
