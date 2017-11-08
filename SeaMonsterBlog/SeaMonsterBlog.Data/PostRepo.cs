@@ -61,7 +61,7 @@ namespace SeaMonster.Data_CLW
 
             using (var cn = new SqlConnection(cs))
             {
-                SqlCommand cmd = new SqlCommand("CreateComment", cn);
+                SqlCommand cmd = new SqlCommand("AddComment", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 SqlParameter param = new SqlParameter("@CommentId", SqlDbType.Int);
                 param.Direction = ParameterDirection.Output;
