@@ -536,8 +536,17 @@ namespace SeaMonster.Data_CLW
                             post.IsPublished = (bool)dr["ispublished"];
                             post.IsForReview = (bool)dr["isforReview"];
 
+                        if (post.ExpDate == null)
+                        {
                             posts.Add(post);
-                        
+                        }
+                        else
+                        {
+                            if(DateTime.Compare(post.ExpDate.Value, DateTime.Now) > 0)
+                            {
+                                posts.Add(post);
+                            }
+                        }
                     }
                 }
             }
@@ -703,7 +712,22 @@ namespace SeaMonster.Data_CLW
         {
             List<Post> posts = GetPostbyHashtag(HashtagID);
             List<Post> PublishedPosts = posts.Where(p => p.IsPublished).ToList();
-            return PublishedPosts;
+            List<Post> posts2 = new List<Post>()
+;            foreach (Post p in PublishedPosts)
+            {
+                if (p.ExpDate == null)
+                {
+                    posts2.Add(p);
+                }
+                else
+                {
+                    if (DateTime.Compare(p.ExpDate.Value, DateTime.Now) > 0)
+                    {
+                        posts2.Add(p);
+                    }
+                }
+            }
+            return posts2;
         }
 
         public List<Post> GetPostbyHashtag(int HashtagID)
@@ -843,7 +867,22 @@ namespace SeaMonster.Data_CLW
         public List<Post> GetPublishedPostByCategory(int CatId)
         {
             List<Post> posts = GetPostByCategory(CatId).Where(p => p.IsPublished == true).ToList();
-            return posts;
+            List<Post> posts2 = new List<Post>();
+            foreach(Post p in posts)
+            {
+                if (p.ExpDate == null)
+                {
+                    posts2.Add(p);
+                }
+                else
+                {
+                    if (DateTime.Compare(p.ExpDate.Value, DateTime.Now) > 0)
+                    {
+                        posts2.Add(p);
+                    }
+                }
+            }
+            return posts2;
         }
 
         public Reply GetReplyByReplyId(int replyId)
@@ -875,6 +914,7 @@ namespace SeaMonster.Data_CLW
         public List<Post> GetAllPostByAuthor(string name)
         {
             List<Post> posts = GetAllPosts().Where(p => p.DisplayAuthor.ToLower() == name.ToLower()).ToList();
+
             return posts;
         }
 
@@ -940,7 +980,22 @@ namespace SeaMonster.Data_CLW
         public List<Post> GetPublishedPostbyAuthor(string name)
         {
             List<Post> posts = GetAllPostByAuthor(name).Where(p => p.IsPublished).ToList();
-            return posts;
+            List<Post> posts2 = new List<Post>();
+            foreach (Post p in posts)
+            {
+                if (p.ExpDate == null)
+                {
+                    posts2.Add(p);
+                }
+                else
+                {
+                    if (DateTime.Compare(p.ExpDate.Value, DateTime.Now) > 0)
+                    {
+                        posts2.Add(p);
+                    }
+                }
+            }
+            return posts2;
         }
 
         public Category GetCategoryByCatName(string name)
@@ -1203,12 +1258,28 @@ namespace SeaMonster.Data_CLW
 
         public int FindPostplus10(int PostID)
         {
-            throw new NotImplementedException();
+            List<Post> posts = GetPublishedPosts().Where(p => p.IsStatic == false).ToList();
+            int next = posts.Max(p => p.PostId);
+            int curr = posts.IndexOf(posts.Where(p => p.PostId == PostID).FirstOrDefault());
+            if (curr < posts.Count - 11)
+            {
+                next = posts[curr + 10].PostId;
+            }
+            return next;
         }
 
         public int FindPostminus10(int PostID)
         {
-            throw new NotImplementedException();
+            int prev = 1;
+            List<Post> posts = GetPublishedPosts().Where(p => p.IsStatic == false).ToList();
+
+            int curr = posts.IndexOf(posts.Where(p => p.PostId == PostID).FirstOrDefault());
+            if (curr > 10 && posts[curr - 10] != null)
+            {
+                prev = posts[curr - 10].PostId;
+            }
+
+            return prev;
         }
 
         public void Review(Post post)

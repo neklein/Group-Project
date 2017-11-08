@@ -236,6 +236,7 @@
     <Compile Include="Models\AppRole.cs" />
     <Compile Include="Models\AppUser.cs" />
     <Compile Include="Models\ByAuthorCategoryVM.cs" />
+    <Compile Include="Models\ByHashtagVM.cs" />
     <Compile Include="Models\CreateEditVM.cs" />
     <Compile Include="Models\DashboardVM.cs" />
     <Compile Include="Models\DetailVM.cs" />
@@ -562,7 +563,9 @@
     <Content Include="Views\Home\ByAuthor.cshtml" />
     <Content Include="Views\Admin\Review.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\ByHashtag.cshtml" />
     <Content Include="Views\Admin\Dashboard.cshtml" />
+    <Content Include="Views\Admin\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

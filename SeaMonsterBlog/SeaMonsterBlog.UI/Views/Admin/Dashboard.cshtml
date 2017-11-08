@@ -6,13 +6,11 @@
     ViewBag.StaticPosts = Model.StaticPosts;
 }
 
-<h2>My Dashboard</h2>
-<div class="container">
+<div>
     @if (Request.IsAuthenticated && User.IsInRole("admin"))
         {
     <h2>Post Awaiting Approval</h2>
-    <div style="display:table">
-        <table class="table table-condensed">
+        <table class="table" style="background: #d6e9cb;border-radius:3px">
             <thead>
                 <tr>
                     <th>Title</th>
@@ -24,21 +22,21 @@
                 @foreach (var p in Model.PostsUnderReview)
                 {
                     <tr>
-                        <td><a href="~/home/detail/@p.PostId">@p.PostTitle</a></td>
-                        <td><a href="~/home/byAuthor/@p.Author"> @p.Author</a></td>
+                        <td><a style="color:firebrick" href="~/admin/review/@p.PostId">@p.PostTitle</a></td>
+                        <td><a style="color:firebrick" href="~/home/byAuthor/@p.Author"> @p.Author</a></td>
                         <td> @p.DateCreated.ToString("MM/dd/yyyy")</td>
                     </tr>
                 }
 
             </tbody>
         </table>
-    </div>
+        <br />
     }
 
     @if (Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator"))
     {
         <h2>Posts With Pending Comments</h2>
-        <table class="table table-condensed">
+        <table class="table" style="background: #d6e9cb;border-radius:3px">
             <thead>
                 <tr>
                     <th>Title</th>
@@ -50,7 +48,7 @@
                 @foreach (var p in Model.PostsPendingComments)
                 {
                     <tr>
-                        <td><a href="~/home/detail/@p.PostId">@p.PostTitle</a></td>
+                        <td><a style="color:firebrick" href="~/home/detail/@p.PostId">@p.PostTitle</a></td>
                         <td># Pending</td>
                     </tr>
                 }
