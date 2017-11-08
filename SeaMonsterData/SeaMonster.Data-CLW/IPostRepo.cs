@@ -61,6 +61,10 @@ namespace SeaMonster.Data_CLW
         List<Post> GetPostForReview();
         List<Comment> GetUnapprovedComments();
         List<Reply> GetUnapprovedReplies();
+        int FindPostplus10(int PostID);
+        int FindPostminus10(int PostID);
+        void Review(Post post); //set dates, isForReview, ispublished 
+
 
     }
 }
