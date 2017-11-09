@@ -15,10 +15,18 @@
     <div class="panel-heading">
         <h3><strong>@Model.Post.PostTitle</strong></h3>
         <h5><strong>@Model.Post.DisplayDate.Value.ToShortDateString() |  @Model.Post.Author</strong></h5>
+
     </div>
     <div class="panel-body">
+        <h5>
+            Categories:
+            @foreach (var category in Model.Post.SelectedCategories)
+            {
+                @Html.ActionLink((string)@category.CategoryTag, "ByCategory", "Home", new { id = category.CategoryID }, new { @class = "label label-default" })
+            }
+        </h5>
+
         <p>
-            categories listed here
             @Html.Raw(Model.Post.PostText)
             <br />
         </p>
