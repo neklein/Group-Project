@@ -16,28 +16,24 @@ namespace SeaMonsterBlog.UI.Models
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             List<ValidationResult> errors = new List<ValidationResult>();
-
-            if (NewReply == null || (string.IsNullOrWhiteSpace(NewComment.CommenterName) && string.IsNullOrWhiteSpace(NewComment.CommentText)
-                && string.IsNullOrWhiteSpace(NewReply.ReplyName) && string.IsNullOrWhiteSpace(NewReply.ReplyText)))
+            if(NewReply == null)
             {
-                errors.Add(new ValidationResult("Please enter a comment or a reply"));
+                if(string.IsNullOrWhiteSpace(NewComment.CommenterName) && string.IsNullOrWhiteSpace(NewComment.CommentText))
+                    errors.Add(new ValidationResult("Please enter a name and a comment"));
+
+                if (!string.IsNullOrWhiteSpace(NewComment.CommenterName) && string.IsNullOrWhiteSpace(NewComment.CommentText))
+                    errors.Add(new ValidationResult("Please enter a comment"));
+
+                if (!string.IsNullOrWhiteSpace(NewComment.CommenterName) && string.IsNullOrWhiteSpace(NewComment.CommentText))
+                    errors.Add(new ValidationResult("Please enter a comment", new[] { "NewComment.CommentText" }));
+
+                if (string.IsNullOrWhiteSpace(NewComment.CommenterName) && !string.IsNullOrWhiteSpace(NewComment.CommentText))
+                    errors.Add(new ValidationResult("Please enter a name for your comment", new[] { "NewComment.CommenterName" }));
             }
 
-            if (NewReply == null || (!string.IsNullOrWhiteSpace(NewComment.CommenterName) && string.IsNullOrWhiteSpace(NewComment.CommentText)
-                && string.IsNullOrWhiteSpace(NewReply.ReplyName) && string.IsNullOrWhiteSpace(NewReply.ReplyText)))
+            else if(NewReply != null)
             {
-                errors.Add(new ValidationResult("Please enter a comment to submit",
-                    new[] { "NewComment.CommentText" }));
-            }
-
-            if (NewReply == null || (string.IsNullOrWhiteSpace(NewComment.CommenterName) && !string.IsNullOrWhiteSpace(NewComment.CommentText)
-                && string.IsNullOrWhiteSpace(NewReply.ReplyName) && string.IsNullOrWhiteSpace(NewReply.ReplyText)))
-            {
-                errors.Add(new ValidationResult("Please enter a name with your commment",
-                    new[] { "NewComment.CommenterName" }));
-            }
-
-            if (NewReply == null || (!string.IsNullOrWhiteSpace(NewComment.CommenterName) && !string.IsNullOrWhiteSpace(NewComment.CommentText)
+                if ((!string.IsNullOrWhiteSpace(NewComment.CommenterName) && !string.IsNullOrWhiteSpace(NewComment.CommentText)
                 && !string.IsNullOrWhiteSpace(NewReply.ReplyName) && !string.IsNullOrWhiteSpace(NewReply.ReplyText))
                     || (!string.IsNullOrWhiteSpace(NewComment.CommenterName) && !string.IsNullOrWhiteSpace(NewComment.CommentText)
                 && !string.IsNullOrWhiteSpace(NewReply.ReplyName) && string.IsNullOrWhiteSpace(NewReply.ReplyText))
@@ -55,22 +51,45 @@ namespace SeaMonsterBlog.UI.Models
                 && string.IsNullOrWhiteSpace(NewReply.ReplyName) && !string.IsNullOrWhiteSpace(NewReply.ReplyText))
                     || (!string.IsNullOrWhiteSpace(NewComment.CommenterName) && string.IsNullOrWhiteSpace(NewComment.CommentText)
                 && !string.IsNullOrWhiteSpace(NewReply.ReplyName) && string.IsNullOrWhiteSpace(NewReply.ReplyText)))
-            {
-                errors.Add(new ValidationResult("Please choose a comment or a reply, but not both"));
-            }
+                {
+                    errors.Add(new ValidationResult("Please choose a comment or a reply, but not both"));
+                }
 
-            if (NewReply == null || (string.IsNullOrWhiteSpace(NewComment.CommenterName) && string.IsNullOrWhiteSpace(NewComment.CommentText)
-                && string.IsNullOrWhiteSpace(NewReply.ReplyName) && !string.IsNullOrWhiteSpace(NewReply.ReplyText)))
-            {
-                errors.Add(new ValidationResult("Please enter a name to go with your reply", 
-                    new[] { "NewReply.ReplyName"}));
-            }
+                if (string.IsNullOrWhiteSpace(NewComment.CommenterName) && string.IsNullOrWhiteSpace(NewComment.CommentText)
+                    && string.IsNullOrWhiteSpace(NewReply.ReplyName) && string.IsNullOrWhiteSpace(NewReply.ReplyText))
+                {
+                    errors.Add(new ValidationResult("Please enter a comment or a reply"));
+                }
 
-            if (NewReply == null || (string.IsNullOrWhiteSpace(NewComment.CommenterName) && string.IsNullOrWhiteSpace(NewComment.CommentText)
-                && !string.IsNullOrWhiteSpace(NewReply.ReplyName) && string.IsNullOrWhiteSpace(NewReply.ReplyText)))
-            {
-                errors.Add(new ValidationResult("Please enter a reply",
-                    new[] { "NewReply.ReplyText" }));
+                if (!string.IsNullOrWhiteSpace(NewComment.CommenterName) && string.IsNullOrWhiteSpace(NewComment.CommentText)
+                    && string.IsNullOrWhiteSpace(NewReply.ReplyName) && string.IsNullOrWhiteSpace(NewReply.ReplyText))
+                {
+                    errors.Add(new ValidationResult("Please enter a comment to submit",
+                        new[] { "NewComment.CommentText" }));
+                }
+
+                if (string.IsNullOrWhiteSpace(NewComment.CommenterName) && !string.IsNullOrWhiteSpace(NewComment.CommentText)
+                    && string.IsNullOrWhiteSpace(NewReply.ReplyName) && string.IsNullOrWhiteSpace(NewReply.ReplyText))
+                {
+                    errors.Add(new ValidationResult("Please enter a name with your commment",
+                        new[] { "NewComment.CommenterName" }));
+                }
+
+
+                if (string.IsNullOrWhiteSpace(NewComment.CommenterName) && string.IsNullOrWhiteSpace(NewComment.CommentText)
+                    && string.IsNullOrWhiteSpace(NewReply.ReplyName) && !string.IsNullOrWhiteSpace(NewReply.ReplyText))
+                {
+                    errors.Add(new ValidationResult("Please enter a name to go with your reply",
+                        new[] { "NewReply.ReplyName" }));
+                }
+
+                if (string.IsNullOrWhiteSpace(NewComment.CommenterName) && string.IsNullOrWhiteSpace(NewComment.CommentText)
+                    && !string.IsNullOrWhiteSpace(NewReply.ReplyName) && string.IsNullOrWhiteSpace(NewReply.ReplyText))
+                {
+                    errors.Add(new ValidationResult("Please enter a reply",
+                        new[] { "NewReply.ReplyText" }));
+                }
+
             }
 
             return errors;
