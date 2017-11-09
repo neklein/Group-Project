@@ -58,7 +58,7 @@ namespace SeaMonsterBlog.UI.Controllers
         }
 
         [HttpPost]
-        public ActionResult DetailCommentForm (DetailVM model)
+        public ActionResult Detail (DetailVM model)
         {
             var repo = RepositoryFactory.GetRepository();
 
@@ -67,17 +67,6 @@ namespace SeaMonsterBlog.UI.Controllers
                 model.NewComment.PostId = model.Post.PostId;
                 repo.CreateComment(model.NewComment);
             }
-            
-          
-            return RedirectToAction("Detail", model.Post.PostId);
-         
-        }
-
-        [HttpPost]
-        public ActionResult DetailReplyForm(DetailVM model)
-        {
-            var repo = RepositoryFactory.GetRepository();
-
 
             if (!string.IsNullOrWhiteSpace(model.NewReply.ReplyName) && !string.IsNullOrWhiteSpace(model.NewReply.ReplyText))
             {
@@ -85,8 +74,9 @@ namespace SeaMonsterBlog.UI.Controllers
             }
 
             return RedirectToAction("Detail", model.Post.PostId);
-
+         
         }
+
 
         public ActionResult ByCategory(int id)
         {

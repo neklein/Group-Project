@@ -8,23 +8,20 @@
 }
 
 
+
+
+@using (Html.BeginForm("Detail", "Home", FormMethod.Post))
+{
     @Html.HiddenFor(m => m.Post.PostId)
 
     <div class="panel panel-success">
         <div class="panel-heading">
             <h3><strong>@Model.Post.PostTitle</strong></h3>
             <h5><strong>@Model.Post.DisplayDate.Value.ToShortDateString()  | <a href="~/Home/ByAuthor/@Model.Post.Author">@Model.Post.Author</a></strong></h5>
-            <h5>
-                Categories:
-                @foreach (var category in Model.Post.SelectedCategories)
-                {
-                    @Html.ActionLink((string)@category.CategoryTag, "ByCategory", "Home", new { id = category.CategoryID }, new { @class = "label label-default" })
-                }
-            </h5>
-
         </div>
         <div class="panel-body">
             <p>
+                categories listed here
                 @Html.Raw(Model.Post.PostText)
                 <br />
             </p>
@@ -41,7 +38,7 @@
         <a href="~/home/previous/@Model.Post.PostId">Previous</a>
     </span>
     <span style="float:right">
-        <a href="~/home/next/@Model.Post.PostId" >Next</a> 
+        <a href="~/home/next/@Model.Post.PostId">Next</a>
     </span>
 
     <div class="col-sm-12">
@@ -62,56 +59,50 @@
                     <p>@comment.CommentText</p>
                     @if (comment.Replies.Any())
                     {
-                    <div class="row">
-                        <div class="col-md-11 col-md-offset-1">
-                            <a id="comment-replies-@comment.CommentId" class="comment-replies" onclick="openReplies(@comment.CommentId)">View Replies or Reply</a>
-                        </div>
-                        <div class="col-md-11 col-md-offset-1 reply-box" id="comment-dropdown-@comment.CommentId" hidden>
-                            @foreach (var reply in comment.Replies)
+                        <div class="row">
+                            <div class="col-md-11 col-md-offset-1">
+                                <a id="comment-replies-@comment.CommentId" class="comment-replies" onclick="openReplies(@comment.CommentId)">View Replies or Reply</a>
+                            </div>
+                            <div class="col-md-11 col-md-offset-1 reply-box" id="comment-dropdown-@comment.CommentId" hidden>
+                                @foreach (var reply in comment.Replies)
                             {
-                                <div id="r-div-@reply.ReplyID">
-                                    <p style="padding-top:4px">
-                                        <strong>@reply.ReplyName | @reply.ReplyDate</strong>
-                                        @if ((Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator")) && !reply.IsShown)
-                                        {
+                                    <div id="r-div-@reply.ReplyID">
+                                        <p style="padding-top:4px">
+                                            <strong>@reply.ReplyName | @reply.ReplyDate</strong>
+                                            @if ((Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator")) && !reply.IsShown)
+                                            {
 
                                                 <i onclick="ApproveReply(@reply.ReplyID)" class="fa fa-check-square-o icon-ch" id="r-approve-@reply.ReplyID" aria-hidden="true" onmouseover="" style="color:green;padding-left:7px;cursor: pointer;"></i>
                                                 <i onclick="DeleteReply(@reply.ReplyID)" class="fa fa-trash-o fa-lg" id="r-delete-@reply.ReplyID" aria-hidden="true" onmouseover="" style="color:red;padding-left:7px;cursor: pointer;"></i>
 
-                                        }
-                                    </p>
-                                    <p>@reply.ReplyText</p>
+                                            }
+                                        </p>
+                                        <p>@reply.ReplyText</p>
+                                    </div>
+                                }
+
+                                @Html.Hidden("NewReply.CommentId", comment.CommentId)
+                                <div class="form-group row">
+                                    <label class="control-label col-sm-2">Name</label>
+                                    <div class="col-sm-6">
+                                        @Html.TextBoxFor(r => r.NewReply.ReplyName, new { @class = "form-control", required = "required" })
+                                        @Html.ValidationMessageFor(r => r.NewReply.ReplyName, null, new { @class = "field-validation-error" })
+                                    </div>
                                 </div>
-                            }
-
-                        @using (Html.BeginForm("DetailReplyForm", "Home", FormMethod.Post))
-                        {
-
-                            @Html.Hidden("NewReply.CommentId", comment.CommentId)
-                            <div class="form-group row">
-                                <label class="control-label col-sm-2">Name</label>
-                                <div class="col-sm-6">
-                                    @Html.TextBoxFor(r => r.NewReply.ReplyName, new { @class = "form-control", required = "required" })
-                                    @Html.ValidationMessageFor(r => r.NewReply.ReplyName, null, new { @class = "field-validation-error" })
+                                <div class="form-group row">
+                                    <label class="control-label col-sm-2">New Reply</label>
+                                    <div class="col-sm-10">
+                                        @Html.TextBoxFor(r => r.NewReply.ReplyText, new { @class = "form-control", required = "required" })
+                                        @Html.ValidationMessageFor(r => r.NewReply.ReplyText, null, new { @class = "field-validation-error" })
+                                        <button type="submit" class="btn btn-info">Submit Reply</button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="control-label col-sm-2">New Reply</label>
-                                <div class="col-sm-10">
-                                    @Html.TextBoxFor(r => r.NewReply.ReplyText, new { @class = "form-control", required = "required" })
-                                    @Html.ValidationMessageFor(r => r.NewReply.ReplyText, null, new { @class = "field-validation-error" })
-                                    <button type="submit" class="btn btn-info">Submit Reply</button>
-                                </div>
-                            </div>
-                        }
                         </div>
-                    </div>
                     }
                 </div>
             }
-            @using (Html.BeginForm("DetailCommentForm", "Home", FormMethod.Post))
-            {
-                <h4 style="padding-top:15px"><strong>New Comment</strong></h4>
+            <h4 style="padding-top:15px"><strong>New Comment</strong></h4>
                 <div class="form-group row">
                     <label class="control-label col-sm-2">Name</label>
                     <div class="col-sm-6">
@@ -127,10 +118,9 @@
                         <button type="submit" class="btn btn-info">Submit Comment</button>
                     </div>
                 </div>
-                }
-            }
+        }
     </div>
-
+}
 
 
 
