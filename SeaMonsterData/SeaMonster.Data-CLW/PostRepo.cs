@@ -270,6 +270,7 @@ namespace SeaMonster.Data_CLW
                         post.ToPostDate = DateTime.Parse(dr["PostDate"].ToString());
                         post.DisplayAuthor = dr["DisplayAuthor"].ToString();
                         post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
+                        post.AddedBy = dr["addedby"].ToString();
                         string expdate = dr["Expdate"].ToString();
                         if (!string.IsNullOrWhiteSpace(expdate))
                         {
@@ -1444,6 +1445,45 @@ namespace SeaMonster.Data_CLW
                 cn.Open();
                 cmd.ExecuteNonQuery();
             }
+        }
+        public List<Post> GetAllPostbyCreator(string CreatedBy)
+        {
+            List<Post> posts = new List<Post>();
+            using (var cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("GetPostsByCreator", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        Post post = new Post();
+
+                        post.PostId = (int)dr["PostID"];
+                        post.PostTitle = dr["PostTitle"].ToString();
+                        post.PostText = dr["PostText"].ToString();
+                        post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
+                        post.ToPostDate = DateTime.Parse(dr["PostDate"].ToString());
+                        post.DisplayAuthor = dr["DisplayAuthor"].ToString();
+                        post.DisplayDate = DateTime.Parse(dr["DisplayDate"].ToString());
+                        post.AddedBy = dr["addedby"].ToString();
+                        string expdate = dr["Expdate"].ToString();
+                        if (!string.IsNullOrWhiteSpace(expdate))
+                        {
+                            post.ExpDate = DateTime.Parse(expdate);
+                        }
+                        post.IsStatic = (bool)dr["isStatic"];
+                        post.IsPublished = (bool)dr["ispublished"];
+                        post.IsForReview = (bool)dr["isforReview"];
+
+                        posts.Add(post);
+                    }
+                }
+            }
+            return posts;
+
         }
     }
 
