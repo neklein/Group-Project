@@ -140,6 +140,10 @@ GO
  drop procedure AddCategory
  GO
 
+ 
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='GetPostsByCreator')
+ drop procedure GetPostsByCreator
+ GO
 
 
  --------------------Searches and Gets------------------------------------------
@@ -452,6 +456,15 @@ begin
 insert into Categories (CategoryName) values (@CategoryName)
 end
 go
+
+Create Procedure GetPostsByCreator (@Addedby nvarchar(40))AS
+begin
+select p.PostID, p.PostTitle, p.DateCreated, isnull(p.ToPostDate, p.DateCreated)AS PostDate, p.DisplayAuthor, 
+ isnull(p.DisplayDate, p.DateCreated)AS DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby 
+ from Post p
+  left join PostText pt on pt.PostId=p.PostID
+  where p.addedby=@Addedby
+end
 
 select * from post
 select* from PostText
