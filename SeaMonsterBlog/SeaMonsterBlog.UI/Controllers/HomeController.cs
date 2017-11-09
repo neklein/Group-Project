@@ -58,7 +58,7 @@ namespace SeaMonsterBlog.UI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Detail (DetailVM model)
+        public ActionResult DetailCommentForm (DetailVM model)
         {
             var repo = RepositoryFactory.GetRepository();
 
@@ -68,13 +68,24 @@ namespace SeaMonsterBlog.UI.Controllers
                 repo.CreateComment(model.NewComment);
             }
             
-            if(!string.IsNullOrWhiteSpace(model.NewReply.ReplyName) && !string.IsNullOrWhiteSpace(model.NewReply.ReplyText))
+          
+            return RedirectToAction("Detail", model.Post.PostId);
+         
+        }
+
+        [HttpPost]
+        public ActionResult DetailReplyForm(DetailVM model)
+        {
+            var repo = RepositoryFactory.GetRepository();
+
+
+            if (!string.IsNullOrWhiteSpace(model.NewReply.ReplyName) && !string.IsNullOrWhiteSpace(model.NewReply.ReplyText))
             {
                 repo.CreateReply(model.NewReply);
             }
 
             return RedirectToAction("Detail", model.Post.PostId);
-         
+
         }
 
         public ActionResult ByCategory(int id)

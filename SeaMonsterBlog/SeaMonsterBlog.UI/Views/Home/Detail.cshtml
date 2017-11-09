@@ -7,8 +7,7 @@
     ViewBag.SearchString = Model.SearchString;
 }
 
-@using (Html.BeginForm("Detail", "Home", FormMethod.Post))
-{
+
     @Html.HiddenFor(m => m.Post.PostId)
 
     <div class="panel panel-success">
@@ -85,11 +84,14 @@
                                 </div>
                             }
 
+                        @using (Html.BeginForm("DetailReplyForm", "Home", FormMethod.Post))
+                        {
+
                             @Html.Hidden("NewReply.CommentId", comment.CommentId)
                             <div class="form-group row">
                                 <label class="control-label col-sm-2">Name</label>
                                 <div class="col-sm-6">
-                                    @Html.TextBoxFor(r => r.NewReply.ReplyName, new { @class = "form-control",  required = "required"})
+                                    @Html.TextBoxFor(r => r.NewReply.ReplyName, new { @class = "form-control", required = "required" })
                                     @Html.ValidationMessageFor(r => r.NewReply.ReplyName, null, new { @class = "field-validation-error" })
                                 </div>
                             </div>
@@ -101,11 +103,14 @@
                                     <button type="submit" class="btn btn-info">Submit Reply</button>
                                 </div>
                             </div>
+                        }
                         </div>
                     </div>
                     }
                 </div>
             }
+            @using (Html.BeginForm("DetailCommentForm", "Home", FormMethod.Post))
+            {
                 <h4 style="padding-top:15px"><strong>New Comment</strong></h4>
                 <div class="form-group row">
                     <label class="control-label col-sm-2">Name</label>
@@ -122,9 +127,10 @@
                         <button type="submit" class="btn btn-info">Submit Comment</button>
                     </div>
                 </div>
-        }
+                }
+            }
     </div>
-}
+
 
 
 
