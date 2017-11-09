@@ -14,5 +14,6 @@ namespace SeaMonsterBlog.UI.Models
         public string ImageTitle { get; set; }
         public HttpPostedFileBase UploadedFile { get; set; }
         public List<SelectListItem> CategoryList { get; set; }
+        public List<int> ChosenCategories { get; set; }
     }
 }
