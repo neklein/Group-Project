@@ -155,7 +155,7 @@ namespace SeaMonster.Data_CLW
 
                 cmd.Parameters.AddWithValue("@CommentId", reply.CommentID);
                 cmd.Parameters.AddWithValue("@ReplyName", reply.ReplyName);
-                cmd.Parameters.AddWithValue("@CommentText", reply.ReplyText);
+                cmd.Parameters.AddWithValue("@ReplyText", reply.ReplyText);
 
                 cn.Open();
                 cmd.ExecuteNonQuery();
