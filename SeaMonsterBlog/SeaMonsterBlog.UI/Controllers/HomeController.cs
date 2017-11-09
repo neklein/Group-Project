@@ -62,15 +62,19 @@ namespace SeaMonsterBlog.UI.Controllers
         {
             var repo = RepositoryFactory.GetRepository();
 
-            if (model.NewComment.CommenterName != null)
+            if (!string.IsNullOrWhiteSpace(model.NewComment.CommenterName) && !string.IsNullOrWhiteSpace(model.NewComment.CommentText))
             {
                 model.NewComment.PostId = model.Post.PostId;
                 repo.CreateComment(model.NewComment);
             }
-            if (model.NewReply.ReplyName != null)
+            
+            if(!string.IsNullOrWhiteSpace(model.NewReply.ReplyName) && !string.IsNullOrWhiteSpace(model.NewReply.ReplyText))
+            {
                 repo.CreateReply(model.NewReply);
+            }
 
             return RedirectToAction("Detail", model.Post.PostId);
+         
         }
 
         public ActionResult ByCategory(int id)
