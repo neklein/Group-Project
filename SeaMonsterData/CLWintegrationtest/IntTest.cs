@@ -479,6 +479,18 @@ namespace CLWintegrationtest
             Assert.AreEqual("TestCat", Cats2[3].CategoryName);
 
         }
+        [Test]
+        [TestCase("#Hello #Hello",5,9)]
+        public void DuplicateTags(string test, int PostID, int expected)
+        {
+            PostRepo repo = new PostRepo();
+            repo.AddHashtags(test, PostID);
+            List<HashTag> Cats = repo.GetHashtags();
+            Assert.AreEqual(expected, Cats.Count());
+        }
+
+
+          
     }
 }
 
