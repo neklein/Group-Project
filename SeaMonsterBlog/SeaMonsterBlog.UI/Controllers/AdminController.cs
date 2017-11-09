@@ -7,12 +7,14 @@ using System.Web;
 using System.Web.Mvc;
 using SeaMonsterBlog.Data;
 using System.Net;
+using SeaMonsterBlog.Models.Tables;
 
 namespace SeaMonsterBlog.UI.Controllers
 {
     public class AdminController : Controller
     {
         // GET: Admin
+        [Authorize(Roles = "admin, moderator")]
         public ActionResult Create()
         {
             var repo = RepositoryFactory.GetRepository();
@@ -25,6 +27,7 @@ namespace SeaMonsterBlog.UI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin, moderator")]
         public ActionResult Edit(int id)
         {
             var repo = RepositoryFactory.GetRepository();
@@ -43,6 +46,7 @@ namespace SeaMonsterBlog.UI.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
+        [Authorize(Roles = "admin, moderator")]
         public ActionResult Edit(CreateEditVM createEditVM)
         {
             createEditVM.Post.PostText = WebUtility.HtmlEncode(createEditVM.Post.PostText);
@@ -96,12 +100,13 @@ namespace SeaMonsterBlog.UI.Controllers
             }
         }
 
-
         [HttpPost]
         [ValidateInput(false)]
+        [Authorize(Roles = "admin, moderator")]
         public ActionResult Create(CreateEditVM createEditVM)
         {
             createEditVM.Post.PostText = WebUtility.HtmlEncode(createEditVM.Post.PostText);
+            createEditVM.Post.SelectedCategories = ConvertChosenToSelected(createEditVM.ChosenCategories);
             var repo = RepositoryFactory.GetRepository();
             
             if (createEditVM.Post.PostId == 0)    //Save or add work regardless of button choice
@@ -154,6 +159,7 @@ namespace SeaMonsterBlog.UI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin, moderator")]
         public ActionResult Review(int id)
         {
             var repo = RepositoryFactory.GetRepository();
@@ -172,6 +178,7 @@ namespace SeaMonsterBlog.UI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin, moderator")]
         public ActionResult Review(CreateEditVM createEditVM)
         {
             var repo = RepositoryFactory.GetRepository();  //chose to edit
@@ -193,6 +200,7 @@ namespace SeaMonsterBlog.UI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin, moderator")]
         public ActionResult Dashboard()
         {
             var repo = RepositoryFactory.GetRepository();
@@ -207,6 +215,7 @@ namespace SeaMonsterBlog.UI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin, moderator")]
         public ActionResult Dashboard(DashboardVM model)
         {
             var repo = RepositoryFactory.GetRepository();
@@ -215,7 +224,23 @@ namespace SeaMonsterBlog.UI.Controllers
             {
                 repo.DeleteCategory((int)model.DeleteCategory);
             }
+
+            if (model.NewCategory != null)
+            {
+                repo.CreateCategory(model.NewCategory);
+            }
             return RedirectToAction("Dashboard");
+        }
+
+
+        private List<Category> ConvertChosenToSelected(List<int> ids)
+        {
+            var repo = RepositoryFactory.GetRepository();
+            var catagories = repo.GetAllCategories();
+            var selectedCategories = (from i in ids
+                                      join c in catagories on i equals c.CategoryID
+                                      select c);
+            return (selectedCategories.ToList());
         }
 
     }

@@ -442,6 +442,8 @@ namespace SeaMonster.Data_CLW
         {
             List<Post> posts = new List<Post>();
 
+            string cs = "Server=localhost;Database=SeaMonster;User Id=SeamonsterSA; Password=ocean;";
+            List<Post> posts3 = new List<Post>();
             using (var cn = new SqlConnection(cs))
             {
                 SqlCommand cmd = new SqlCommand("GetPublishedPosts", cn);
@@ -459,10 +461,6 @@ namespace SeaMonster.Data_CLW
 
                         post.PostId = (int)dr["PostID"];
                         post.PostTitle = dr["PostTitle"].ToString();
-
-                        post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
-                        post.ToPostDate = DateTime.Parse(dr["PostDate"].ToString());
-
                         post.PostText = dr["PostText"].ToString();
                         post.DateCreated = DateTime.Parse(dr["DateCreated"].ToString());
                         post.ToPostDate = DateTime.Parse(dr["PostDate"].ToString());
@@ -477,14 +475,36 @@ namespace SeaMonster.Data_CLW
                         post.IsPublished = (bool)dr["ispublished"];
                         post.IsForReview = (bool)dr["isforReview"];
 
-                        posts.Add(post);
-
+                        if (post.ExpDate == null)
+                        {
+                            posts.Add(post);
+                        }
+                        else
+                        {
+                            if (DateTime.Compare(post.ExpDate.Value, DateTime.Now) > 0)
+                            {
+                                posts.Add(post);
+                            }
+                        }
                     }
                 }
             }
-            return posts;
+            foreach (Post e in posts)
+            {
+                if (e.ToPostDate == null)
+                {
+                    posts3.Add(e);
+                }
+                else
+                {
+                    if (DateTime.Compare(e.ToPostDate.Value, DateTime.Now) <= 0)
+                    {
+                        posts3.Add(e);
+                    }
+                }
+            }
+            return posts3;
         }
-
 
 
         public List<Post> GetAllStaticPublished()
@@ -615,8 +635,39 @@ namespace SeaMonster.Data_CLW
         {
             List<Post> posts = GetPostbyHashtag(HashtagID);
             List<Post> PublishedPosts = posts.Where(p => p.IsPublished).ToList();
-            return PublishedPosts;
+            List<Post> posts2 = new List<Post>();
+            foreach (Post p in PublishedPosts)
+            {
+                if (p.ExpDate == null)
+                {
+                    posts2.Add(p);
+                }
+                else
+                {
+                    if (DateTime.Compare(p.ExpDate.Value, DateTime.Now) > 0)
+                    {
+                        posts2.Add(p);
+                    }
+                }
+            }
+            List<Post> posts3 = new List<Post>();
+            foreach (Post e in posts2)
+            {
+                if (e.ToPostDate == null)
+                {
+                    posts3.Add(e);
+                }
+                else
+                {
+                    if (DateTime.Compare(e.ToPostDate.Value, DateTime.Now) <= 0)
+                    {
+                        posts3.Add(e);
+                    }
+                }
+            }
+            return posts3;
         }
+
 
         public List<Post> GetPostbyHashtag(int HashtagID)
         {
@@ -780,7 +831,37 @@ namespace SeaMonster.Data_CLW
         public List<Post> GetPublishedPostByCategory(int CatId)
         {
             List<Post> posts = GetPostByCategory(CatId).Where(p => p.IsPublished == true).ToList();
-            return posts;
+            List<Post> posts2 = new List<Post>();
+            foreach (Post p in posts)
+            {
+                if (p.ExpDate == null)
+                {
+                    posts2.Add(p);
+                }
+                else
+                {
+                    if (DateTime.Compare(p.ExpDate.Value, DateTime.Now) > 0)
+                    {
+                        posts2.Add(p);
+                    }
+                }
+            }
+            List<Post> posts3 = new List<Post>();
+            foreach (Post e in posts2)
+            {
+                if (e.ToPostDate == null)
+                {
+                    posts3.Add(e);
+                }
+                else
+                {
+                    if (DateTime.Compare(e.ToPostDate.Value, DateTime.Now) <= 0)
+                    {
+                        posts3.Add(e);
+                    }
+                }
+            }
+            return posts3;
         }
 
         public List<Post> GetAllPostByAuthor(string name)
@@ -792,7 +873,37 @@ namespace SeaMonster.Data_CLW
         public List<Post> GetPublishedPostbyAuthor(string name)
         {
             List<Post> posts = GetAllPostByAuthor(name).Where(p => p.IsPublished).ToList();
-            return posts;
+            List<Post> posts2 = new List<Post>();
+            foreach (Post p in posts)
+            {
+                if (p.ExpDate == null)
+                {
+                    posts2.Add(p);
+                }
+                else
+                {
+                    if (DateTime.Compare(p.ExpDate.Value, DateTime.Now) > 0)
+                    {
+                        posts2.Add(p);
+                    }
+                }
+            }
+            List<Post> posts3 = new List<Post>();
+            foreach (Post e in posts2)
+            {
+                if (e.ToPostDate == null)
+                {
+                    posts3.Add(e);
+                }
+                else
+                {
+                    if (DateTime.Compare(e.ToPostDate.Value, DateTime.Now) <= 0)
+                    {
+                        posts3.Add(e);
+                    }
+                }
+            }
+            return posts3;
         }
 
         public Category GetCategoryByCatID(int CatID)
@@ -1052,12 +1163,44 @@ namespace SeaMonster.Data_CLW
         public List<Post> GetPublishedPostByTitle(string searchstring)
         {
             List<Post> posts = GetPostsbyTitle(searchstring);
-            List<Post> pubposts = new List<Post>();
+            List<Post> postspub = new List<Post>();
+            List<Post> posts2 = new List<Post>();
             if (posts.Count > 0)
             {
-                pubposts = posts.Where(p => p.IsPublished == true).ToList();
+                postspub = posts.Where(p => p.IsPublished == true).ToList();
             }
-            return pubposts;
+
+            foreach (Post p in postspub)
+            {
+                if (p.ExpDate == null)
+                {
+                    posts2.Add(p);
+                }
+                if (p.ExpDate != null)
+                {
+                    if (DateTime.Compare(p.ExpDate.Value, DateTime.Now) > 0)
+                    {
+                        posts2.Add(p);
+                    }
+                }
+            }
+            List<Post> posts3 = new List<Post>();
+            foreach (Post e in posts2)
+            {
+                if (e.ToPostDate == null)
+                {
+                    posts3.Add(e);
+                }
+                else
+                {
+                    if (DateTime.Compare(e.ToPostDate.Value, DateTime.Now) <= 0)
+                    {
+                        posts3.Add(e);
+                    }
+                }
+            }
+            return posts3;
+
         }
 
         public List<string> GetAllAuthors()
@@ -1228,6 +1371,18 @@ namespace SeaMonster.Data_CLW
                 SqlCommand cmd = new SqlCommand("DeleteCategory", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@CategoryID", CatID);
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void CreateCategory(string Categoryname)
+        {
+            using (var cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("AddCategory", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@CategoryName", Categoryname);
                 cn.Open();
                 cmd.ExecuteNonQuery();
             }
