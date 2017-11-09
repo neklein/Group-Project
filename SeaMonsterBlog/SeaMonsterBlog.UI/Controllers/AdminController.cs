@@ -201,6 +201,7 @@ namespace SeaMonsterBlog.UI.Controllers
             dashboardVM.Categories = repo.GetAllCategories();
             dashboardVM.PostsUnderReview = repo.GetPostForReview();
             dashboardVM.PostsPendingComments = repo.GetPostsWithUnapprovedCommentsAndReplies();
+            dashboardVM.CategoryPickList = new SelectList(dashboardVM.Categories, "CategoryID", "CategoryTag");
 
             return View(dashboardVM);
         }
