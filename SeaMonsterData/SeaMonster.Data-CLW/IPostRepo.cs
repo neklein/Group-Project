@@ -65,6 +65,7 @@ namespace SeaMonster.Data_CLW
         int FindPostminus10(int PostID);
         void Review(Post post); //set dates, isForReview, ispublished 
         void Deletepost(int postId);
+        void DeleteCategory(int CatID);
 
 
     }

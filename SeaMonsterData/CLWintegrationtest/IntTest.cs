@@ -456,6 +456,17 @@ namespace CLWintegrationtest
             Assert.IsTrue(AllPost.Count > NonExp.Count);
             Assert.AreEqual(5, NonExp.Count); //2 unpublished 1 expired 1 to pubublish on 12/1/2017
         }
+        [Test]
+        public void CanDeleteCategory()
+        {
+            PostRepo repo = new PostRepo();
+            List<Category> Cats = repo.GetAllCategories();
+            Assert.AreEqual(3, Cats.Count);
+            repo.DeleteCategory(1);
+            List<Category> Cats2 = repo.GetAllCategories();
+            Assert.AreEqual(2, Cats2.Count);
+            Assert.AreEqual(2, Cats2[0].CategoryID);
+        }
     }
 }
 
