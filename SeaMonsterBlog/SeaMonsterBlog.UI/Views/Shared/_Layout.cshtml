@@ -53,17 +53,17 @@
         <div class="container body-content col-sm-9">
             <div class="col-sm-12">
                 @RenderBody()
-                <hr />
+
                 <footer>
                     <p>&copy; @DateTime.Now.Year - CMonster Web Design</p>
                 </footer>
             </div>
         </div>
 
-        <div class="container col-sm-3" style="background: #d6e9cb;border-radius:3px">
+        <div class="container col-sm-3" style="background: #d6e9cb;border-radius:3px;padding-bottom:25px;padding-top:25px">
             <div class="container col-sm-12">
                     <div class="input-group">
-                        <input class="form-control" placeholder="Search by Category" id="search-term" type="text" >
+                        <input class="form-control" placeholder="Search by Title" id="search-term" type="text" >
                         <div class="input-group-btn">
                             <button class="btn btn-default" type="submit" onclick="executeSearch()"><i class="glyphicon glyphicon-search"></i></button>
                         </div>

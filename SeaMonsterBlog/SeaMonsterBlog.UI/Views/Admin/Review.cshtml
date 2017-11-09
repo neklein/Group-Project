@@ -11,13 +11,13 @@
 @using (Html.BeginForm("review", "admin", FormMethod.Post, new { @class = "form-inline", enctype = "multipart/form-data", id = "review-form" }))
 {
     @Html.HiddenFor(m => m.Post.PostId)
-<div class="panel panel-success">
+<div class="panel panel-success" style="background-color: rgb(223,240,216)">
     <div class="panel-heading">
         <h3><strong>@Model.Post.PostTitle</strong></h3>
         <h5><strong>@Model.Post.DisplayDate.Value.ToShortDateString() |  @Model.Post.Author</strong></h5>
 
     </div>
-    <div class="panel-body">
+    <div class="panel-body" style="background-color:rgb(240,248,235)">
         <h5>
             Categories:
             @foreach (var category in Model.Post.SelectedCategories)

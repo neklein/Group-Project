@@ -12,7 +12,7 @@
     <div class="col-sm-12">
         @foreach (var blog in Model.Posts)
         {
-            <div class="panel panel-success">
+            <div class="panel panel-success" style="background-color: rgb(223,240,216);">
                 <div class="panel-heading">
                     <h3 onclick="GoToDetail(@blog.PostId)" style="cursor: pointer;"><strong>@blog.PostTitle</strong></h3>
                     <h5><strong>@blog.DisplayDate  |  <a href="~/Home/ByAuthor/@blog.Author">@blog.Author</a></strong></h5>
@@ -24,24 +24,22 @@
                         }
                     </h5>
                 </div>
-                <div class="panel-body" style="height:300px; overflow:hidden">
+                <div class="panel-body" style="height:300px; overflow:hidden;background-color:rgb(240,248,235)">
 
                     @Html.Raw(blog.PostText)
                     <br />
                    
                 </div>
-                <p>
+                <p >
                     @foreach (var hashtag in blog.Hashtags)
                     {
-                        @Html.ActionLink("#"+(string)hashtag.HashtagName, "ByHashtag", "Home", new { id = hashtag.HashtagID }, new { @class = "label label-success" })
+                        @Html.ActionLink("#"+(string)hashtag.HashtagName, "ByHashtag", "Home", new { id = hashtag.HashtagID }, new { @class = "label label-success"})
                     }
-            </p>
-
+                </p>
             </div>
 
-
             @Html.ActionLink("Read More and Comment", "Detail", "Home", new { id = blog.PostId }, new { @class = "btn btn-warning" })
-
+          
             <hr />
         }
 

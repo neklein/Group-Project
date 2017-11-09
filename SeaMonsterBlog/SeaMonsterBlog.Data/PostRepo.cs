@@ -376,7 +376,7 @@ namespace SeaMonster.Data_CLW
             List<string> categorysort = new List<string>();
             foreach (string s in Categories)
             {
-                if (s.Length > 2 && !string.IsNullOrWhiteSpace(s))
+                if (s.Length > 2 && !string.IsNullOrWhiteSpace(s) && !categorysort.Contains(s.ToLower()))
                 {
                     categorysort.Add(s.ToLower());
                 }

@@ -106,7 +106,10 @@ namespace SeaMonsterBlog.UI.Controllers
         public ActionResult Create(CreateEditVM createEditVM)
         {
             createEditVM.Post.PostText = WebUtility.HtmlEncode(createEditVM.Post.PostText);
-            createEditVM.Post.SelectedCategories = ConvertChosenToSelected(createEditVM.ChosenCategories);
+            if (createEditVM.ChosenCategories.Any())
+            {
+                createEditVM.Post.SelectedCategories = ConvertChosenToSelected(createEditVM.ChosenCategories);
+            }
             var repo = RepositoryFactory.GetRepository();
             
             if (createEditVM.Post.PostId == 0)    //Save or add work regardless of button choice
