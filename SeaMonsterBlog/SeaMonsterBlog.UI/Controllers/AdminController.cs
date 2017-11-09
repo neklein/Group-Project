@@ -65,7 +65,7 @@ namespace SeaMonsterBlog.UI.Controllers
             {
                 return RedirectToAction("Review/" + createEditVM.Post.PostId);
             }
-            else if (createEditVM.UploadedFile != null)
+            if (createEditVM.UploadedFile != null)
             {
                 fileName = createEditVM.UploadedFile.FileName;
 
@@ -174,6 +174,7 @@ namespace SeaMonsterBlog.UI.Controllers
             createEditVM.StaticPosts = repo.GetAllStaticPublished();
             repo.SetPostLists(createEditVM.Post);
 
+
             return View(createEditVM);
         }
 
@@ -183,10 +184,16 @@ namespace SeaMonsterBlog.UI.Controllers
         {
             var repo = RepositoryFactory.GetRepository();  //chose to edit
 
-            if (createEditVM.Post.IsForReview && !createEditVM.Post.IsPublished)
+            if ((createEditVM.Post.IsForReview && !createEditVM.Post.IsPublished)&& !Request.IsAuthenticated && User.IsInRole("moderator"))
             {
                 return RedirectToAction("Edit/" + createEditVM.Post.PostId.ToString());
             }
+            else if (Request.IsAuthenticated && User.IsInRole("moderator"))
+            {
+                repo.Review(createEditVM.Post);
+                return RedirectToAction("Dashboard");
+            }
+
             else if (createEditVM.Post.IsForReview == false && createEditVM.Post.IsPublished == false)  //returned to contributor
             {
                 repo.Review(createEditVM.Post);
