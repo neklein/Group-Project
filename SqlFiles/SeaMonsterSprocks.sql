@@ -136,6 +136,11 @@ GO
  drop procedure ReviewPost
  GO
 
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='AddCategory')
+ drop procedure AddCategory
+ GO
+
+
 
  --------------------Searches and Gets------------------------------------------
 
@@ -439,6 +444,12 @@ begin transaction
 Delete from CategoryPost where CategoryPost.CategoryID=@CategoryID
 Delete from Categories where Categories.CategoryID=@CategoryID
 commit 
+end
+go
+
+Create Procedure AddCategory (@CategoryName nvarchar(50))AS
+begin
+insert into Categories (CategoryName) values (@CategoryName)
 end
 go
 

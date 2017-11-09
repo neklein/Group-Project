@@ -1434,6 +1434,17 @@ namespace SeaMonster.Data_CLW
                 cmd.ExecuteNonQuery();
             }
         }
+        public void CreateCategory(string Categoryname)
+        {
+            using (var cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("AddCategory", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@CategoryName", Categoryname);
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 
   

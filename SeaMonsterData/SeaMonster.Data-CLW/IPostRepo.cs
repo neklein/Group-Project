@@ -66,6 +66,7 @@ namespace SeaMonster.Data_CLW
         void Review(Post post); //set dates, isForReview, ispublished 
         void Deletepost(int postId);
         void DeleteCategory(int CatID);
+        void CreateCategory(string Categoryname);
 
 
     }

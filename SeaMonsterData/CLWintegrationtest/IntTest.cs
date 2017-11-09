@@ -467,6 +467,18 @@ namespace CLWintegrationtest
             Assert.AreEqual(2, Cats2.Count);
             Assert.AreEqual(2, Cats2[0].CategoryID);
         }
+        [Test]
+        public void CanAddCategory()
+        {
+            PostRepo repo = new PostRepo();
+            List<Category> Cats = repo.GetAllCategories();
+            Assert.AreEqual(3, Cats.Count);
+            repo.CreateCategory("TestCat");
+            List<Category> Cats2 = repo.GetAllCategories();
+            Assert.AreEqual(4, Cats2.Count);
+            Assert.AreEqual("TestCat", Cats2[3].CategoryName);
+
+        }
     }
 }
 
