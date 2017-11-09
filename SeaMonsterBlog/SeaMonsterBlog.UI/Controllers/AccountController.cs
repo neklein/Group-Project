@@ -75,6 +75,7 @@ namespace SeaMonsterBlog.UI.Controllers
         {
             var repo = RepositoryFactory.GetRepository();
             model.Categories = repo.GetAllCategories();
+            model.StaticPosts = repo.GetAllStaticPublished();
 
             if (!ModelState.IsValid)
             {
@@ -109,7 +110,14 @@ namespace SeaMonsterBlog.UI.Controllers
             {
                 return View("Error");
             }
-            return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
+
+            VerifyCodeViewModel model = new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe };
+            var repo = RepositoryFactory.GetRepository();
+            model.Categories = repo.GetAllCategories();
+            model.StaticPosts = repo.GetAllStaticPublished();
+
+
+            return View(model);
         }
 
         //
@@ -119,6 +127,10 @@ namespace SeaMonsterBlog.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> VerifyCode(VerifyCodeViewModel model)
         {
+            var repo = RepositoryFactory.GetRepository();
+            model.Categories = repo.GetAllCategories();
+            model.StaticPosts = repo.GetAllStaticPublished();
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -146,7 +158,13 @@ namespace SeaMonsterBlog.UI.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            RegisterViewModel model = new RegisterViewModel();
+
+            var repo = RepositoryFactory.GetRepository();
+            model.Categories = repo.GetAllCategories();
+            model.StaticPosts = repo.GetAllStaticPublished();
+
+            return View(model);
         }
 
         //
@@ -233,7 +251,13 @@ namespace SeaMonsterBlog.UI.Controllers
         [AllowAnonymous]
         public ActionResult ForgotPasswordConfirmation()
         {
-            return View();
+            LayoutVM model = new LayoutVM();
+
+            var repo = RepositoryFactory.GetRepository();
+            model.Categories = repo.GetAllCategories();
+            model.StaticPosts = repo.GetAllStaticPublished();
+
+            return View(model);
         }
 
         //
@@ -241,6 +265,8 @@ namespace SeaMonsterBlog.UI.Controllers
         [AllowAnonymous]
         public ActionResult ResetPassword(string code)
         {
+
+
             return code == null ? View("Error") : View();
         }
 
@@ -251,6 +277,10 @@ namespace SeaMonsterBlog.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
         {
+            var repo = RepositoryFactory.GetRepository();
+            model.Categories = repo.GetAllCategories();
+            model.StaticPosts = repo.GetAllStaticPublished();
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -267,7 +297,7 @@ namespace SeaMonsterBlog.UI.Controllers
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
             }
             AddErrors(result);
-            return View();
+            return View(model);
         }
 
         //
@@ -275,7 +305,12 @@ namespace SeaMonsterBlog.UI.Controllers
         [AllowAnonymous]
         public ActionResult ResetPasswordConfirmation()
         {
-            return View();
+            LayoutVM model = new LayoutVM();
+            var repo = RepositoryFactory.GetRepository();
+            model.Categories = repo.GetAllCategories();
+            model.StaticPosts = repo.GetAllStaticPublished();
+
+            return View(model);
         }
 
         //
@@ -301,7 +336,13 @@ namespace SeaMonsterBlog.UI.Controllers
             }
             var userFactors = await UserManager.GetValidTwoFactorProvidersAsync(userId);
             var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
-            return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
+
+            SendCodeViewModel model = new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe };
+            var repo = RepositoryFactory.GetRepository();
+            model.Categories = repo.GetAllCategories();
+            model.StaticPosts = repo.GetAllStaticPublished();
+
+            return View(model);
         }
 
         //
@@ -350,7 +391,13 @@ namespace SeaMonsterBlog.UI.Controllers
                     // If the user does not have an account, then prompt the user to create an account
                     ViewBag.ReturnUrl = returnUrl;
                     ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
+
+                    ExternalLoginConfirmationViewModel model = new ExternalLoginConfirmationViewModel { Email = loginInfo.Email };
+                    var repo = RepositoryFactory.GetRepository();
+                    model.Categories = repo.GetAllCategories();
+                    model.StaticPosts = repo.GetAllStaticPublished();
+
+                    return View("ExternalLoginConfirmation", model);
             }
         }
 
@@ -361,6 +408,10 @@ namespace SeaMonsterBlog.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl)
         {
+            var repo = RepositoryFactory.GetRepository();
+            model.Categories = repo.GetAllCategories();
+            model.StaticPosts = repo.GetAllStaticPublished();
+
             if (User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "Manage");
@@ -407,7 +458,12 @@ namespace SeaMonsterBlog.UI.Controllers
         [AllowAnonymous]
         public ActionResult ExternalLoginFailure()
         {
-            return View();
+            LayoutVM model = new LayoutVM();
+            var repo = RepositoryFactory.GetRepository();
+            model.Categories = repo.GetAllCategories();
+            model.StaticPosts = repo.GetAllStaticPublished();
+
+            return View(model);
         }
 
         protected override void Dispose(bool disposing)
