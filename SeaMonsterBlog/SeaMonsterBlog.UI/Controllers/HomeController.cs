@@ -61,20 +61,40 @@ namespace SeaMonsterBlog.UI.Controllers
         public ActionResult Detail (DetailVM model)
         {
             var repo = RepositoryFactory.GetRepository();
-
-            if (!string.IsNullOrWhiteSpace(model.NewComment.CommenterName) && !string.IsNullOrWhiteSpace(model.NewComment.CommentText))
+            if (ModelState.IsValid)
             {
-                model.NewComment.PostId = model.Post.PostId;
-                repo.CreateComment(model.NewComment);
+                if (!string.IsNullOrWhiteSpace(model.NewComment.CommenterName))
+                {
+                    model.NewComment.PostId = model.Post.PostId;
+                    repo.CreateComment(model.NewComment);
+
+                    return RedirectToAction("Detail", model.Post.PostId);
+                }
+
+                if (!string.IsNullOrWhiteSpace(model.NewReply.ReplyName))
+                {
+                    repo.CreateReply(model.NewReply);
+
+                    return RedirectToAction("Detail", model.Post.PostId);
+                }
             }
 
-            if (!string.IsNullOrWhiteSpace(model.NewReply.ReplyName) && !string.IsNullOrWhiteSpace(model.NewReply.ReplyText))
+            model.Post = repo.GetPostByID(model.Post.PostId);
+            model.Post.PostText = WebUtility.HtmlDecode(model.Post.PostText);
+            model.Post.PostText = model.Post.PostText.Substring(60);
+            model.Post.PostText = model.Post.PostText.Substring(0, model.Post.PostText.Length - 16);
+            model.Categories = repo.GetAllCategories();
+            model.StaticPosts = repo.GetAllStaticPublished();
+            if (Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator"))
             {
-                repo.CreateReply(model.NewReply);
+                repo.ADMINSetPostList(model.Post);
+            }
+            else
+            {
+                repo.SetPostLists(model.Post);
             }
 
-            return RedirectToAction("Detail", model.Post.PostId);
-         
+            return View(model);
         }
 
 
