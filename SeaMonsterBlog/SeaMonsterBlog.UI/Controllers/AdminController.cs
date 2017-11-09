@@ -206,5 +206,17 @@ namespace SeaMonsterBlog.UI.Controllers
             return View(dashboardVM);
         }
 
+        [HttpPost]
+        public ActionResult Dashboard(DashboardVM model)
+        {
+            var repo = RepositoryFactory.GetRepository();
+
+            if (model.DeleteCategory != null)
+            {
+                repo.DeleteCategory((int)model.DeleteCategory);
+            }
+            return RedirectToAction("Dashboard");
+        }
+
     }
 }

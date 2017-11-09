@@ -12,7 +12,7 @@ namespace SeaMonsterBlog.UI.Models
         public List<Post> PostsUnderReview { get; set; }
         public List<Post> PostsPendingComments { get; set; }
         public string NewCategory { get; set; }
-        public int DeleteCategory { get; set; }
+        public int? DeleteCategory { get; set; }
         public IEnumerable<SelectListItem> CategoryPickList { get; set; }
     }
 }
