@@ -50,8 +50,15 @@
         </div>
         <div class="row">
             <button onclick="returnToEdit" class="btn" id="main-submit">Return to Edit View</button>
+            @if (Request.IsAuthenticated && User.IsInRole("admin"))
+                {
             <button onclick="flagToReturn()"class="btn">Return to Contributor</button>
-            <button onclick="flagToPublish()"class="btn btn-primary" style="float:right">Publish</button>
+            <button onclick="flagToPublish()" class="btn btn-primary" style="float:right">Publish</button>
+            }
+            else
+            {
+                <button onclick="flagToReturn()" class="btn">Save Changes</button>
+            }
         </div>
         @Html.CheckBoxFor(m => m.Post.IsForReview, new { @style = "visibility:hidden", id = "toReview" })
         @Html.CheckBoxFor(m => m.Post.IsPublished, new { @style = "visibility:hidden", id = "is-for-publish" })
@@ -65,13 +72,12 @@
     <script>
         $(function () {
             $('.date-picker').datepicker();
-            $("#is-for-publish").attr("checked", false);
-
         });
 
         function flagToReturn() {
-            $("#toReview").attr("checked", false);
             $("#is-for-publish").attr("checked", false)
+            $("#toReview").attr("checked", false);
+
             $("#review-form").submit();
         };
 
