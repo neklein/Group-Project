@@ -62,5 +62,6 @@ namespace SeaMonsterBlog.Data
         List<Post> GetPostsWithUnapprovedCommentsAndReplies();
         void Review(Post post);
         void Deletepost(int postId);
+        void DeleteCategory(int CatId);
     }
 }

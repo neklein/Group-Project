@@ -1221,5 +1221,17 @@ namespace SeaMonster.Data_CLW
             }
         }
 
+        public void DeleteCategory(int CatID)
+        {
+            using (var cn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("DeleteCategory", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@CategoryID", CatID);
+                cn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
     }
 }

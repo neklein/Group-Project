@@ -5,7 +5,7 @@ using Microsoft.Owin.Security;
 
 namespace SeaMonsterBlog.UI.Models
 {
-    public class IndexViewModel
+    public class IndexViewModel : LayoutVM
     {
         public bool HasPassword { get; set; }
         public IList<UserLoginInfo> Logins { get; set; }
@@ -14,18 +14,18 @@ namespace SeaMonsterBlog.UI.Models
         public bool BrowserRemembered { get; set; }
     }
 
-    public class ManageLoginsViewModel
+    public class ManageLoginsViewModel : LayoutVM
     {
         public IList<UserLoginInfo> CurrentLogins { get; set; }
         public IList<AuthenticationDescription> OtherLogins { get; set; }
     }
 
-    public class FactorViewModel
+    public class FactorViewModel : LayoutVM
     {
         public string Purpose { get; set; }
     }
 
-    public class SetPasswordViewModel
+    public class SetPasswordViewModel : LayoutVM
     {
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
@@ -39,7 +39,7 @@ namespace SeaMonsterBlog.UI.Models
         public string ConfirmPassword { get; set; }
     }
 
-    public class ChangePasswordViewModel
+    public class ChangePasswordViewModel : LayoutVM
     {
         [Required]
         [DataType(DataType.Password)]
@@ -58,7 +58,7 @@ namespace SeaMonsterBlog.UI.Models
         public string ConfirmPassword { get; set; }
     }
 
-    public class AddPhoneNumberViewModel
+    public class AddPhoneNumberViewModel : LayoutVM
     {
         [Required]
         [Phone]
@@ -66,7 +66,7 @@ namespace SeaMonsterBlog.UI.Models
         public string Number { get; set; }
     }
 
-    public class VerifyPhoneNumberViewModel
+    public class VerifyPhoneNumberViewModel : LayoutVM
     {
         [Required]
         [Display(Name = "Code")]
@@ -78,7 +78,7 @@ namespace SeaMonsterBlog.UI.Models
         public string PhoneNumber { get; set; }
     }
 
-    public class ConfigureTwoFactorViewModel
+    public class ConfigureTwoFactorViewModel : LayoutVM
     {
         public string SelectedProvider { get; set; }
         public ICollection<System.Web.Mvc.SelectListItem> Providers { get; set; }

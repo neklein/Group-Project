@@ -128,9 +128,20 @@ GO
  drop procedure CreateReply
  GO
 
- if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='ReviewPost')
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='DeleteCategory')
+ drop procedure DeleteCategory
+ GO
+
+  if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='ReviewPost')
  drop procedure ReviewPost
  GO
+
+ if exists( select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME='AddCategory')
+ drop procedure AddCategory
+ GO
+
+
+
  --------------------Searches and Gets------------------------------------------
 
  
@@ -426,6 +437,21 @@ isforReview=@IsForReview
 where PostID=@PostID 
 End
 Go
+
+Create Procedure DeleteCategory (@CategoryID int)AS
+begin
+begin transaction
+Delete from CategoryPost where CategoryPost.CategoryID=@CategoryID
+Delete from Categories where Categories.CategoryID=@CategoryID
+commit 
+end
+go
+
+Create Procedure AddCategory (@CategoryName nvarchar(50))AS
+begin
+insert into Categories (CategoryName) values (@CategoryName)
+end
+go
 
 select * from post
 select* from PostText
