@@ -15,7 +15,7 @@
         {
             <div class="panel panel-success">
                 <div class="panel-heading">
-                    <h3><strong>@blog.PostTitle</strong></h3>
+                    <h3 onclick="GoToDetail(@blog.PostId)" style="cursor: pointer;"><strong>@blog.PostTitle</strong></h3>
                     <h5><strong>@blog.DisplayDate  |  <a href="~/Home/ByAuthor/@blog.Author">@blog.Author</a></strong></h5>
                     <h5>
                         Categories:
@@ -50,3 +50,18 @@
 
     </div>
 </div>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+
+        });
+
+        function GoToDetail(id) {
+            window.location.replace("/home/detail/" + id);
+        };
+
+    </script>
+
+}
