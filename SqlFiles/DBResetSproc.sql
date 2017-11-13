@@ -99,13 +99,12 @@ Legs crack Jennys tea cup Barbary Coast Jolly Roger. Legs crack Jennys tea cup B
 Furl brig holystone haul wind spike wench Pieces of Eight landlubber or just lubber fire ship scourge of the seven  wind&lt;/em&gt;.&lt;img src=&quot;/images/Monty.jpg&quot;
 seas.&lt;/p&gt; &lt;p&gt;Interloper cackle fruit clap of thunder&lt;strong&gt;&amp;nbsp;fire in the hole quarter lateen sail sutler&lt;/strong&gt;&amp;nbsp;dance the 
 hempen jig chandler parley. Shiver me timbers knave strike colors gally tack log Legs crack Jennys tea cup Barbary Coast Jolly Roger. Carouser bring a spring upon her cable trysail shrouds hands gunwalls cog Sink me bucko 
-overhaul league sheet skysail. Tender dance the hempen jig Letter of Marque 
+overhaul league sheet skysail.git -commi Tender dance the hempen jig Letter of Marque 
 lanyard topmast jib driver yo-ho-ho shrouds wherry.&lt;/p&gt; &lt;p&gt;&lt;br /&gt;list of hashtags at the bottom&lt;/p&gt; &lt;/body&gt; &lt;/html&gt;
 . '),
 (5, '&lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;/head&gt; &lt;body&gt; &lt;p&gt; Help! I am being held on a boat and forced to write this blog.&lt;/p&gt; &lt;p&gt;&lt;br /&gt;list of hashtags at 
 the bottom&lt;/p&gt; &lt;/body&gt; &lt;/html&gt;'),
-(6,'&lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;/head&gt; &lt;body&gt; &lt;p&gt;categories 
-listed here Salmagundi boom gunwalls rope&#39;s end Jack Ketch chase sheet cutlass 
+(6,'&lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;/head&gt; &lt;body&gt; &lt;p&gt;Salmagundi boom gunwalls rope&#39;s end Jack Ketch chase sheet cutlass 
 Buccaneer starboard.&lt;a title=&quot;kraken&quot; href=&quot;https://en.wikipedia.org/wiki/Kraken&quot;&gt;&amp;nbsp;Corsair&lt;/a&gt;&amp;nbsp;spirits walk the 
 plank heave down landlubber or just lubber hulk swing the lead rigging Jack Tar reef. Gabion hulk Cat o&#39;nine tails take a caul&amp;nbsp; coffer tackle&amp;nbsp;&lt;em&gt;scuttle 
 tender nipper haul wind&lt;/em&gt;.&lt;img src=&quot;/images/helmethead.jpg&quot; alt=&quot;broken&quot; width=&quot;186&quot; height=&quot;185&quot; /&gt;&lt;/p&gt; &lt;p&gt;Crack 
@@ -201,3 +200,17 @@ select * from categorypost
 select* from Reply
 select * from comment
 select* from Post
+select* from post left join PostText on post.PostID=PostText.PostId
+
+
+
+
+
+
+
+
+
+
+
+
+
