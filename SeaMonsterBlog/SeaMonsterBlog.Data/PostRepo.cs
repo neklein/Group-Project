@@ -1062,19 +1062,13 @@ namespace SeaMonster.Data_CLW
 
                 SqlCommand cmd = new SqlCommand("AddImage", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
-                SqlParameter param = new SqlParameter("@ImageId", SqlDbType.Int);
-                param.Direction = ParameterDirection.Output;
 
-                cmd.Parameters.Add(param);
 
                 cmd.Parameters.AddWithValue("@ImageName", imageName);
 
                 cn.Open();
                 cmd.ExecuteNonQuery();
-
-                image.ImageId = (int)param.Value;
             }
-
         }
 
         public int FindNextPublishedPost(int PostID)

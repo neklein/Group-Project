@@ -7,8 +7,9 @@
     ViewBag.SearchString = Model.SearchString;
 }
 
-    @using (Html.BeginForm("Create", "Admin", FormMethod.Post, new { @class = "form-inline", id = "frmUpload" }))
+    @using (Html.BeginForm("Create", "Admin", FormMethod.Post, new { @class = "form-inline", id = "frmUpload", enctype = "multipart/form-data" }))
     {
+        @Html.ValidationSummary(false)
         @Html.AntiForgeryToken()
         <input type="text" name="Post.PostId" value="@Model.Post.PostId" class="hidden"/>
         <input type="text" name="Post.PostId" value="@Model.Post.PostId" class="hidden" />
