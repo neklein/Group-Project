@@ -22,7 +22,7 @@ namespace SeaMonsterBlog.UI.Controllers
             createEditVM.Categories = repo.GetAllCategories();
             createEditVM.StaticPosts = repo.GetAllStaticPublished();
             createEditVM.Images = repo.GetAllImages();
-            createEditVM.Post = new SeaMonsterBlog.Models.Tables.Post();            
+            createEditVM.Post = new Post();            
             return View(createEditVM);
         }
 
@@ -49,6 +49,7 @@ namespace SeaMonsterBlog.UI.Controllers
         [Authorize(Roles = "admin, moderator")]
         public ActionResult Edit(CreateEditVM createEditVM)
         {
+            
             if (string.IsNullOrEmpty(createEditVM.Post.PostTitle) || string.IsNullOrEmpty(createEditVM.Post.PostText) || string.IsNullOrEmpty(createEditVM.Post.Author))
             {
                 ModelState.AddModelError("NotValid", "A title, author and text are required before saving/submitting");
@@ -132,7 +133,6 @@ namespace SeaMonsterBlog.UI.Controllers
             {
                 ModelState.AddModelError("NotValid", "A title, author and text are required before saving/submitting");
             }
-
             if (ModelState.IsValid)
             {
                 createEditVM.Post.PostText = WebUtility.HtmlEncode(createEditVM.Post.PostText);
@@ -141,6 +141,14 @@ namespace SeaMonsterBlog.UI.Controllers
                     createEditVM.Post.SelectedCategories = ConvertChosenToSelected(createEditVM.ChosenCategories);
                 }
                 var repo = RepositoryFactory.GetRepository();
+
+                if (ModelState.IsValid && createEditVM.Post.PostId == 0)    //Save or add work regardless of button choice
+                {
+                    createEditVM.Post.PostId = repo.CreateNewPost(createEditVM.Post);
+                }
+                else if (ModelState.IsValid)
+                    repo.SavePost(createEditVM.Post);
+                else return View(createEditVM);
 
                 if (createEditVM.Post.PostId == 0)    //Save or add work regardless of button choice
                 {

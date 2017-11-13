@@ -9,20 +9,22 @@
 
     @using (Html.BeginForm("Create", "Admin", FormMethod.Post, new { @class = "form-inline", id = "frmUpload", enctype = "multipart/form-data" }))
     {
-        @Html.ValidationSummary(false)
+        @Html.ValidationSummary()
+
         @Html.AntiForgeryToken()
         <input type="text" name="Post.PostId" value="@Model.Post.PostId" class="hidden"/>
-        <input type="text" name="Post.PostId" value="@Model.Post.PostId" class="hidden" />
         <div style="padding-left:15px">
             @Html.CheckBoxFor(m => m.Post.IsForReview, new { @style = "visibility:hidden", id = "is-for-review" })
             <div class="row" style="padding-bottom:10px">
                 <div class="col-md-5">
                     <label>Title</label>
                     @Html.TextBoxFor(model => model.Post.PostTitle, new { @class = "form-control", style = "width:600px" })
+                    @Html.ValidationMessageFor(model => model.Post.PostTitle)
                 </div>
                 <div class="col-md-5">
                     <label>Author</label>
                     @Html.TextBoxFor(model => model.Post.Author, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Post.Author)
                 </div>
                 <div class="col-md-2">
                     <select name="Post.IsStatic" class="form-control" style="width:auto">
@@ -53,6 +55,7 @@
             </div>
             <!-- This will contain your HtmlContent and use the TinyMCE editor-->
             @Html.TextAreaFor(model => model.Post.PostText)
+            @Html.ValidationMessageFor(model => model.Post.PostText)
             <br />
             <div class="row">
                 <div class="col-md-6">
