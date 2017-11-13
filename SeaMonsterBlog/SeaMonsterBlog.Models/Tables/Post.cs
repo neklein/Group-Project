@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.ComponentModel.DataAnnotations;
 
 namespace SeaMonsterBlog.Models.Tables
 {
@@ -25,8 +26,6 @@ namespace SeaMonsterBlog.Models.Tables
         public List<Hashtag> Hashtags { get; set; }
         public List<Category> SelectedCategories { get; set; }
         public int? NumberOfUnapprovedComments { get; set; }
-
-        // JM -> ADDED MORNING 11/2
         public string Author { get; set; }
         
 

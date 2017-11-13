@@ -41,7 +41,7 @@ namespace SeaMonsterBlog.UI.Controllers
 
             detailVM.Post = repo.GetPostByID(id);
             detailVM.Post.PostText = WebUtility.HtmlDecode(detailVM.Post.PostText);
-            detailVM.Post.PostText = detailVM.Post.PostText.Substring(60);
+            detailVM.Post.PostText = detailVM.Post.PostText.Substring(54);
             detailVM.Post.PostText = detailVM.Post.PostText.Substring(0, detailVM.Post.PostText.Length - 16);
             detailVM.Categories = repo.GetAllCategories();
             detailVM.StaticPosts = repo.GetAllStaticPublished();
