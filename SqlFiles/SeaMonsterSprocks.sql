@@ -155,7 +155,7 @@ GO
  isnull(p.DisplayDate, p.DateCreated)AS DisplayDate, pt.PostText, p.isforReview, p.Expdate, p.ispublished, p.isStatic, p.addedby 
  from Post p
  left join PostText pt on pt.PostId=p.PostID
- order by p.DateCreated
+order by p.DisplayDate desc
  end
  go 
 
@@ -167,7 +167,7 @@ select p.PostID, p.PostTitle, p.DateCreated, isnull(p.ToPostDate, p.DateCreated)
  from Post p
  left join PostText pt on pt.PostId=p.PostID
  where p.ispublished=1
- order by p.DateCreated
+ order by p.DisplayDate desc
  End  
 GO
 
@@ -227,7 +227,7 @@ begin
  left join PostText pt on pt.PostId=p.PostID
  left join HashtagPost h on h.PostID=p.PostID
  where h.HashtagID=@HashtagID
- order by p.DateCreated
+order by p.DisplayDate desc
 end
 Go
 
@@ -239,6 +239,7 @@ select p.PostID, p.PostTitle, p.DateCreated, isnull(p.ToPostDate, p.DateCreated)
 left join PostText pt on pt.PostId=p.PostID
 left join CategoryPost cp on cp.PostId=p.PostID
 where cp.CategoryID=@CategoryID 
+order by p.DisplayDate desc
 end
 go
 
@@ -249,6 +250,7 @@ Begin
  from Post p
  left join PostText pt on pt.PostId=p.PostID
  where p.DisplayAuthor=@DisplayAuthor
+ order by p.DisplayDate desc
  END
  GO
 
@@ -464,6 +466,7 @@ select p.PostID, p.PostTitle, p.DateCreated, isnull(p.ToPostDate, p.DateCreated)
  from Post p
   left join PostText pt on pt.PostId=p.PostID
   where p.addedby=@Addedby
+  order by p.DisplayDate desc
 end
 
 select * from post
