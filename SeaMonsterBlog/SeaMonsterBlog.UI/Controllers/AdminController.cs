@@ -225,7 +225,7 @@ namespace SeaMonsterBlog.UI.Controllers
 
             createEditVM.Post = repo.GetPostByID(id);
             createEditVM.Post.PostText = WebUtility.HtmlDecode(createEditVM.Post.PostText);
-            createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(52);
+            createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(48);
             createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(0, createEditVM.Post.PostText.Length - 16);
             createEditVM.Categories = repo.GetAllCategories();
             createEditVM.StaticPosts = repo.GetAllStaticPublished();
