@@ -54,7 +54,10 @@ update post set
 ToPostDate='2017-11-23'
 where PostID=9
 
-Insert into PostText (PostId, PostText) values (1,' &lt;!DOCTYPE html&gt &lt;html&gt; &lt;head&gt; &lt;/head&gt; &lt;body&gt; &lt;p&gt;Salmagundi boom gunwalls rope&#39;s end Jack Ketch chase sheet cutlass 
+
+Insert into PostText (PostId, PostText) values 
+(1,'&lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt; &lt;/head&gt; &lt;body&gt; &lt;p&gt;Salmagundi boom gunwalls rope&#39;s end Jack Ketch chase sheet cutlass 
+
 Buccaneer starboard.&lt;a title=&quot;kraken&quot; href=&quot;https://en.wikipedia.org/wiki/Kraken&quot;&gt;&amp;nbsp;Corsair&lt;/a&gt;&amp;nbsp;spirits walk the 
 plank heave down landlubber or just lubber hulk swing the lead rigging Jack Tar reef. Gabion hulk Cat o&#39;nine tails take a caul&amp;nbsp; coffer tackle&amp;nbsp;&lt;em&gt;scuttle 
 tender nipper haul wind&lt;/em&gt;.&lt;img src=&quot;/images/submarine.jpg&quot; alt=&quot;broken&quot; width=&quot;186&quot; height=&quot;185&quot; /&gt;&lt;/p&gt; &lt;p&gt;Crack 
