@@ -13,7 +13,6 @@
     @Html.ValidationSummary()
     @Html.AntiForgeryToken()
     <input type="text" name="Post.PostId" value="@Model.Post.PostId" class="hidden" />
-        <input type="text" name="Post.PostId" value="@Model.Post.PostId" class="hidden" />
         <div style="padding-left:15px">
             @Html.CheckBoxFor(m => m.Post.IsForReview, new { @style = "visibility:hidden", id = "is-for-review" })
             <div class="row" style="padding-bottom:10px">
@@ -54,7 +53,6 @@
                     </select>
                 </div>
             </div>
-            <!-- This will contain your HtmlContent and use the TinyMCE editor-->
             @Html.TextAreaFor(model => model.Post.PostText)
             @Html.ValidationMessageFor(model => model.Post.PostText)
             <br />
@@ -62,7 +60,7 @@
                 <div class="col-md-6">
                     @Html.TextBoxFor(m => Model.Post.HashtagString, new { @class = "form-control", style = "width:1000px", placeholder = "#hashtags" })
                     <input type="submit" class="btn btn-default" value="Save Work" id="main-button" />
-                    <input type="button" class="btn btn-primary" value="Submit For Review" onclick="FlagAndSend()" />
+                    <input type="button" class="btn btn-primary" value="Preview" onclick="FlagAndSend()" />
                 </div>
                 <div class="col-md-6">
                     @Html.ListBoxFor(m => m.Post.SelectedCategories,

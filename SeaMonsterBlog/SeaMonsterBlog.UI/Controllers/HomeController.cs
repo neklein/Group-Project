@@ -29,7 +29,7 @@ namespace SeaMonsterBlog.UI.Controllers
             foreach (var p in homeVM.Posts)
             {
                 p.PostText = WebUtility.HtmlDecode(p.PostText);
-                p.PostText = p.PostText.Substring(48);
+                p.PostText = p.PostText.Substring(50);
                 p.PostText = p.PostText.Substring(0, p.PostText.Length - 16);
                 repo.SetPostLists(p);
             }
@@ -44,7 +44,7 @@ namespace SeaMonsterBlog.UI.Controllers
 
             detailVM.Post = repo.GetPostByID(id);
             detailVM.Post.PostText = WebUtility.HtmlDecode(detailVM.Post.PostText);
-            detailVM.Post.PostText = detailVM.Post.PostText.Substring(48);
+            detailVM.Post.PostText = detailVM.Post.PostText.Substring(50);
             detailVM.Post.PostText = detailVM.Post.PostText.Substring(0, detailVM.Post.PostText.Length - 16);
             detailVM.Categories = repo.GetAllCategories();
             detailVM.StaticPosts = repo.GetAllStaticPublished();
@@ -84,7 +84,7 @@ namespace SeaMonsterBlog.UI.Controllers
 
             model.Post = repo.GetPostByID(model.Post.PostId);
             model.Post.PostText = WebUtility.HtmlDecode(model.Post.PostText);
-            model.Post.PostText = model.Post.PostText.Substring(48);
+            model.Post.PostText = model.Post.PostText.Substring(50);
             model.Post.PostText = model.Post.PostText.Substring(0, model.Post.PostText.Length - 16);
             model.Categories = repo.GetAllCategories();
             model.StaticPosts = repo.GetAllStaticPublished();
@@ -258,7 +258,7 @@ namespace SeaMonsterBlog.UI.Controllers
             foreach (var p in homeVM.Posts)
             {
                 p.PostText = WebUtility.HtmlDecode(p.PostText);
-                p.PostText = p.PostText.Substring(48);
+                p.PostText = p.PostText.Substring(50);
                 p.PostText = p.PostText.Substring(0, p.PostText.Length - 16);
                 repo.SetPostLists(p);
             }
@@ -277,7 +277,7 @@ namespace SeaMonsterBlog.UI.Controllers
             foreach (var p in hashtagVM.Posts)
             {
                 p.PostText = WebUtility.HtmlDecode(p.PostText);
-                p.PostText = p.PostText.Substring(48);
+                p.PostText = p.PostText.Substring(50);
                 p.PostText = p.PostText.Substring(0, p.PostText.Length - 16);
                 repo.SetPostLists(p);
             }

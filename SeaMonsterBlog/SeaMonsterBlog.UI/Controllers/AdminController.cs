@@ -22,7 +22,7 @@ namespace SeaMonsterBlog.UI.Controllers
             createEditVM.Categories = repo.GetAllCategories();
             createEditVM.StaticPosts = repo.GetAllStaticPublished();
             createEditVM.Images = repo.GetAllImages();
-            createEditVM.Post = new Post();            
+            createEditVM.Post = new Post();  
             return View(createEditVM);
         }
 
@@ -35,10 +35,14 @@ namespace SeaMonsterBlog.UI.Controllers
             createEditVM.Post = repo.GetPostByID(id);
             repo.SetPostLists(createEditVM.Post);
             createEditVM.Post.PostText = WebUtility.HtmlDecode(createEditVM.Post.PostText);
-            createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(52);
+            createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(50);
             createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(0, createEditVM.Post.PostText.Length - 16);
             createEditVM.Categories = repo.GetAllCategories();
             createEditVM.StaticPosts = repo.GetAllStaticPublished();
+            if (User.IsInRole("admin"))
+            {
+                createEditVM.Post.IsForReview = true;
+            }
             createEditVM.Images = repo.GetAllImages();
             createEditVM.Post.IsPublished = false;
             return View(createEditVM);
@@ -50,9 +54,15 @@ namespace SeaMonsterBlog.UI.Controllers
         public ActionResult Edit(CreateEditVM createEditVM)
         {
             
+
             if (string.IsNullOrEmpty(createEditVM.Post.PostTitle) || string.IsNullOrEmpty(createEditVM.Post.PostText) || string.IsNullOrEmpty(createEditVM.Post.Author))
             {
                 ModelState.AddModelError("NotValid", "A title, author and text are required before saving/submitting");
+            }
+
+            if (User.IsInRole("admin"))
+            {
+                createEditVM.Post.IsForReview = true;
             }
 
             if (ModelState.IsValid)
@@ -73,6 +83,7 @@ namespace SeaMonsterBlog.UI.Controllers
                 {
                     return RedirectToAction("Review/" + createEditVM.Post.PostId);
                 }
+
                 if (createEditVM.UploadedFile != null)
                 {
                     fileName = createEditVM.UploadedFile.FileName;
@@ -103,6 +114,10 @@ namespace SeaMonsterBlog.UI.Controllers
                 else
                 {
                     createEditVM.Post = repo.GetPostByID(createEditVM.Post.PostId);
+                    if (User.IsInRole("admin"))
+                    {
+                        createEditVM.Post.IsForReview = true;
+                    }
                     repo.SetPostLists(createEditVM.Post);
                     createEditVM.StaticPosts = repo.GetAllStaticPublished();
                     createEditVM.Categories = repo.GetAllCategories();
@@ -133,6 +148,12 @@ namespace SeaMonsterBlog.UI.Controllers
             {
                 ModelState.AddModelError("NotValid", "A title, author and text are required before saving/submitting");
             }
+
+            if (User.IsInRole("admin"))
+            {
+                createEditVM.Post.IsForReview = true;
+            }
+
             if (ModelState.IsValid)
             {
                 createEditVM.Post.PostText = WebUtility.HtmlEncode(createEditVM.Post.PostText);
@@ -193,6 +214,10 @@ namespace SeaMonsterBlog.UI.Controllers
                 else
                 {
                     createEditVM.Post = repo.GetPostByID(createEditVM.Post.PostId);
+                    if (User.IsInRole("admin"))
+                    {
+                        createEditVM.Post.IsForReview = true;
+                    }
                     repo.SetPostLists(createEditVM.Post);
                     createEditVM.StaticPosts = repo.GetAllStaticPublished();
                     createEditVM.Categories = repo.GetAllCategories();
@@ -225,7 +250,7 @@ namespace SeaMonsterBlog.UI.Controllers
 
             createEditVM.Post = repo.GetPostByID(id);
             createEditVM.Post.PostText = WebUtility.HtmlDecode(createEditVM.Post.PostText);
-            createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(48);
+            createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(50);
             createEditVM.Post.PostText = createEditVM.Post.PostText.Substring(0, createEditVM.Post.PostText.Length - 16);
             createEditVM.Categories = repo.GetAllCategories();
             createEditVM.StaticPosts = repo.GetAllStaticPublished();
@@ -242,7 +267,7 @@ namespace SeaMonsterBlog.UI.Controllers
 
             var repo = RepositoryFactory.GetRepository();  //chose to edit
 
-            if ((createEditVM.Post.IsForReview && !createEditVM.Post.IsPublished)&& !Request.IsAuthenticated && User.IsInRole("moderator"))
+            if ((createEditVM.Post.IsForReview && !createEditVM.Post.IsPublished)&& !User.IsInRole("moderator"))
             {
                 return RedirectToAction("Edit/" + createEditVM.Post.PostId.ToString());
             }

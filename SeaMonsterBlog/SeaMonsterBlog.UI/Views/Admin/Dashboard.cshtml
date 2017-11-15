@@ -10,7 +10,11 @@
 <div>
     @if (Request.IsAuthenticated && User.IsInRole("admin") || Request.IsAuthenticated && User.IsInRole("moderator"))
     {
+        if (Request.IsAuthenticated && User.IsInRole("admin"))
+            {
         <h2>Post Awaiting Approval</h2>
+        }
+        else { <h2>My Posts in Progress</h2>}
         <div class="row">
             <div class="col-md-9">
                 <table class="table" style="background: #d6e9cb;border-radius:3px">
