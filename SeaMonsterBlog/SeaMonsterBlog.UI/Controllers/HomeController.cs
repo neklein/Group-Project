@@ -22,7 +22,10 @@ namespace SeaMonsterBlog.UI.Controllers
 
             // this doesn't actually seem to sort tho
             homeVM.Posts.OrderByDescending(post => post.DisplayDate).Where(post => post.ToPostDate <= DateTime.Now).Take(10);
-            
+            homeVM.Posts = (from h in homeVM.Posts
+                            where h.IsStatic == false
+                            select h).ToList();
+
             foreach (var p in homeVM.Posts)
             {
                 p.PostText = WebUtility.HtmlDecode(p.PostText);
