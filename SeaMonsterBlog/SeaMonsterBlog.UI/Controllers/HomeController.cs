@@ -20,8 +20,6 @@ namespace SeaMonsterBlog.UI.Controllers
             homeVM.StaticPosts = repo.GetAllStaticPublished();
             homeVM.Posts = repo.GetPublishedPosts();
 
-            // this doesn't actually seem to sort tho
-            homeVM.Posts.OrderByDescending(post => post.DisplayDate).Where(post => post.ToPostDate <= DateTime.Now).Take(10);
             homeVM.Posts = (from h in homeVM.Posts
                             where h.IsStatic == false
                             select h).ToList();

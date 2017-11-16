@@ -42,6 +42,10 @@
 
                         </li>
                         <li>@Html.ActionLink("Authors", "ByAuthor/1", "Home")</li>
+                        @if ((Request.IsAuthenticated && User.IsInRole("admin")) || (Request.IsAuthenticated && User.IsInRole("moderator")))
+                        {
+                            @Html.Partial("_LoginPartial")
+                        }
                     </ul>
                 </div>
             </div>
